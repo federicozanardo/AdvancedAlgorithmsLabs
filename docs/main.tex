@@ -1,0 +1,128 @@
+% ---------------------------
+%  Lab1 - Algoritmi Avanzati
+%	----------------------
+%		   (2021) 
+%	   Mariano Sciacco
+%      Enrico Buratto
+% ---------------------------
+
+
+% ---------------------------
+% Package e configurazione
+% ---------------------------
+
+\documentclass[12pt]{article}
+    
+    \usepackage{graphicx} 
+    \usepackage[utf8]{inputenc}
+    \usepackage[italian]{babel}
+    \usepackage{float}
+    \usepackage{subcaption}
+    \usepackage{wrapfig}
+    \usepackage[toc,page]{appendix}
+
+    % INDICE - spaziatura del ToC
+    \usepackage{tocloft}
+    \renewcommand\cftsecafterpnum{\vskip18pt}
+
+
+    % DOCUMENTO - margini
+    \usepackage[
+        top=2.5cm,
+        bottom=2.5cm, 
+        left=1.75cm,
+        right=1.75cm,
+        headheight=14.5pt,
+       ]{geometry}
+
+    % DOCUMENTO - stile e pagina finale       
+    \usepackage{fancyhdr} 
+    \usepackage{lastpage}
+
+    \pagestyle{fancy}
+    \fancyhead[L]{ }
+    % \fancyhf{}
+    \fancyfoot{}
+    \fancyfoot[L]{ \textit{Laboratorio 1} - Algoritmi Avanzati}
+    \renewcommand{\headrulewidth}{0.1pt}
+    \renewcommand{\footrulewidth}{0.1pt}
+    \rfoot{ Pagina \thepage \hspace{1pt} di \pageref*{LastPage}}
+    
+    \usepackage{xcolor}
+
+    \setlength{\parindent}{2.2em}
+	\setlength{\parskip}{1em}
+	\renewcommand{\baselinestretch}{1.075}
+
+
+    % LINK - colori degli url interni ed esterni
+    \usepackage{hyperref}         
+    \hypersetup{
+        colorlinks,
+        linkcolor={red!50!black},
+        citecolor={blue!50!black},
+        urlcolor={blue!80!black}
+    }
+    \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+
+    % EXTRA - linea dritta
+    \newcommand{\hr}{\par\vspace{-.1\ht\strutbox}\noindent\hrulefill\par}
+
+    % EXTRA - Paginazione e appendice
+    \pagenumbering{Roman} % first pages
+    \renewcommand{\appendixname}{Appendice}
+    \renewcommand\appendixpagename{Appendice}
+    \renewcommand\appendixtocname{Appendice}
+
+    % EXTRA - TOC e LOF empty page numbering
+    \usepackage{tocloft}
+    \tocloftpagestyle{empty}%<- sets the page style on the first page of ToC, LoF and LoT
+    \usepackage[nottoc]{tocbibind}%<- add an ToC entry for LoF and LoT
+
+
+% ---------------------------
+% Intestazione
+% ---------------------------
+
+\title{ \huge\textsc{Laboratorio 1} \\
+		\large\textsc{Algoritmi Avanzati}}
+\author{\textit{Enrico Buratto} (69696969)\\ 
+        \textit{Mariano Sciacco} (2007692)}
+\date{\small Aprile 2021}
+
+
+% ---------------------------
+% Corpo del documento
+% ---------------------------
+
+\begin{document} 
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[height=18em]{res/images/banner.png}
+\end{figure}
+
+\maketitle 
+\thispagestyle{empty}
+
+\begin{center}
+    \vspace{12em}
+    \hr
+    \textit{Corso di Laurea Magistrale in Informatica, Dipartimento di Matematica, UniPD}
+\end{center}
+
+\newpage
+\renewcommand{\baselinestretch}{0.95}\normalsize
+\tableofcontents
+\renewcommand{\baselinestretch}{1.075}\normalsize
+
+\newpage
+\input{res/sections_list}
+
+
+\end{document}
+
+
+% EOF
+
+

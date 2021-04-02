@@ -1,29 +1,84 @@
 #!/user/bin/env python3
 
+import sys
 
 """
-	Heap data structure
-	-----------------------------------------
-"""s
+    Heap (binary)
+    -----------------------------------------
+"""
 
-class node : 
+class Node : 
 
-    def __init__(self, parent, index):
-		self.parent = parent
+    def __init__(self, index, weight):
         self.index = index
-        self.children = []
+        self.weight = weight
     
-    def addChild(self, child):
-        self.children.append(child)
+    # def setIndex(self, index):
+    #     self.index = index
 
+    # def setWeight(self, weight):
+    #     self.weight = weight
 
+    
 
-class heap :
+class Heap:
 
-	def __init__(self):
-		self.root = Nan
-        self. 
+    def __init__(self):
+        self.list = [0]
+        self.currentSize = 0
+    
+    def parent(self, index):
+        return list[index//2]
 
-	def response(self) :
-		output = self.usb.readline().decode('utf-8').rstrip()
-		return output
+    def right(self, index):
+        return list[(index * 2) + 1]
+    
+    def left(self, index):
+        return list[(index * 2)]
+
+    def heapifyUp(self, index): 
+        while index // 2 > 0:
+            if self.list[index].weight < self.list[index // 2].weight:
+                self.list[index], self.list[index // 2] = self.list[index // 2], self.list[index]
+            index //= 2
+
+    def insert(self, node):
+        self.list.append(node)
+        self.currentSize += 1
+        lastPos = self.heapifyUp(self.currentSize)
+    
+    def heapifyDown(self, index):
+        while (index * 2) <= self.currentSize :
+            minChild = self.minChild(index)
+            if self.list[index].weight > self.list[minChild].weight: 
+                self.list[index], self.list[minChild] = self.list[minChild], self.list[index]
+            index = minChild
+
+    def minChild(self, index):
+        if (index * 2)+1 > self.current_size:
+            return index * 2
+        else:
+            if self.list[index*2].weight < self.list[(index*2)+1].weight:
+                return index * 2
+            else:
+                return (index * 2) + 1
+ 
+    def extractMin(self):
+        
+        if len(self.list) == 1:
+            return Nan
+        minEl = self.list[1]
+        self.list[1] = self.list[self.currentSize]
+        *self.list, _ = self.list
+        self.currentSize -= 1
+        self.heapifyDown(1)
+        return minEl
+
+    def print(self):
+        for i in range(1, (self.currentSize//2)+1):
+            
+            print(" PARENT : "+ str(self.list[i].weight)+" LEFT CHILD : "+
+                                str(self.list[2 * i].weight))
+            if 2*i+1 <= self.currentSize : 
+                print(" RIGHT CHILD : " + str(self.list[2 * i + 1].weight))
+            

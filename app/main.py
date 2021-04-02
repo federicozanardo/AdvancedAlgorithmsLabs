@@ -13,7 +13,8 @@ from random import randint
 import gc
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
-from algorithms.heap import heap
+from data_structures.heap import Heap, Node
+
 
 
 
@@ -36,16 +37,24 @@ def measure_run_time(list_size, num_calls, num_instances):
   # return average time in nanoseconds
   return avg_time
 
-avg_time = measure_run_time(10, 100000, 4)
-print("Average time (ns):", avg_time)
+# avg_time = measure_run_time(10, 100000, 4)
+# print("Average time (ns):", avg_time)
 
 
 
 def main(args):
-    """ Main entry point of the app """
-    print("hello world")
-    print(args)
+    # """ Main entry point of the app """
+    # print("hello world")
+    # print(args)
+    h = Heap()
+    h.insert(Node(1, 100))
+    h.insert(Node(2, 200))
+    h.insert(Node(3, 1))
+    h.insert(Node(1, 50))
+    h.insert(Node(2, 2000))
+    h.insert(Node(3, 2))
 
+    h.print()
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """

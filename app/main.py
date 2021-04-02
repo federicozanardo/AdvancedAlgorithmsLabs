@@ -4,7 +4,7 @@
 Module Docstring
 """
 
-__author__ = "E. Buratto, M. Sciacco"
+__author__ = "E. Buratto, M. Sciacco, F. Zanardo"
 __version__ = "0.0.1"
 __license__ = "Unlicense"
 
@@ -13,6 +13,8 @@ from random import randint
 import gc
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
+from classes.heap import heap
+
 
 
 # TODO: adapt the code to the one we need

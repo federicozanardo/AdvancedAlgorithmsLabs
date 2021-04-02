@@ -14,8 +14,7 @@ import gc
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
-
-
+from algorithms.utils import Utils
 
 
 # TODO: adapt the code to the one we need
@@ -55,6 +54,7 @@ def main(args):
     h.insert(Node(3, 2))
 
     h.print()
+    u = Utils()
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """

@@ -13,7 +13,7 @@ from random import randint
 import gc
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
-from classes.heap import heap
+from algorithms.heap import heap
 
 
 

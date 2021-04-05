@@ -1,4 +1,6 @@
 from collections import defaultdict
+import sys
+sys.path.append('../')
 
 
 class Graph:

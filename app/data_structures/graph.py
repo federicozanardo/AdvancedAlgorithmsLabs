@@ -10,13 +10,21 @@ class Graph:
         self.E = []
 
     def add_vertex(self, value):
-        if value not in self.V:
+        ok = True
+        if value in self.V:
+            ok = False
+
+        if ok:
             self.V.append(value)
             self.graph[value] = []
 
     def add_edge(self, u, v, w):
-        if u in self.V and v in self.V:
-            if (u, v, w) not in self.E and (v, u, w) not in self.E:
-                self.E.append((u, v, w))
-                self.graph[u].append((v, w))
-                self.graph[v].append((u, w))
+        ok = True
+        for i in range(len(self.E)):
+            if (u, v, w) == self.E[i] or (v, u, w) == self.E[i]:
+                ok = False
+
+        if ok:
+            self.E.append((u, v, w))
+            self.graph[u].append((v, w))
+            self.graph[v].append((u, w))

@@ -16,11 +16,13 @@ import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
 from algorithms.utils import populateGraphFromFile as populate
+from algorithms.utils import loadFromFolder as loadFromFolder
 import sys
 from os import walk, path
-
+import time
 
 # TODO: adapt the code to the one we need
+
 
 def measure_run_time(list_size, num_calls, num_instances):
     sum_times = 0.0
@@ -45,27 +47,20 @@ def measure_run_time(list_size, num_calls, num_instances):
 
 def main():
 
-    filepath = sys.argv[1]
-    assert path.isfile(filepath), "File or folder not found"
+    start = time.time()  # start timer
 
-    # # Import one dataset
-    # graph = populate(filepath)
+    # read datasets
+    dirpath = sys.argv[1]
+    assert path.isfile(dirpath) or path.isdir(
+        dirpath), "File or folder not found"
 
-    # # Import multiple datasets from directory
-    # graphs = []
-    # for root, dirs, files in walk(filepath):
-    #     for filename in files:
-    #         g = populate(filepath + filename)
-    #         graphs.append(g)
+    graphs = loadFromFolder(dirpath)
 
-    # h = Heap()
-    # h.insert(Node(1, 100))
-    # h.insert(Node(2, 200))
-    # h.insert(Node(3, 1))
-    # h.insert(Node(1, 50))
-    # h.insert(Node(2, 2000))
-    # h.insert(Node(3, 2))
-    # h.print()
+    for g in graphs:
+        print(len(g.E))
+
+    tempo = time.time() - start
+    print(tempo)
 
 
 if __name__ == "__main__":

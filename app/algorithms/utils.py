@@ -2,6 +2,7 @@
 
 import sys
 from data_structures.graph import Graph
+from os import walk
 sys.path.append('../')
 
 
@@ -18,4 +19,22 @@ def populateGraphFromFile(filepath):
         g.add_vertex(row[1])
         g.add_edge(row[0], row[1], row[2])
 
+    file.close()
+
     return g
+
+
+def loadFromFolder(dirpath):
+    graphs = []
+    filenames = []
+
+    for root, dirs, files in walk(dirpath):  # load filenames
+        for filename in files:
+            filenames.append(filename)
+    filenames.sort()  # lmao
+
+    for file in filenames:  # load files
+        g = populateGraphFromFile(dirpath + '/' + file)
+        graphs.append(g)
+
+    return graphs

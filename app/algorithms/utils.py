@@ -25,6 +25,9 @@ def populateGraphFromFile(filepath):
 
 
 def loadFromFolder(dirpath):
+    print("Loading dataset files...", end="")
+    sys.stdout.flush()
+
     graphs = []
     filenames = []
 
@@ -36,5 +39,8 @@ def loadFromFolder(dirpath):
     for file in filenames:  # load files
         g = populateGraphFromFile(dirpath + '/' + file)
         graphs.append(g)
+
+    print("DONE")
+    sys.stdout.flush()
 
     return graphs

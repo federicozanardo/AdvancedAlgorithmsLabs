@@ -56,11 +56,7 @@ def main():
 
     graphs = loadFromFolder(dirpath)
 
-    for g in graphs:
-        print(len(g.E))
-
-    tempo = time.time() - start
-    print(tempo)
+    print("Execution time: " + str(round(time.time()-start, 2)) + "s")
 
 
 if __name__ == "__main__":

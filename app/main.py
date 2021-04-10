@@ -17,6 +17,7 @@ from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
 from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder as loadFromFolder
+from algorithms.utils import loadFromFile as loadFromFile
 import sys
 from os import walk, path
 import time
@@ -54,7 +55,11 @@ def main():
     assert path.isfile(dirpath) or path.isdir(
         dirpath), "File or folder not found"
 
+    # Caricamento da cartella
     graphs = loadFromFolder(dirpath)
+
+    # Caricamento file singolo
+    # graph = loadFromFile(dirpath)
 
     print("Execution time: " + str(round(time.time()-start, 2)) + "s")
 

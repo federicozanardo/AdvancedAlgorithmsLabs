@@ -13,6 +13,7 @@ class Graph:
         self.V.add(value)
         self.graph[value] = []
 
+    # assunzione: viene chiamato appena dopo gli addVertex
     def add_edge(self, u, v, w):
         self.E.append((u, v, w))
         self.graph[u].append((v, w))

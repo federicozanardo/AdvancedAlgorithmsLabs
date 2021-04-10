@@ -44,3 +44,15 @@ def loadFromFolder(dirpath):
     sys.stdout.flush()
 
     return graphs
+
+
+def loadFromFile(filepath):
+    print("Loading dataset files...", end="")
+    sys.stdout.flush()
+
+    graph = populateGraphFromFile(filepath)
+
+    print("DONE")
+    sys.stdout.flush()
+
+    return graph

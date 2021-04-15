@@ -92,12 +92,12 @@ class MST:
         while Q != []:
             v = Q.pop(0)
 
-            if (u, v) in edges_visited:
-                e = (u, v)
-            else:
-                e = (v, u)
-
             for (u, w) in G.graph[v]:
+                if (u, v) in edges_visited:
+                    e = (u, v)
+                else:
+                    e = (v, u)
+
                 if edges_visited[e] is None:
                     if not vertices_visited[u]:
                         edges_visited[e] = self.DISCOVERY_EDGE

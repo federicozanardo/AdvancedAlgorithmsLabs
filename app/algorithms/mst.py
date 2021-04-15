@@ -1,8 +1,10 @@
 import copy
 from collections import defaultdict
+import sys
+sys.path.append('../')
 
-from AdvancedAlgorithmsLab1.app.data_structures.disjoint_set import DisjointSet
-from AdvancedAlgorithmsLab1.app.data_structures.graph import Graph
+from data_structures.disjoint_set import DisjointSet
+from data_structures.graph import Graph
 
 
 class MST:
@@ -18,6 +20,7 @@ class MST:
     #         if A U {e} is acyclic
     #             A = A U {e}
     #     return A
+    
     def kruskal_naive(self, G):
         A = Graph()
 
@@ -33,18 +36,36 @@ class MST:
 
     def _is_acyclic(self, A: Graph, e):
         (u, v, w) = e
-        A_graph = copy.deepcopy(A)  # TODO: optimization
+        # A_graph = copy.deepcopy(A)  # TODO: optimization 
 
-        A_graph.add_vertex(u)
-        A_graph.add_vertex(v)
-        A_graph.add_edge(u, v, w)
+        A.add_vertex(u)
+        A.add_vertex(v)
+        A.add_edge(u, v, w)
 
-        s = A_graph.V[0]
-        flag = self._check_cross_edge(self.BFS(A_graph, s))
+        # FIXME: before was: s = A_graph.V[0]
+        firstVertex = A.V.pop()
+        s = firstVertex
+        A.V.add(firstVertex)
+        flag = self._check_cross_edge(self.BFS(A, s))
 
-        if flag:
-            pass
-            # remove the edge
+        # TODO: remove edge
+        A.E.remove((u,v,w))
+        indexU = 0
+        for x in A.graph[u]:
+            if x != (v,w):
+                indexU += 1
+            else:
+                break
+        
+        indexV = 0
+        for x in A.graph[v]:
+            if x != (u,w):
+                indexV += 1
+            else:
+                break
+                
+        A.graph[u].pop(indexU)
+        A.graph[v].pop(indexV)
 
         return not flag
 
@@ -71,12 +92,12 @@ class MST:
         while Q != []:
             v = Q.pop(0)
 
-            for (u, w) in G.graph[v]:
-                if (v, u) in edges_visited:
-                    e = (v, u)
-                else:
-                    e = (u, v)
+            if (u, v) in edges_visited:
+                e = (u, v)
+            else:
+                e = (v, u)
 
+            for (u, w) in G.graph[v]:
                 if edges_visited[e] is None:
                     if not vertices_visited[u]:
                         edges_visited[e] = self.DISCOVERY_EDGE

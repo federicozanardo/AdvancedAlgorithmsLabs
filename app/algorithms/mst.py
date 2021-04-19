@@ -1,6 +1,7 @@
 import copy
 from collections import defaultdict
 import sys
+
 sys.path.append('../')
 
 from data_structures.disjoint_set import DisjointSet
@@ -20,7 +21,7 @@ class MST:
     #         if A U {e} is acyclic
     #             A = A U {e}
     #     return A
-    
+
     def kruskal_naive(self, G):
         A = Graph()
 
@@ -31,6 +32,10 @@ class MST:
                 A.add_vertex(u)
                 A.add_vertex(v)
                 A.add_edge(u, v, w)
+
+            # Ottimizzazione: mi fermo quando ho aggiunto n - 1 archi
+            if len(G.V) == len(A.E) - 1:
+                break
 
         return A
 
@@ -49,21 +54,21 @@ class MST:
         flag = self._check_cross_edge(self.BFS(A, s))
 
         # TODO: remove edge
-        A.E.remove((u,v,w))
+        A.E.remove((u, v, w))
         indexU = 0
         for x in A.graph[u]:
-            if x != (v,w):
+            if x != (v, w):
                 indexU += 1
             else:
                 break
-        
+
         indexV = 0
         for x in A.graph[v]:
-            if x != (u,w):
+            if x != (u, w):
                 indexV += 1
             else:
                 break
-                
+
         A.graph[u].pop(indexU)
         A.graph[v].pop(indexV)
 
@@ -131,14 +136,15 @@ class MST:
         A = []
 
         for v in G.V:
-            ds.make_set(v)
+            ds.make_set(int(v))
 
+        # Ordina i lati con merge sort (complessità: O(nlogn))
         self._mergeSort(G.E, 0, len(G.E) - 1)
 
         for (u, v, w) in G.E:
-            if ds.find_set(u) != ds.find_set(v):
+            if ds.find_set(int(u)) != ds.find_set(int(v)):
                 A.append((u, v, w))
-                ds.union_by_size(u, v)
+                ds.union_by_size(int(u), int(v))
 
         return A
 
@@ -171,7 +177,7 @@ class MST:
             (_, _, w1) = L[i]
             (_, _, w2) = R[j]
 
-            if w1 <= w2:
+            if int(w1) <= int(w2):
                 arr[k] = L[i]
                 i += 1
             else:

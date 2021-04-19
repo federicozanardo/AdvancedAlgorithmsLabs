@@ -1,7 +1,7 @@
 #!/user/bin/env python3
 
 import sys
-
+sys.path.append('../')
 """
     Heap (binary)
     -----------------------------------------
@@ -13,6 +13,8 @@ class Node :
         self.index = index
         self.weight = weight
     
+    def toTuple(self):
+        return (self.index, self.weight)
     # def setIndex(self, index):
     #     self.index = index
 
@@ -42,6 +44,14 @@ class Heap:
                 self.list[index], self.list[index // 2] = self.list[index // 2], self.list[index]
             index //= 2
 
+    def search(self, index):
+        for node in self.list:
+            if node != 0:
+                if node.index == int(index):
+                    return True
+                    break
+        return False
+
     def insert(self, node):
         self.list.append(node)
         self.currentSize += 1
@@ -55,7 +65,7 @@ class Heap:
             index = minChild
 
     def minChild(self, index):
-        if (index * 2)+1 > self.current_size:
+        if (index * 2)+1 > self.currentSize:
             return index * 2
         else:
             if self.list[index*2].weight < self.list[(index*2)+1].weight:
@@ -66,7 +76,7 @@ class Heap:
     def extractMin(self):
         
         if len(self.list) == 1:
-            return Nan
+            return None
         minEl = self.list[1]
         self.list[1] = self.list[self.currentSize]
         *self.list, _ = self.list

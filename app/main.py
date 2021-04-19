@@ -19,6 +19,7 @@ from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder as loadFromFolder
 from algorithms.utils import loadFromFile as loadFromFile
 from algorithms.mst import MST
+from algorithms.prim import Prim
 import sys
 from os import walk, path
 import time
@@ -64,7 +65,9 @@ def main():
     graph = loadFromFile(dirpath)
 
     mst = MST()
+    #prim = Prim()
     final_graph = mst.kruskal_naive(graph)
+    #final_graph = prim.prim_mst(graph, 1)
 
     print("Execution time: " + str(round(time.time()-start, 5)) + "s")
 

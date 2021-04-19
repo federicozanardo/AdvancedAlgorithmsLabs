@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+
 class DisjointSet:
     def __init__(self, n):
         self.nodes = [DisjointSetNode] * n

@@ -23,8 +23,8 @@ class Prim:
 
     def prim_mst(self, G, s):
         # Initialization & Q <- V
-        key = defaultdict(list)
-        parent = defaultdict(list)
+        key = {}
+        parent = {} #defaultdict(list)
 
         Q = Heap()
 
@@ -40,6 +40,6 @@ class Prim:
             u = (Q.extractMin()).toTuple()
             for (v,w) in G.graph[str(u[0])]:
                 if Q.search(v) and float(w) < key[int(v)]:
-                    print('a')
                     parent[int(v)] = u
                     key[int(v)] = float(w)
+        

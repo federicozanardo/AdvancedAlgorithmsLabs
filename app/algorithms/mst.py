@@ -1,5 +1,4 @@
 import copy
-from collections import defaultdict
 import sys
 
 sys.path.append('../')
@@ -9,10 +8,10 @@ from data_structures.graph import Graph
 
 
 class MST:
-    DISCOVERY_EDGE = 0
-    CROSS_EDGE = 1
 
-    # Pseudo-code
+    # Pseudo-codice Kruskal naive
+    #
+    # Complessità temporale: O(m * n)
     #
     # Kruskal-Naive(G)
     #     A = empty_set
@@ -21,105 +20,79 @@ class MST:
     #         if A U {e} is acyclic
     #             A = A U {e}
     #     return A
-
     def kruskal_naive(self, G):
         A = Graph()
+
+        for i in range(len(G.V)):
+            A.add_vertex(i + 1)
 
         self._mergeSort(G.E, 0, len(G.E) - 1)
 
         for (u, v, w) in G.E:
             if self._is_acyclic(A, (u, v, w)):
-                A.add_vertex(u)
-                A.add_vertex(v)
                 A.add_edge(u, v, w)
 
             # Ottimizzazione: mi fermo quando ho aggiunto n - 1 archi
-            if len(G.V) == len(A.E) - 1:
+            if len(A.E) == (len(G.V) - 1):
                 break
 
         return A
 
     def _is_acyclic(self, A: Graph, e):
         (u, v, w) = e
-        # A_graph = copy.deepcopy(A)  # TODO: optimization 
-
-        A.add_vertex(u)
-        A.add_vertex(v)
         A.add_edge(u, v, w)
-
-        # FIXME: before was: s = A_graph.V[0]
-        firstVertex = A.V.pop()
-        s = firstVertex
-        A.V.add(firstVertex)
-        flag = self._check_cross_edge(self.BFS(A, s))
-
-        # TODO: remove edge
-        A.E.remove((u, v, w))
-        indexU = 0
-        for x in A.graph[u]:
-            if x != (v, w):
-                indexU += 1
-            else:
-                break
-
-        indexV = 0
-        for x in A.graph[v]:
-            if x != (u, w):
-                indexV += 1
-            else:
-                break
-
-        A.graph[u].pop(indexU)
-        A.graph[v].pop(indexV)
-
+        flag = self.isCyclic(A)
+        A.remove_edge(u, v, w)
         return not flag
 
-    def BFS(self, G: Graph, s):
-        # Create a queue
-        Q = []
+    # Returns true if the graph
+    # contains a cycle, else false.
+    def isCyclic(self, G):
 
-        vertices_visited = defaultdict(bool)
-        for v in G.V:
-            vertices_visited[v] = False
+        # Mark all the vertices
+        # as not visited
+        visited = [False] * (len(G.V) + 1)
 
-        # None = not visited
-        # 0 = discovery edge
-        # 1 = cross edge
-        edges_visited = defaultdict()
+        # Call the recursive helper
+        # function to detect cycle in different
+        # DFS trees
+        for i in range(len(G.V)):
 
-        for (u, v, w) in G.E:
-            edges_visited[(u, v)] = None
+            # Don't recur for u if it
+            # is already visited
+            if not visited[(i + 1)]:
+                if self.isCyclicUtil(G, (i + 1), visited, -1):
+                    return True
 
-        Q.append(s)
-
-        vertices_visited[s] = True
-
-        while Q != []:
-            v = Q.pop(0)
-
-            for (u, w) in G.graph[v]:
-                if (u, v) in edges_visited:
-                    e = (u, v)
-                else:
-                    e = (v, u)
-
-                if edges_visited[e] is None:
-                    if not vertices_visited[u]:
-                        edges_visited[e] = self.DISCOVERY_EDGE
-                        vertices_visited[u] = True
-                        Q.append(u)
-                    else:
-                        edges_visited[e] = self.CROSS_EDGE
-
-        return edges_visited
-
-    def _check_cross_edge(self, edges_visited):
-        for w in edges_visited:
-            if edges_visited[w] == 1:
-                return True
         return False
 
-    # Pseudo-code
+    def isCyclicUtil(self, G, v, visited, parent):
+        # Mark the current node as visited
+        visited[v] = True
+
+        # Recur for all the vertices
+        # adjacent to this vertex
+        for e in G.graph[v]:
+            (u, w) = e
+
+            # If the node is not
+            # visited then recurse on it
+            if not visited[u]:
+                if self.isCyclicUtil(G, u, visited, v):
+                    return True
+
+            # If an adjacent vertex is
+            # visited and not parent
+            # of current vertex,
+            # then there is a cycle
+            elif parent != u:
+                return True
+
+        return False
+
+    # Pseudo-codice Kruskal con Union-Find
+    #
+    # Complessità temporale: O(m * log(n))
     #
     # Kruskal-Union-Find(G, w)
     #   A = empty_set
@@ -197,3 +170,11 @@ class MST:
             arr[k] = R[j]
             j += 1
             k += 1
+
+    def get_mst_weight(self, E):
+        summation = 0
+
+        for (u, v, w) in E:
+            summation += int(w)
+
+        return summation

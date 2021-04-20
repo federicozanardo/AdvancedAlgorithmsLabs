@@ -4,13 +4,13 @@ sys.path.append('../')
 
 
 class DisjointSet:
-    def __init__(self):
-        self.parents = [math.inf]
-        self.sizes = [0]
+    def __init__(self, n):
+        self.parents = [math.inf] * (n + 1)
+        self.sizes = [0] * (n + 1)
 
     def make_set(self, x: int):
-        self.parents.append(x)
-        self.sizes.append(1)
+        self.parents[x] = x
+        self.sizes[x] = 1
 
     def find_set(self, x: int):
         root = x

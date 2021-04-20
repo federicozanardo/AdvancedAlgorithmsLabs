@@ -19,6 +19,7 @@ from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
+from algorithms.utils import Loader
 from algorithms.mst import MST
 from algorithms.prim import Prim
 import sys
@@ -87,7 +88,7 @@ def main():
         mst = MST()
         final_graph = mst.kruskal_union_find(graph)
 
-    print(">" + col.OKGREEN + " Execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
+    print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 
 
 def executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, lock):
@@ -98,14 +99,15 @@ def executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, lock):
 
     # testing.. executeSingleThreadCalculus("./output_prim_" + outputfilePostfix, "prim", graphs[0], 1, lock)
 
-    print("Executing Prim [", end="")
+    loader = Loader("Executing Prim...", "Executing Prim... COMPLETED!", 0.05).start()
+
     for graph in graphs:
         output = "./output_prim_" + outputfilePostfix
         executor.submit(executeSingleThreadCalculus, output, "prim", graph, datasetNumber, lock)
         datasetNumber += 1
     
     executor.shutdown(wait=True)
-    print("] Done!")
+    loader.stop()
     
 
 def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResultLock):
@@ -132,7 +134,7 @@ def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResul
         file_object = open(outputfile, 'a')
         file_object.write(str(filename) + "\t" + str(len(graph.V)) + "\t" + "{:.7f}".format(endtime) + "\n")
         file_object.close()
-        print("x", end="")
+    
 
 
 if __name__ == "__main__":

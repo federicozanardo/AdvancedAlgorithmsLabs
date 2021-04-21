@@ -26,7 +26,7 @@ class MST:
         for i in range(len(G.V)):
             A.add_vertex(i + 1)
 
-        self._mergeSort(G.E, 0, len(G.E) - 1)
+        self._merge_sort(G.E, 0, len(G.E) - 1)
 
         for (u, v, w) in G.E:
             if self._is_acyclic(A, (u, v, w)):
@@ -40,52 +40,30 @@ class MST:
 
     def _is_acyclic(self, A: Graph, e):
         (u, v, w) = e
-        A.add_edge(u, v, w)
-        flag = self.isCyclic(A)
-        A.remove_edge(u, v, w)
-        return not flag
 
-    # Returns true if the graph
-    # contains a cycle, else false.
-    def isCyclic(self, G):
+        if u != v:
+            if A.graph[u] == [] or A.graph[v] == []:
+                return True
+            else:
+                return not self.is_there_a_path(A, u, v)
+        else:
+            return False
 
-        # Mark all the vertices
-        # as not visited
+    def is_there_a_path(self, G, source_node, destination_node):
+        # Imposto tutti i vertici come non visitati
         visited = [False] * (len(G.V) + 1)
 
-        # Call the recursive helper
-        # function to detect cycle in different
-        # DFS trees
-        for i in range(len(G.V)):
+        return self.is_there_a_path_util(G, source_node, destination_node, visited)
 
-            # Don't recur for u if it
-            # is already visited
-            if not visited[(i + 1)]:
-                if self.isCyclicUtil(G, (i + 1), visited, -1):
-                    return True
+    def is_there_a_path_util(self, G, current_node, destination_node, visited):
+        if destination_node == current_node:
+            return True
 
-        return False
+        visited[current_node] = True
 
-    def isCyclicUtil(self, G, v, visited, parent):
-        # Mark the current node as visited
-        visited[v] = True
-
-        # Recur for all the vertices
-        # adjacent to this vertex
-        for e in G.graph[v]:
+        for e in G.graph[current_node]:
             (u, w) = e
-
-            # If the node is not
-            # visited then recurse on it
-            if not visited[u]:
-                if self.isCyclicUtil(G, u, visited, v):
-                    return True
-
-            # If an adjacent vertex is
-            # visited and not parent
-            # of current vertex,
-            # then there is a cycle
-            elif parent != u:
+            if not visited[u] and self.is_there_a_path_util(G, u, destination_node, visited):
                 return True
 
         return False
@@ -112,7 +90,7 @@ class MST:
             ds.make_set(int(v))
 
         # Ordina i lati con merge sort (complessità: O(nlogn))
-        self._mergeSort(G.E, 0, len(G.E) - 1)
+        self._merge_sort(G.E, 0, len(G.E) - 1)
 
         for (u, v, w) in G.E:
             if ds.find_set(int(u)) != ds.find_set(int(v)):
@@ -121,12 +99,12 @@ class MST:
 
         return A
 
-    def _mergeSort(self, array, left, right):
+    def _merge_sort(self, array, left, right):
         if left < right:
             m = (left + (right - 1)) // 2
 
-            self._mergeSort(array, left, m)
-            self._mergeSort(array, m + 1, right)
+            self._merge_sort(array, left, m)
+            self._merge_sort(array, m + 1, right)
             self._merge(array, left, m, right)
 
     def _merge(self, arr, left, m, right):

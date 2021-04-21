@@ -77,16 +77,23 @@ def main():
     if sys.argv[1] == "all":
         executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
     elif sys.argv[1] == "prim":
-        prim = Prim()
-        prim.prim_mst(graph, 1)
+        for graph in graphs:
+            prim = Prim()
+            mst = MST()
+            key = prim.prim_mst(graph, 1)
+            print(prim.get_weight(key))
 
     elif sys.argv[1] == "kruskal":
-        mst = MST()
-        final_graph = mst.kruskal_naive(graph)
+        for graph in graphs:
+            mst = MST()
+            final_graph = mst.kruskal_naive(graph)
+            print(mst.get_mst_weight(final_graph.E))
 
     elif sys.argv[1] == "kruskal-opt":
-        mst = MST()
-        final_graph = mst.kruskal_union_find(graph)
+        for graph in graphs:
+            mst = MST()
+            final_graph = mst.kruskal_union_find(graph)
+            print(mst.get_mst_weight(final_graph))
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 
@@ -94,23 +101,46 @@ def main():
 def executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, lock):
 
     outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=24)
     datasetNumber = 1
 
     # testing.. executeSingleThreadCalculus("./output_prim_" + outputfilePostfix, "prim", graphs[0], 1, lock)
 
-    loader = Loader("Executing Prim...", "Executing Prim... COMPLETED!", 0.05).start()
+    # ======= PRIM ========
+    executorPrim = concurrent.futures.ThreadPoolExecutor(max_workers=24)
+    loaderPrim = Loader("Executing Prim...", "Executing Prim... COMPLETED!", 0.05).start()
 
     for graph in graphs:
         output = "./output_prim_" + outputfilePostfix
-        executor.submit(executeSingleThreadCalculus, output, "prim", graph, datasetNumber, lock)
-        datasetNumber += 1
-    
-    executor.shutdown(wait=True)
-    loader.stop()
-    
+        executorPrim.submit(executeSingleThreadCalculus, output, "prim", graph, datasetNumber, lock)
+        datasetNumber += 1    
+    executorPrim.shutdown(wait=True)
+    loaderPrim.stop()
 
-def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResultLock):
+    # ======= KRUSKAL NAIVE ========
+    executorKruskal = concurrent.futures.ThreadPoolExecutor(max_workers=24)
+    loaderKruskal = Loader("Executing Kruskal Naive...", "Executing Kruskal Naive... COMPLETED!", 0.05).start()
+
+    for graph in graphs:
+        output = "./output_kruskal_" + outputfilePostfix
+        executorKruskal.submit(executeSingleThreadCalculus, output, "kruskal", graph, datasetNumber, lock)
+        datasetNumber += 1    
+    executorKruskal.shutdown(wait=True)
+    loaderKruskal.stop()
+
+    # ======= KRUSKAL UNION FIND ========
+    executorKruskalUF = concurrent.futures.ThreadPoolExecutor(max_workers=24)
+    loaderKruskalUF = Loader("Executing Kruskal-UF...", "Executing Kruskal-UF... COMPLETED!", 0.05).start()
+
+    for graph in graphs:
+        output = "./output_kruskal_uf_" + outputfilePostfix
+        executorKruskalUF.submit(executeSingleThreadCalculus, output, "kruskal-opt", graph, datasetNumber, lock)
+        datasetNumber += 1    
+    executorKruskalUF.shutdown(wait=True)
+    loaderKruskalUF.stop()
+
+
+
+def executeSingleThreadCalculus(outputfile, algoname, graph, filenumber, fileResultLock):
 
     localStartTime = time.time()
 
@@ -121,10 +151,12 @@ def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResul
     elif algoname == "kruskal":
         mst = MST()
         final_graph = mst.kruskal_naive(graph)
+        kw = mst.get_mst_weight(final_graph.E)
 
     elif algoname == "kruskal-opt":
         mst = MST()
         final_graph = mst.kruskal_union_find(graph)
+        kw = mst.get_mst_weight(final_graph)
     else:
         pass
 
@@ -132,7 +164,7 @@ def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResul
 
     with fileResultLock: 
         file_object = open(outputfile, 'a')
-        file_object.write(str(filename) + "\t" + str(len(graph.V)) + "\t" + "{:.7f}".format(endtime) + "\n")
+        file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" + "{:.7f}".format(endtime) + "\t" + str(kw) + "\n")
         file_object.close()
     
 

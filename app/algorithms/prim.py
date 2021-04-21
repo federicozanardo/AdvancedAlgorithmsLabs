@@ -23,23 +23,33 @@ class Prim:
 
     def prim_mst(self, G, s):
         # Initialization & Q <- V
-        key = {}
-        parent = {} #defaultdict(list)
+        key = defaultdict(list)
+        parent = defaultdict(list)
 
         Q = Heap()
 
         for node in G.V:
-            key[int(node)] = 0 if s==int(node) else float('inf')
+            key[node] = 0 if s==node else float('inf')
             #key.insert(int(node), 0 if s==node else float('inf'))
-            parent[int(node)] = None
+            parent[node] = None
             #parent.insert(int(node), None)
-            Q.insert(Node(int(node), key[int(node)]))
+            Q.insert(Node(node, key[node]))
 
         # algoritmo
         while Q.currentSize != 0:
             u = (Q.extractMin()).toTuple()
-            for (v,w) in G.graph[str(u[0])]:
-                if Q.search(v) and float(w) < key[int(v)]:
-                    parent[int(v)] = u
-                    key[int(v)] = float(w)
+            for (v,w) in G.graph[u[0]]:
+                if Q.search(v) and w < key[v]:
+                    parent[v] = u
+                    key[v] = w
+                    
+        return key
+
+    def get_weight(self, key):
+        sum = 0
+        for (k, v) in key.items():
+            #print(k)
+            if v!= float('inf'):
+                sum += v
+        return sum
         

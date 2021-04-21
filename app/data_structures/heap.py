@@ -55,7 +55,7 @@ class Heap:
     def insert(self, node):
         self.list.append(node)
         self.currentSize += 1
-        lastPos = self.heapifyUp(self.currentSize)
+        self.heapifyUp(self.currentSize)
     
     def heapifyDown(self, index):
         while (index * 2) <= self.currentSize :

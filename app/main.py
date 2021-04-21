@@ -16,15 +16,19 @@ import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
 from algorithms.utils import populateGraphFromFile as populate
-from algorithms.utils import loadFromFolder as loadFromFolder
-from algorithms.utils import loadFromFile as loadFromFile
+from algorithms.utils import loadFromFolder
+from algorithms.utils import loadFromFile
+from algorithms.utils import bcolors as col
+from algorithms.utils import Loader
 from algorithms.mst import MST
+from algorithms.prim import Prim
 import sys
 from os import walk, path
 import time
+import concurrent.futures
+import multiprocessing
 
 # TODO: adapt the code to the one we need
-
 
 def measure_run_time(list_size, num_calls, num_instances):
     sum_times = 0.0
@@ -47,26 +51,90 @@ def measure_run_time(list_size, num_calls, num_instances):
 # print("Average time (ns):", avg_time)
 
 
+
 def main():
 
     start = time.time()  # start timer
-
+    fileResultLock = multiprocessing.Lock()
+    mode = None
+    
     # read datasets
-    dirpath = sys.argv[1]
+    dirpath = sys.argv[2]
+
     assert path.isfile(dirpath) or path.isdir(
         dirpath), "File or folder not found"
 
-    # Caricamento da cartella
-    # graphs = loadFromFolder(dirpath)
+    if path.isdir(dirpath):
+        graphs = loadFromFolder(dirpath)
+        mode = 1
+    elif path.isfile(dirpath):     
+        graph = loadFromFile(dirpath)
+        graphs = [graph]
+        mode = 2
+
+    # select what to do
+
+    if sys.argv[1] == "all":
+        executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
+    elif sys.argv[1] == "prim":
+        prim = Prim()
+        prim.prim_mst(graph, 1)
+
+    elif sys.argv[1] == "kruskal":
+        mst = MST()
+        final_graph = mst.kruskal_naive(graph)
+
+    elif sys.argv[1] == "kruskal-opt":
+        mst = MST()
+        final_graph = mst.kruskal_union_find(graph)
+
+    print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 
 
-    # Caricamento file singolo
-    graph = loadFromFile(dirpath)
+def executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, lock):
 
-    mst = MST()
-    final_graph = mst.kruskal_naive(graph)
+    outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=24)
+    datasetNumber = 1
 
-    print("Execution time: " + str(round(time.time()-start, 5)) + "s")
+    # testing.. executeSingleThreadCalculus("./output_prim_" + outputfilePostfix, "prim", graphs[0], 1, lock)
+
+    loader = Loader("Executing Prim...", "Executing Prim... COMPLETED!", 0.05).start()
+
+    for graph in graphs:
+        output = "./output_prim_" + outputfilePostfix
+        executor.submit(executeSingleThreadCalculus, output, "prim", graph, datasetNumber, lock)
+        datasetNumber += 1
+    
+    executor.shutdown(wait=True)
+    loader.stop()
+    
+
+def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResultLock):
+
+    localStartTime = time.time()
+
+    if algoname == "prim":
+        prim = Prim()
+        prim.prim_mst(graph, 1)
+
+    elif algoname == "kruskal":
+        mst = MST()
+        final_graph = mst.kruskal_naive(graph)
+
+    elif algoname == "kruskal-opt":
+        mst = MST()
+        final_graph = mst.kruskal_union_find(graph)
+    else:
+        pass
+
+    endtime = time.time()-localStartTime
+
+    with fileResultLock: 
+        file_object = open(outputfile, 'a')
+        file_object.write(str(filename) + "\t" + str(len(graph.V)) + "\t" + "{:.7f}".format(endtime) + "\n")
+        file_object.close()
+    
 
 
 if __name__ == "__main__":

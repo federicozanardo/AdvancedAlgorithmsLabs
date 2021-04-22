@@ -26,7 +26,7 @@ class Node :
 class Heap:
 
     def __init__(self):
-        self.list = [Node(float('-inf'), float('-inf'))]
+        self.list = [Node(0, float('-inf'))]
         self.currentSize = 0
     
     def parent(self, index):
@@ -53,12 +53,15 @@ class Heap:
     def searchAndUpdateWeight(self, index, newWeight):
         i = 0
         for node in self.list:
+            if i == 0:
+                i += 1
+                continue
             if node.index == index:
                 node.weight = float('-inf')
                 self.heapifyUp(i)
                 self.list[1].weight = newWeight
                 self.heapifyDown(1)
-                break
+                return
             else: 
                 i += 1
             

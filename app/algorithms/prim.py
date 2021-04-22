@@ -35,15 +35,14 @@ class Prim:
             #parent.insert(int(node), None)
             Q.insert(Node(node, key[node]))
 
-        
-
-        # algoritmo
+        Q.print()
+        # algoritmo che non sta funzionando
         while Q.currentSize != 0:
             Q.print()
             u = (Q.extractMin()).toTuple()
             for (v,w) in G.graph[u[0]]:
                 print(v)
-                print(Q.search(v))
+                #print(Q.search(v))
                 if Q.search(v) and w < key[v]:
                     print(v)
                     parent[v] = u

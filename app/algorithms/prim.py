@@ -35,20 +35,31 @@ class Prim:
             #parent.insert(int(node), None)
             Q.insert(Node(node, key[node]))
 
+        
+
         # algoritmo
         while Q.currentSize != 0:
+            Q.print()
             u = (Q.extractMin()).toTuple()
             for (v,w) in G.graph[u[0]]:
+                print(v)
+                print(Q.search(v))
                 if Q.search(v) and w < key[v]:
+                    print(v)
                     parent[v] = u
                     key[v] = w
-                    
+                    Q.searchAndUpdateWeight(v, w)
+                
+            print(G.graph[u[0]])
+            print(key)
+        for (x, y) in G.graph[u[0]]:
+            print(x)
         return key
 
     def get_weight(self, key):
         sum = 0
         for (k, v) in key.items():
-            #print(k)
+            #print(v)
             if v!= float('inf'):
                 sum += v
         return sum

@@ -26,7 +26,7 @@ class Node :
 class Heap:
 
     def __init__(self):
-        self.list = [0]
+        self.list = [Node(float('-inf'), float('-inf'))]
         self.currentSize = 0
     
     def parent(self, index):
@@ -46,11 +46,22 @@ class Heap:
 
     def search(self, index):
         for node in self.list:
-            if node != 0:
-                if node.index == int(index):
-                    return True
-                    break
+            if node.index == index:
+                return True
         return False
+    
+    def searchAndUpdateWeight(self, index, newWeight):
+        i = 0
+        for node in self.list:
+            if node.index == index:
+                node.weight = float('-inf')
+                self.heapifyUp(i)
+                self.list[1].weight = newWeight
+                self.heapifyDown(1)
+                break
+            else: 
+                i += 1
+            
 
     def insert(self, node):
         self.list.append(node)
@@ -87,8 +98,10 @@ class Heap:
     def print(self):
         for i in range(1, (self.currentSize//2)+1):
             
-            print(" PARENT : "+ str(self.list[i].weight)+" LEFT CHILD : "+
-                                str(self.list[2 * i].weight))
+            print(" PARENT: "+ str(self.list[i].index) + "(w." + str(self.list[i].weight)+") LEFT CHILD: "+ str(self.list[2*i].index) + "(w." +
+                                str(self.list[2 * i].weight) + ")", end="")
             if 2*i+1 <= self.currentSize : 
-                print(" RIGHT CHILD : " + str(self.list[2 * i + 1].weight))
+                print(" RIGHT CHILD: " + str(self.list[2*i+1].index) + "(w." + str(self.list[2 * i + 1].weight) + ")")
+            else:
+                print("")
             

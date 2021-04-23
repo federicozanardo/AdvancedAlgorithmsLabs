@@ -5,7 +5,7 @@ Module Docstring
 """
 
 __author__ = "E. Buratto, M. Sciacco, F. Zanardo"
-__version__ = "0.0.1"
+__version__ = "0.2.1"
 __license__ = "Unlicense"
 
 import argparse
@@ -23,6 +23,7 @@ from algorithms.utils import Loader
 from algorithms.mst import MST
 from algorithms.prim import Prim
 from multithreading.threads import executeSingleThreadCalculus,executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs
+from multithreading.measurements import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff
 import sys
 from os import walk, path
 import time
@@ -52,7 +53,8 @@ def main():
     # select what to do
 
     if sys.argv[1] == "all":
-        executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
+        # executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
+        executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(graphs, fileResultLock)
     
     if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
         for graph in graphs:
@@ -74,9 +76,6 @@ def main():
             print(mst.get_mst_weight(final_graph))
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
-
-
-
 
 
 if __name__ == "__main__":

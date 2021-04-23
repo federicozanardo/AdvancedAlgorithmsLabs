@@ -1,25 +1,3 @@
-# how to misurare il tempo bene
-
-# - qui ci sono calcoli complessi con una sola esecuzione dell'algoritmo
-# - if endtime - starttime < 1
-#     then
-#     for i in range(0, 999)
-#         esegui di nuovo
-#         time = time/i + timediquestociclo/i+1
-
-# misura il tempo
-# se il tempo è tra 0 e 1 s
-#     fallo 1000 volte
-#     prendi la media
-
-# se il tempo è tra 0.5 e 1 S
-#     fallo 100 volte
-#     prendi la media
-
-# altrimenti
-#     fallo una volta
-
-
 import argparse
 from random import randint
 import gc

@@ -185,12 +185,12 @@ def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumb
     # First execution
     
     averageTimePerQuartet = 0
-    #gc.disable()
+    gc.disable()
     for graph in graphs:
         localStartTime = time.perf_counter_ns()
         executeAlgorithm(algoname, graph)
         averageTimePerQuartet += time.perf_counter_ns()-localStartTime
-    #gc.enable()
+    gc.enable()
     
     averageTimePerQuartet /= 4
 

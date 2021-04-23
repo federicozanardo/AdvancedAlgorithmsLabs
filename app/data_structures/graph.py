@@ -6,15 +6,15 @@ sys.path.append('../')
 
 class Graph:
     def __init__(self):
-        self.graph = defaultdict(list)  # Adjacency list
+        self.graph = defaultdict(list)  # Lista di adiacenza
         self.V = set()
         self.E = []
 
     def add_vertex(self, value: int):
         self.V.add(value)
-        self.graph[value] = []
+        #self.graph[value] = [] --> :cry:
 
-    # assunzione: viene chiamato appena dopo gli addVertex
+    # Assunzione: viene chiamato appena dopo gli addVertex
     def add_edge(self, u: int, v: int, w: int):
         self.E.append((u, v, w))
         self.graph[u].append((v, w))
@@ -24,3 +24,12 @@ class Graph:
         self.E.remove((u, v, w))
         self.graph[u].remove((v, w))
         self.graph[v].remove((u, w))
+
+    def weightBetween(self, firstNode, secondNode):
+        minWeight = float('inf')
+
+        for index in range(0, len(self.E)):
+            if (self.E[index][0] == firstNode and self.E[index][1] == secondNode) or (self.E[index][1] == firstNode and self.E[index][0] == secondNode):
+                minWeight = self.E[index][2]
+                break
+        return minWeight

@@ -15,18 +15,12 @@ class Node :
     
     def toTuple(self):
         return (self.index, self.weight)
-    # def setIndex(self, index):
-    #     self.index = index
 
-    # def setWeight(self, weight):
-    #     self.weight = weight
-
-    
 
 class Heap:
 
     def __init__(self):
-        self.list = [0]
+        self.list = [Node(0, float('-inf'))] # nodo fittizio per avere array che partono da 1
         self.currentSize = 0
     
     def parent(self, index):
@@ -46,16 +40,30 @@ class Heap:
 
     def search(self, index):
         for node in self.list:
-            if node != 0:
-                if node.index == int(index):
-                    return True
-                    break
+            if node.index == index:
+                return True
         return False
+    
+    def searchAndUpdateWeight(self, index, newWeight):
+        i = 0
+        for node in self.list:
+            if i == 0:
+                i += 1
+                continue
+            if node.index == index:
+                self.list[i].weight = float('-inf')
+                self.heapifyUp(i)
+                self.list[1].weight = newWeight
+                self.heapifyDown(1)
+                return
+            else: 
+                i += 1
+            
 
     def insert(self, node):
         self.list.append(node)
         self.currentSize += 1
-        lastPos = self.heapifyUp(self.currentSize)
+        self.heapifyUp(self.currentSize)
     
     def heapifyDown(self, index):
         while (index * 2) <= self.currentSize :
@@ -79,7 +87,8 @@ class Heap:
             return None
         minEl = self.list[1]
         self.list[1] = self.list[self.currentSize]
-        *self.list, _ = self.list
+        # *self.list, _ = self.list
+        del self.list[self.currentSize]
         self.currentSize -= 1
         self.heapifyDown(1)
         return minEl
@@ -87,8 +96,10 @@ class Heap:
     def print(self):
         for i in range(1, (self.currentSize//2)+1):
             
-            print(" PARENT : "+ str(self.list[i].weight)+" LEFT CHILD : "+
-                                str(self.list[2 * i].weight))
+            print(" PARENT: "+ str(self.list[i].index) + "(w." + str(self.list[i].weight)+") LEFT CHILD: "+ str(self.list[2*i].index) + "(w." +
+                                str(self.list[2 * i].weight) + ")", end="")
             if 2*i+1 <= self.currentSize : 
-                print(" RIGHT CHILD : " + str(self.list[2 * i + 1].weight))
+                print(" RIGHT CHILD: " + str(self.list[2*i+1].index) + "(w." + str(self.list[2 * i + 1].weight) + ")")
+            else:
+                print("")
             

@@ -22,35 +22,12 @@ from algorithms.utils import bcolors as col
 from algorithms.utils import Loader
 from algorithms.mst import MST
 from algorithms.prim import Prim
+from multithreading.threads import executeSingleThreadCalculus,executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs
 import sys
 from os import walk, path
 import time
 import concurrent.futures
 import multiprocessing
-
-# TODO: adapt the code to the one we need
-
-def measure_run_time(list_size, num_calls, num_instances):
-    sum_times = 0.0
-    for i in range(num_instances):
-        alist = [randint(0, 10000) for i in range(list_size)]
-        target = randint(0, 10000)
-        gc.disable()
-        start_time = perf_counter_ns()
-        for i in range(num_calls):
-            print(i)
-            # linear_search(alist, target)
-        end_time = perf_counter_ns()
-        gc.enable()
-        sum_times += (end_time - start_time)/num_calls
-    avg_time = int(round(sum_times/num_instances))
-    # return average time in nanoseconds
-    return avg_time
-
-# avg_time = measure_run_time(10, 100000, 4)
-# print("Average time (ns):", avg_time)
-
-
 
 def main():
 
@@ -76,65 +53,30 @@ def main():
 
     if sys.argv[1] == "all":
         executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
-    elif sys.argv[1] == "prim":
-        prim = Prim()
-        prim.prim_mst(graph, 1)
+    
+    if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
+        for graph in graphs:
+            prim = Prim()
+            mst = MST()
+            key,_ = prim.prim_mst(graph, 1)
+            print(prim.get_weight(key))
 
-    elif sys.argv[1] == "kruskal":
-        mst = MST()
-        final_graph = mst.kruskal_naive(graph)
+    if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":
+        for graph in graphs:
+            mst = MST()
+            final_graph = mst.kruskal_naive(graph)
+            print(mst.get_mst_weight(final_graph.E))
 
-    elif sys.argv[1] == "kruskal-opt":
-        mst = MST()
-        final_graph = mst.kruskal_union_find(graph)
+    if sys.argv[1] == "kruskal-opt" or sys.argv[1] == "all-single":
+        for graph in graphs:
+            mst = MST()
+            final_graph = mst.kruskal_union_find(graph)
+            print(mst.get_mst_weight(final_graph))
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 
 
-def executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, lock):
 
-    outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=24)
-    datasetNumber = 1
-
-    # testing.. executeSingleThreadCalculus("./output_prim_" + outputfilePostfix, "prim", graphs[0], 1, lock)
-
-    loader = Loader("Executing Prim...", "Executing Prim... COMPLETED!", 0.05).start()
-
-    for graph in graphs:
-        output = "./output_prim_" + outputfilePostfix
-        executor.submit(executeSingleThreadCalculus, output, "prim", graph, datasetNumber, lock)
-        datasetNumber += 1
-    
-    executor.shutdown(wait=True)
-    loader.stop()
-    
-
-def executeSingleThreadCalculus(outputfile, algoname, graph, filename, fileResultLock):
-
-    localStartTime = time.time()
-
-    if algoname == "prim":
-        prim = Prim()
-        prim.prim_mst(graph, 1)
-
-    elif algoname == "kruskal":
-        mst = MST()
-        final_graph = mst.kruskal_naive(graph)
-
-    elif algoname == "kruskal-opt":
-        mst = MST()
-        final_graph = mst.kruskal_union_find(graph)
-    else:
-        pass
-
-    endtime = time.time()-localStartTime
-
-    with fileResultLock: 
-        file_object = open(outputfile, 'a')
-        file_object.write(str(filename) + "\t" + str(len(graph.V)) + "\t" + "{:.7f}".format(endtime) + "\n")
-        file_object.close()
-    
 
 
 if __name__ == "__main__":

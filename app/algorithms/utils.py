@@ -19,9 +19,9 @@ def populateGraphFromFile(filepath):
 
     for i in range(n_edges):
         row = formatted_file[i+1].split(' ')
-        g.add_vertex(row[0])
-        g.add_vertex(row[1])
-        g.add_edge(row[0], row[1], row[2])
+        g.add_vertex(int(row[0]))
+        g.add_vertex(int(row[1]))
+        g.add_edge(int(row[0]), int(row[1]), int(row[2]))
 
     file.close()
 
@@ -38,7 +38,7 @@ def loadFromFolder(dirpath):
     for root, dirs, files in walk(dirpath):  # load filenames
         for filename in files:
             filenames.append(filename)
-    filenames.sort()  # lmao
+    filenames.sort() 
 
     for file in filenames:  # load files
         g = populateGraphFromFile(dirpath + '/' + file)
@@ -115,3 +115,4 @@ class Loader:
     def __exit__(self, exc_type, exc_value, tb):
         # handle exceptions with those variables ^
         self.stop()
+        

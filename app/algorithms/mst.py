@@ -18,6 +18,7 @@ class MST:
         algorithm = KruskalUnionFind()
         return algorithm.kruskal_union_find(G)
 
+    
     def get_mst_weight(self, E):
         summation = 0
 

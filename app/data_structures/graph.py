@@ -24,3 +24,12 @@ class Graph:
         self.E.remove((u, v, w))
         self.graph[u].remove((v, w))
         self.graph[v].remove((u, w))
+
+    def weightBetween(self, firstNode, secondNode):
+        minWeight = float('inf')
+
+        for index in range(0, len(self.E)):
+            if (self.E[index][0] == firstNode and self.E[index][1] == secondNode) or (self.E[index][1] == firstNode and self.E[index][0] == secondNode):
+                minWeight = self.E[index][2]
+                break
+        return minWeight

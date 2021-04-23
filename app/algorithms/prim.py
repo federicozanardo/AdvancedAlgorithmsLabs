@@ -35,25 +35,36 @@ class Prim:
             #parent.insert(int(node), None)
             Q.insert(Node(node, key[node]))
 
-        Q.print()
-        # algoritmo che non sta funzionando
+        # algoritmo
         while Q.currentSize != 0:
             Q.print()
             u = (Q.extractMin()).toTuple()
             for (v,w) in G.graph[u[0]]:
                 print(v)
-                #print(Q.search(v))
+                print(Q.search(v))
                 if Q.search(v) and w < key[v]:
                     print(v)
                     parent[v] = u
                     key[v] = w
-                    Q.searchAndUpdateWeight(v, w)
+                    Q.searchAndUpdateWeight(v, key[v])
                 
             print(G.graph[u[0]])
             print(key)
         for (x, y) in G.graph[u[0]]:
             print(x)
         return key
+
+    def ahaha(self, G, u, v):
+        minWeight = float('inf')
+        found = False
+        for i in range(len(G.E)):
+            if found: 
+                break
+            if G.graph[i] == u and G.graph[i] == v: 
+                minWeight = G.graph[i]
+                found = True
+        return minWeight
+
 
     def get_weight(self, key):
         sum = 0

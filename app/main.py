@@ -58,7 +58,7 @@ def main():
         for graph in graphs:
             prim = Prim()
             mst = MST()
-            key = prim.prim_mst(graph, 1)
+            key,_ = prim.prim_mst(graph, 1)
             print(prim.get_weight(key))
 
     if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":

@@ -57,10 +57,11 @@ class Heap:
                 i += 1
                 continue
             if node.index == index:
-                node.weight = float('-inf')
+                self.list[i].weight = float('-inf')
                 self.heapifyUp(i)
                 self.list[1].weight = newWeight
                 self.heapifyDown(1)
+                print("======== UPDATED Node pos,index = ",i, index)
                 return
             else: 
                 i += 1
@@ -93,7 +94,8 @@ class Heap:
             return None
         minEl = self.list[1]
         self.list[1] = self.list[self.currentSize]
-        *self.list, _ = self.list
+        # *self.list, _ = self.list
+        del self.list[self.currentSize]
         self.currentSize -= 1
         self.heapifyDown(1)
         return minEl

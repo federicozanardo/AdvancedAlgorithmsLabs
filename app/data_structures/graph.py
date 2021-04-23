@@ -12,7 +12,7 @@ class Graph:
 
     def add_vertex(self, value: int):
         self.V.add(value)
-        self.graph[value] = []
+        #self.graph[value] = []
 
     # assunzione: viene chiamato appena dopo gli addVertex
     def add_edge(self, u: int, v: int, w: int):

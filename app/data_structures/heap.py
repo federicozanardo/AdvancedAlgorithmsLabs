@@ -15,18 +15,12 @@ class Node :
     
     def toTuple(self):
         return (self.index, self.weight)
-    # def setIndex(self, index):
-    #     self.index = index
 
-    # def setWeight(self, weight):
-    #     self.weight = weight
-
-    
 
 class Heap:
 
     def __init__(self):
-        self.list = [Node(0, float('-inf'))]
+        self.list = [Node(0, float('-inf'))] # nodo fittizio per avere array che partono da 1
         self.currentSize = 0
     
     def parent(self, index):
@@ -61,7 +55,6 @@ class Heap:
                 self.heapifyUp(i)
                 self.list[1].weight = newWeight
                 self.heapifyDown(1)
-                print("======== UPDATED Node pos,index = ",i, index)
                 return
             else: 
                 i += 1

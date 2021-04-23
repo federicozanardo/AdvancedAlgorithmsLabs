@@ -38,7 +38,7 @@ def loadFromFolder(dirpath):
     for root, dirs, files in walk(dirpath):  # load filenames
         for filename in files:
             filenames.append(filename)
-    filenames.sort()  # lmao
+    filenames.sort() 
 
     for file in filenames:  # load files
         g = populateGraphFromFile(dirpath + '/' + file)

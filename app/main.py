@@ -53,7 +53,9 @@ def main():
     # select what to do
 
     if sys.argv[1] == "all":
-        # executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
+        executeTheSuperFancyPoolThreadsToCalculateMegaComplexGraphs(graphs, fileResultLock)
+
+    if sys.argv[1] == "all-quartet":
         executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(graphs, fileResultLock)
     
     if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
@@ -63,17 +65,17 @@ def main():
             key,_ = prim.prim_mst(graph, 1)
             print(prim.get_weight(key))
 
-    if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":
-        for graph in graphs:
-            mst = MST()
-            final_graph = mst.kruskal_naive(graph)
-            print(mst.get_mst_weight(final_graph.E))
-
     if sys.argv[1] == "kruskal-opt" or sys.argv[1] == "all-single":
         for graph in graphs:
             mst = MST()
             final_graph = mst.kruskal_union_find(graph)
             print(mst.get_mst_weight(final_graph))
+
+    if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":
+        for graph in graphs:
+            mst = MST()
+            final_graph = mst.kruskal_naive(graph)
+            print(mst.get_mst_weight(final_graph.E))
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 

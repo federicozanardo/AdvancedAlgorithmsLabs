@@ -99,7 +99,8 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(
 
     # ======= PRIM ========
     # executorPrim = concurrent.futures.ProcessPoolExecutor(max_workers=17)
-    loaderPrim = Loader("Executing quartet Prim...", "Executing quartet Prim... COMPLETED!", 0.05).start()
+    #loaderPrim = Loader("Executing quartet Prim...", "Executing quartet Prim... COMPLETED!", 0.05).start()
+    print("Executing quartet Prim...")
     datasetNumber = 1
     graphsAccumulator = []
     datasetNumberAccumulator = []
@@ -107,7 +108,6 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(
     for graph in graphs:
         if foo == 4:
             foo = 0
-            print("Executing till dataset number ", str(datasetNumberAccumulator[3]))
             output = "./quartet_prim_" + outputfilePostfix
             #executorPrim.submit(executeSingleThreadQuartetMeasurement, output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
             executeSingleThreadQuartetMeasurement(output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
@@ -121,31 +121,54 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(
             foo += 1
           
     # executorPrim.shutdown(wait=True)
-    loaderPrim.stop()
+    #loaderPrim.stop()
 
-    # # ======= KRUSKAL NAIVE ========
-    # executorKruskal = concurrent.futures.ThreadPoolExecutor(max_workers=17)
-    # loaderKruskal = Loader("Executing quartet Kruskal Naive...", "Executing quartet Kruskal Naive... COMPLETED!", 0.05).start()
-    # datasetNumber = 1
-
-    # for graph in graphs:
-    #     output = "./output_quartet_kruskal_" + outputfilePostfix
-    #     executorKruskal.submit(executeSingleThreadQuartetMeasurement, output, "kruskal", graph, datasetNumber, lock)
-    #     datasetNumber += 1    
-    # executorKruskal.shutdown(wait=True)
-    # loaderKruskal.stop()
 
     # # ======= KRUSKAL UNION FIND ========
-    # executorKruskalUF = concurrent.futures.ThreadPoolExecutor(max_workers=17)
-    # loaderKruskalUF = Loader("Executing quartet Kruskal-UF...", "Executing quartet Kruskal-UF... COMPLETED!", 0.05).start()
-    # datasetNumber = 1
 
-    # for graph in graphs:
-    #     output = "./output_quartet_kruskal_uf_" + outputfilePostfix
-    #     executorKruskalUF.submit(executeSingleThreadQuartetMeasurement, output, "kruskal-opt", graph, datasetNumber, lock)
-    #     datasetNumber += 1    
-    # executorKruskalUF.shutdown(wait=True)
-    # loaderKruskalUF.stop()
+    print("Executing quartet Kruskal Union Find...")
+    datasetNumber = 1
+    graphsAccumulator = []
+    datasetNumberAccumulator = []
+    foo = 0
+    for graph in graphs:
+        if foo == 4:
+            foo = 0
+            output = "./quartet_kruskal_uf_" + outputfilePostfix
+            #executorPrim.submit(executeSingleThreadQuartetMeasurement, output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
+            executeSingleThreadQuartetMeasurement(output, "kruskal-opt", graphsAccumulator, datasetNumberAccumulator, lock)
+            graphsAccumulator = []
+            datasetNumberAccumulator = []
+            
+        if foo != 4:
+            datasetNumberAccumulator.append(datasetNumber)
+            graphsAccumulator.append(graph)
+            datasetNumber += 1
+            foo += 1
+
+
+    # # ======= KRUSKAL NAIVE ========
+
+    print("Executing quartet Kruskal Naive...")
+    datasetNumber = 1
+    graphsAccumulator = []
+    datasetNumberAccumulator = []
+    foo = 0
+    for graph in graphs:
+        if foo == 4:
+            foo = 0
+            output = "./quartet_kruskal_" + outputfilePostfix
+            #executorPrim.submit(executeSingleThreadQuartetMeasurement, output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
+            executeSingleThreadQuartetMeasurement(output, "kruskal", graphsAccumulator, datasetNumberAccumulator, lock)
+            graphsAccumulator = []
+            datasetNumberAccumulator = []
+            
+        if foo != 4:
+            datasetNumberAccumulator.append(datasetNumber)
+            graphsAccumulator.append(graph)
+            datasetNumber += 1
+            foo += 1
+
 
 
 def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumbers, fileResultLock):

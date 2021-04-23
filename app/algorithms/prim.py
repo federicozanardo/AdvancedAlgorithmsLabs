@@ -49,7 +49,7 @@ class Prim:
 
     def get_weight(self, key):
         sum = 0
-        for (k, v) in key.items():
+        for (_, v) in key.items():
             if v!= float('inf'):
                 sum += v
         return sum

@@ -74,7 +74,7 @@ def executeAlgorithm(algoname, graph):
 
     if algoname == "prim":
         prim = Prim()
-        final_graph = prim.prim_mst(graph, 1)
+        final_graph, _ = prim.prim_mst(graph, 1)
         kw = prim.get_weight(final_graph)
 
     elif algoname == "kruskal":
@@ -98,7 +98,7 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(
     outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
 
     # ======= PRIM ========
-    executorPrim = concurrent.futures.ThreadPoolExecutor(max_workers=24)
+    # executorPrim = concurrent.futures.ProcessPoolExecutor(max_workers=17)
     loaderPrim = Loader("Executing quartet Prim...", "Executing quartet Prim... COMPLETED!", 0.05).start()
     datasetNumber = 1
     graphsAccumulator = []
@@ -109,7 +109,8 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(
             foo = 0
             print("Executing till dataset number ", str(datasetNumberAccumulator[3]))
             output = "./quartet_prim_" + outputfilePostfix
-            executorPrim.submit(executeSingleThreadQuartetMeasurement, output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
+            #executorPrim.submit(executeSingleThreadQuartetMeasurement, output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
+            executeSingleThreadQuartetMeasurement(output, "prim", graphsAccumulator, datasetNumberAccumulator, lock)
             graphsAccumulator = []
             datasetNumberAccumulator = []
             
@@ -119,7 +120,7 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateAsynthoticStuff(
             datasetNumber += 1
             foo += 1
           
-    executorPrim.shutdown(wait=True)
+    # executorPrim.shutdown(wait=True)
     loaderPrim.stop()
 
     # # ======= KRUSKAL NAIVE ========
@@ -156,8 +157,6 @@ def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumb
     # fileResultLock --> per l'accesso condiviso dei thread per la scrittura in append dei file
     # =======================================================
 
-    print("sono almeno :D qua xD e ho esattamente = ", len(graphs))
-
     executionTimes = 4
 
     # First execution
@@ -165,24 +164,8 @@ def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumb
     averageTimePerQuartet = 0
     #gc.disable()
     for graph in graphs:
-        print("sto eseguendo il grafo con n vertici :D ", graph.V)
         localStartTime = time.perf_counter_ns()
-        if algoname == "prim":
-            prim = Prim()
-            final_graph = prim.prim_mst(graph, 1)
-            kw = prim.get_weight(final_graph)
-
-        elif algoname == "kruskal":
-            mst = MST()
-            final_graph = mst.kruskal_naive(graph)
-            kw = mst.get_mst_weight(final_graph.E)
-
-        elif algoname == "kruskal-opt":
-            mst = MST()
-            final_graph = mst.kruskal_union_find(graph)
-            kw = mst.get_mst_weight(final_graph)
-        else:
-            pass
+        executeAlgorithm(algoname, graph)
         averageTimePerQuartet += time.perf_counter_ns()-localStartTime
     #gc.enable()
     
@@ -190,8 +173,6 @@ def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumb
 
     # Check if execution time is less than 1 seconds
     # in case, take the avg time after 1000 execution
-
-    print("sono almeno :D qua")
 
 
     if averageTimePerQuartet <= 1000000000: 
@@ -219,14 +200,14 @@ def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumb
     #  n vertex | dataset number | n edges | avg num edges | time | exe times
     # 10 | (1,2,3,4) | (10, 9, 11, 12) | 10+eps  | 0.2345 | 4000
 
-    outFilenumbers = "("
+    outFilenumbers = "( "
     for i in filenumbers:
-        outFilenumbers += i + " "
+        outFilenumbers += str(i) + " "
     outFilenumbers += ")"
 
-    outEdges = "("
+    outEdges = "( "
     for graph in graphs:
-        outEdges += len(graph.E) + " "
+        outEdges = outEdges + str(len(graph.E)) + " "
     outEdges += ")"
 
     outAvgEdges = 0
@@ -234,14 +215,10 @@ def executeSingleThreadQuartetMeasurement(outputfile, algoname, graphs, filenumb
         outAvgEdges += len(graph.E)
     outAvgEdges /= 4
 
-    print("sono qua")
-
     with fileResultLock: 
-        print("e dovrei essere anche qua")
         file_object = open(outputfile, 'a')
         file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\n")
         file_object.close()
-        print("oltre che qua")
 
 
     # =======================================================

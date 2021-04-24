@@ -73,7 +73,8 @@ def executeSingleThreadCalculus(outputfile, algoname, graph, filenumber, fileRes
     # First execution
 
     localStartTime = time.perf_counter_ns()
-    
+    gc.disable()
+
     if algoname == "prim":
         prim = Prim()
         final_graph,_ = prim.prim_mst(graph, 1)
@@ -91,6 +92,7 @@ def executeSingleThreadCalculus(outputfile, algoname, graph, filenumber, fileRes
     else:
         pass
 
+    gc.enable()
     localEndTime = time.perf_counter_ns()-localStartTime
 
     # Check if execution time is less than 1 seconds

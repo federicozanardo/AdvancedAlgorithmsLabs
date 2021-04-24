@@ -1,0 +1,138 @@
+\section{Descrizione degli algoritmi}
+
+\subsection{Struttura dati per il grafo}
+
+La struttura dati per il grafo è stata implementata nel seguente
+modo:
+\begin{enumerate}
+    \item \verb|V| è un insime di nodi;
+    \item \verb|E| è una lista di lati;
+    \item \verb|graph| rappresenta la \textit{lista di adiacenza}.
+    Gli indici per accedere alla mappa sono rappresentati dai vertici.
+    Ogni cella della mappa punta ad una lista di coppie di valori
+    (il vertice a cui è collegato e il peso del lato che li
+    congiunge).
+\end{enumerate}
+
+I metodi implementati sono:
+\begin{enumerate}
+    \item \verb|add_vertex|: aggiunge un vertice al grafo;
+    \item \verb|add_edge|: aggiunge un lato al grafo;
+    \item \verb|remove_edge|: rimuove un lato dal grafo.
+\end{enumerate}
+Queste operazioni sono state implementate in modo da avere una
+complessità computazionale costante.
+
+\subsection{Kruskal naive}
+
+\subsubsection{Introduzione}
+
+La versione naive dell'algoritmo di Kruskal ha una complessità
+computazionale pari a $\mathcal{O}(mn)$. L'idea alla base di questo
+algoritmo è quella di ordinare i lati in ordine crescente rispetto al
+loro peso $w$. Una volta ordinati, per ogni lato si controlla se
+aggiungendolo al grafo temporaneo questo crei un ciclo. Se crea un
+ciclo allora tale lato non verrà inserito, altrimenti il lato farà
+parte dell'MST $T$.
+
+Ordinando i lati in base al loro peso e controllando che l'inserimento
+di un lato non crei un ciclo nel grafo, si otterà un albero la cui
+somma dei suoi lati sarà minima.
+
+Si illustri lo pseudocodice:
+\begin{verbatim}
+    Kruskal-Naive(G)
+        A = empty_set
+        for each vertex v in G.V
+            make-set(v)
+        sort the edges of G.E into increasing order by weight w
+        for each edge (u, v) in G.E, taken in increasing order by weight
+            if find-set(u) != find-set(v)
+                A = A U {(u, v)}
+                union(u, v)
+        return A
+\end{verbatim}
+
+\subsubsection{Implementazione}
+
+Nella nostra implementazione, abbiamo utilizzato l'algorimo di
+ordinamento \textit{merge sort}, che cha una complessità
+computazionale pari a $\Theta(n log(n))$, per ordinare i lati
+in ordine crescente rispetto al loro peso.
+
+Il Minimum Spanning Tree viene salvato in una struttura dati
+\verb|Graph|. Il MST può essere esaminato andando ad
+esplorare la lista di adiacenza \verb|graph| o la lista dei
+lati \verb|E|.
+
+Il controllo per la ciclicità viene implementato con una
+versione modificata della \textit{Depth First Search}
+(\textit{DFS}).
+
+\subsubsection{Ottimizzazioni implementate}
+
+Per ottimizzare l'algoritmo abbiamo apportato delle opportune
+modifiche. A partire dal metodo \verb|kruskal_naive|, ad
+ogni iterazione del ciclo, si controlla se il numero di lati
+del grafo $A$ (quello che conterrà il MST) ha $n - 1$ lati,
+dove $n$ è il numero di vertici del grafo $G$, fornito in input.
+Quando si raggiunge questa uguaglianza, significa che è stato
+costruito il MST $T$, pertanto l'algoritmo può terminare.
+Questa prima modifica permette di evitare di fare iterazioni
+inutili che non contribuiranno alla costruzione del MST.
+
+La seconda ottimizzazione implementata riguarda il metodo
+\verb|_is_acyclic|. Un primo controllo riguarda i vertici
+connessi dal lato. Se i due vertici sono uguali significa
+che il lato in questione crea un \textit{self-loop}. Con
+questo controllo siamo in grado eliminare i self-loop in
+tempo costante, senza dover effettuare una chiamata a DFS per verificare
+che l'aggiunta di tale lato crei un ciclo nel grafo $A$.
+Il secondo controllo che è stato implementato in questo metodo
+riguarda i vertici $u$ e $v$ che il lato, fornito in input, connette.
+Se almeno uno dei due lati non è presente nel grafo $A$, allora
+possiamo concludere che tale lato non introdurrà un ciclo nel grafo,
+in quanto il lato in questione permetterà di scoprire almeno un nuovo
+vertice del MST finale. Questa accortezza ci permette di risparmiare
+di effettuare delle chiamate a DFS soprattuto nella fase di avvio
+dell'algoritmo. Se invece, sia $u$ che $v$ sono già presenti
+nel grafo $A$, allora è necessario fare una chiamata a DFS per verificare
+che quel lato non introduca un ciclo nel grafo.
+
+La terza ottimizzazione riguarda DFS. Il metodo che è stato implementato
+non rispecchia la versione originale dell'algoritmo. Lo scopo di DFS
+è quello di andare a visitare \textit{tutti} i vertici di un certo
+grafo. Tuttavia, questo non rappresenta il nostro scopo. Il nostro
+intento è quello di cercare, se esiste, un cammino che congiunge $u$ con
+$v$. Se tali vertici si trovano in due componenti connesse distinte
+(può capitare nel momento in cui si stanno aggiungendo i lati al
+grafo $A$), significa che l'aggiunta del lato $(u, v)$ al grafo $A$ non
+introdurrà un ciclo. Avviando DFS dal vertice $u$ sul grafo $A$,
+desidero verificare se esiste un cammino che mi porta fino a $v$.
+Se entrambi i vertici sono nella stessa componente connessa, allora
+tale cammino verrà trovato, altrimenti, tale cammino non verrà
+trovato perchè non esiste. Quindi, DFS verrà eseguita soltanto sulla
+componente connessa di $u$ e non su tutti i vertici del grafo.
+Questa versione permette di risparmiare di visitare tutto il grafo
+e la sua complessità computazionale diventa $O(m)$.
+
+Queste tre ottimizzazioni permettono di evitare di fare eccissive
+chiamate a DFS e di evitare di andare a visitare l'intero grafo
+anche quando un cammino da $u$ a $v$ non esiste. La complessità
+computazionale rimane sempre $O(mn)$, però l'esecuzione è sensibilmente
+molto più veloce rispetto ad un'implementazione senza queste accortezze.
+
+Il metodo \verb|is_there_a_path| serve soltanto per inizializzare
+il vettore di booleani che indica se un vertice è stato visitato o meno.
+Tale vettore è necessario a DFS per esplorare il grafo (o la
+componente connessa in cui vi è $u$).
+
+\subsection{Kruskal con Union-Find}
+
+\subsubsection{Introduzione}
+
+\subsubsection{Implementazione}
+
+\subsubsection{Ottimizzazioni implementate}
+
+\subsection{Prim}

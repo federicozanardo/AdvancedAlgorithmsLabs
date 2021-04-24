@@ -1,5 +1,79 @@
-\section{Misurazioni}
+\section{Misurazioni ed esecuzione del programma}
 
 \subsection{Introduzione} % TODO: cambiare gli apici -_-
 
-Le misurazioni sono state effettuate attraverso l´implementazione due moduli che eseguono 
+Le misurazioni sono state effettuate attraverso l'implementazione di due moduli che eseguono rispettivamente due tipi di misurazioni:
+
+\begin{itemize}
+    \item \textbf{Misurazione singola:} esecuzione dei tre algoritmi per ogni grafo del dataset con misurazione del tempo;
+    \item \textbf{Misurazione a quartetto:} esecuzione dei tre algoritmi per ogni quartetto di grafi con lo stesso numero di vertici.
+\end{itemize}
+
+In entrambi i casi le misurazioni vengono effettuate dopo aver recuperato e caricato l'intero dataset nella struttura dati \textsc{graph}, come menzionato precedentemente.
+Prima di ogni esecuzione dei vari algoritmi è stato inoltre disabilitato temporaneamente il \textit{garbage collector} di Python, così da evitare rallentamenti anche minimi nel corso dell'esecuzione. Infine, ciascuno dei due moduli salva in tre file differenti - uno per ogni algoritmo - i risultati del programma.
+
+
+\subsection{Misurazione singola}
+
+\subsubsection{Descrizione} 
+
+La misurazione singola è organizzata sequenzialmente eseguendo in base al tipo di algoritmo l'intero dataset. Il metodo \textit{executeSingleGraphCalculus} applica l'algoritmo richiesto al graph in input e procede nella seguente maniera:
+
+\begin{enumerate}
+    \item Esegue una volta l'algoritmo applicato al grafo, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione.
+    \item Verifica se il tempo di esecuzione è maggiore o meno a 1s.
+    \begin{itemize}
+        \item Se il tempo è minore al secondo, esegue nuovamente 1000 volte l'algoritmo, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio sulle 1000 esecuzioni.
+        \item Altrimenti, viene mantenuto il tempo rilevato precedentemente con una singola esecuzione.
+    \end{itemize}
+    \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
+\end{enumerate}
+
+
+\subsubsection{File di output}
+
+Il file di output viene salvato direttamente alla fine di ogni esecuzione dell'algoritmo mantenendo la seguente formattazione:
+\begin{itemize}
+    \item Numero del dataset;
+    \item Numero di vertici del grafo;
+    \item Numero di archi del grafo;
+    \item Tempo di esecuzione in nano secondi;
+    \item Tempo di esecuzione in secondi;
+    \item Peso finale calcolato;
+    \item Esecuzioni totali effettuate dell'algoritmo.
+\end{itemize}
+
+
+\subsection{Misurazione a quartetto}
+
+\subsubsection{Descrizione} 
+
+La misurazione a quartetto è organizzata sequenzialmente eseguendo in base al tipo di algoritmo l'intero dataset raggruppando a gruppi di 4 i grafi con lo stesso numero di vertici. Per questa particolare casistica applichiamo la premessa che il dataset in input abbia sempre 4 file adiacenti con lo stesso numero di vertici. Il metodo \textit{executeSingleQuartetMeasurement} applica l'algoritmo richiesto al quartetto di grafi e procede nella seguente maniera:
+
+\begin{enumerate}
+    \item Esegue una volta l'algoritmo applicato al quartetto di grafi, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio.
+    \item Verifica se il tempo di esecuzione è maggiore o meno a 1s.
+    \begin{itemize}
+        \item Se il tempo è minore al secondo, esegue nuovamente 1000 volte l'algoritmo per ogni quartetto di grafi, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio sulle 1000 esecuzioni.
+        \item Altrimenti, viene mantenuto il tempo rilevato precedentemente, pari all'esecuzione media del quartetto di grafi.
+    \end{itemize}
+    \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
+\end{enumerate}
+
+
+\subsubsection{File di output}
+
+Il file di output viene salvato direttamente alla fine di ogni esecuzione del metodo mantenendo la seguente formattazione:
+\begin{itemize}
+    \item Numero dei vertici;
+    \item Numeri del dataset di interesse;
+    \item Numeri di archi dei grafi;
+    \item Numero medio di archi nei grafi;
+    \item Tempo di esecuzione in nano secondi;
+    \item Esecuzioni totali effettuate per il quartetto.
+\end{itemize}
+
+
+\subsection{Esecuzione del programma}
+
+\subsubsection{Introduzione}

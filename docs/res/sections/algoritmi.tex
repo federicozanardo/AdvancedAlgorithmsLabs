@@ -42,14 +42,13 @@ somma dei suoi lati sarà minima.
 Si illustri lo pseudocodice:
 \begin{verbatim}
     Kruskal-Naive(G)
-        A = empty_set
+        A = Graph()
         for each vertex v in G.V
-            make-set(v)
+            G.add_vertex(v)
         sort the edges of G.E into increasing order by weight w
         for each edge (u, v) in G.E, taken in increasing order by weight
-            if find-set(u) != find-set(v)
+            if A U {(u, v)} is acyclic
                 A = A U {(u, v)}
-                union(u, v)
         return A
 \end{verbatim}
 
@@ -130,6 +129,20 @@ componente connessa in cui vi è $u$).
 \subsection{Kruskal con Union-Find}
 
 \subsubsection{Introduzione}
+
+Si illustri lo pseudocodice:
+\begin{verbatim}
+    Kruskal-Union-Find(G)
+        A = empty_set
+        for each vertex v in G.V
+            make-set(v)
+        sort the edges of G.E into increasing order by weight w
+        for each edge (u, v) in G.E, taken in increasing order by weight
+            if find-set(u) != find-set(v)
+                A = A U {(u, v)}
+                union(u, v)
+        return A
+\end{verbatim}
 
 \subsubsection{Implementazione}
 

@@ -111,36 +111,39 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     localEndTime = time.perf_counter_ns()-localStartTime
 
 
-    # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo 1000 volte
+    # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo n volte \
+    # tale da avvicinarmi a 1 secondo
     # e ne faccio la media
 
-    # if localEndTime <= 1000000000: 
+    if localEndTime <= 1000000000: 
 
-    #     loopStartTime = time.perf_counter_ns()
-    #     gc.disable()
-    #     for i in range(0, 1000):
+        numCalls = 1000000000//localEndTime
 
-    #         if algoname == "prim":
-    #             prim = Prim()
-    #             final_graph,_ = prim.prim_mst(graph, 1)
-    #             kw = prim.get_weight(final_graph)
+        loopStartTime = time.perf_counter_ns()
+        gc.disable()
+        for i in range(0, numCalls):
 
-    #         elif algoname == "kruskal":
-    #             mst = MST()
-    #             final_graph = mst.kruskal_naive(graph)
-    #             kw = mst.get_mst_weight(final_graph.E)
+            if algoname == "prim":
+                prim = Prim()
+                final_graph,_ = prim.prim_mst(graph, 1)
+                kw = prim.get_weight(final_graph)
 
-    #         elif algoname == "kruskal-opt":
-    #             mst = MST()
-    #             final_graph = mst.kruskal_union_find(graph)
-    #             kw = mst.get_mst_weight(final_graph)
+            elif algoname == "kruskal":
+                mst = MST()
+                final_graph = mst.kruskal_naive(graph)
+                kw = mst.get_mst_weight(final_graph.E)
+
+            elif algoname == "kruskal-opt":
+                mst = MST()
+                final_graph = mst.kruskal_union_find(graph)
+                kw = mst.get_mst_weight(final_graph)
             
-    #     gc.enable()
-    #     loopEndTime = time.perf_counter_ns() - loopStartTime
-    #     rightTime = loopEndTime/1000
-    #     executionTimes = 1000
-    # else:
-    rightTime = localEndTime
+        gc.enable()
+        loopEndTime = time.perf_counter_ns() - loopStartTime
+        rightTime = loopEndTime/numCalls
+        executionTimes = numCalls
+    else:
+        rightTime = localEndTime
     
 
     # Una volta concluso, inserisco in append su un file i risultati

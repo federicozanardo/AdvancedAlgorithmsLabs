@@ -120,8 +120,8 @@ class Heap:
             aggiorna l´indice a cui cercare il nodo
     """
     def searchAndUpdateWeight(self, index, newWeight):
+        print(index)
         i = self.mapList[index]
-        for node in self.list:
         self.list[i].weight = float('-inf')
         self.heapifyUp(i)
         self.list[1].weight = newWeight

@@ -62,7 +62,6 @@ class Prim:
         """
         while Q.currentSize != 0:
             u = (Q.extractMin()).toTuple()
-            print (Q.mapList)
             for (v,w) in G.graph[u[0]]:
                 if Q.search(v) and w < key[v]:
                     parent[v] = u

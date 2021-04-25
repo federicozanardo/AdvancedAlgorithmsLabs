@@ -27,8 +27,9 @@ class Node :
 
 """
 Classe Heap
-heap: Heap = (list: Node[], currentSize: int)
-    Node[] = lista di nodi del grafo
+heap: Heap = (list: Node[], mapList: defaultdict(list), currentSize: int)
+    list = lista di nodi del grafo
+    mapList = mappa che associa indice del vertice alla sua posizione in list
     currentSize = dimensione dello Heap
 """
 class Heap:
@@ -66,22 +67,10 @@ class Heap:
     heapifyUp(index: int) : void
         index = indice del nodo da cui eseguire heapify
     Esegue la procedura heapify dello heap dal basso verso l´alto
+    Nel farlo aggiorna anche la mappa delle posizioni
+    Ritorna la posizione in cui il nodo è stato aggiunto
     """
     def heapifyUp(self, index):
-        # while(index>0):
-        #     el = self.list[index]
-        #     pIndex = index // 2
-        #     parent = self.list[pIndex]
-        #     if parent.weight < el.weight:
-        #         break
-            
-        #     self.mapList[self.list[pIndex].index] = index
-        #     self.list[index] = parent
-        #     self.list[pIndex] = el
-        #     index = pIndex
-        # return index 
-
-    # def heapifyUp(self, index):
         constInd = index
         while index // 2 > 0:
             if self.list[index].weight < self.list[index // 2].weight:
@@ -91,7 +80,6 @@ class Heap:
                 self.list[index], self.list[index // 2] = self.list[index // 2], self.list[index]
             index //= 2
         return constInd
-    
     
     """
     search(index: int) : boolean
@@ -110,41 +98,24 @@ class Heap:
     Aggiorna lo heap con il nuovo valore del nodo
 
     Il funzionamento è il seguente:
-    Per ogni nodo nella lista di nodi dello heap
-        Se il nodo è quello cercato
-            peso del nodo = -inf
-            esegui heapifyUp dal nodo cercato per farlo andare in cima allo heap
-            aggiorna il peso del nodo in cima allo heap
-            esegui heapifyDown per garantire la proprietà dello heap
-        Altrimenti
-            aggiorna l´indice a cui cercare il nodo
+    estrapola la posizione in list del Node con indice index
+    aggiorna il peso di tale nodo a -inf
+    esegue heapifyUp dal nodo cercato per farlo andare in cima allo heap
+    aggiorna il peso del nodo (ora) in cima allo heap
+    esegue heapifyDown per garantire la proprietà dello heap
     """
     def searchAndUpdateWeight(self, index, newWeight):
-        print(index)
         i = self.mapList[index]
         self.list[i].weight = float('-inf')
         self.heapifyUp(i)
         self.list[1].weight = newWeight
         self.heapifyDown(1)
-
-        # i = 0
-        # for node in self.list:
-        #     if i == 0:
-        #         i += 1
-        #         continue
-        #     if node.index == index:
-        #         self.list[i].weight = float('-inf')
-        #         self.heapifyUp(i)
-        #         self.list[1].weight = newWeight
-        #         self.heapifyDown(1)
-        #         return
-        #     else: 
-        #         i += 1
             
     """
     insert(node: Node) : void
         node = nodo da inserire
     Inserisce il nuovo nodo nello heap ed esegue heapifyUp per garantire la proprietà dello heap
+    Aggiorna anche la mappa delle posizioni con la posizione restituita da heapifyUp
     """
     def insert(self, node):
         self.list.append(node)
@@ -156,27 +127,9 @@ class Heap:
     heapifyDown(index: int) : void
         index = indice del nodo da cui eseguire heapify
     Esegue la procedura heapify dello heap dall´alto verso il basso
+    Nel farlo aggiorna anche la mappa delle posizioni
     """
     def heapifyDown(self, index):
-        # left = 2 * index
-        # right = 2 * index +1
-        # smallest = index
-        # length = self.currentSize
-
-        # if(left <= length and self.list[left] and self.list[left].weight < self.list[smallest].weight):
-        #     smallest = left
-
-        # if(right <= length and self.list[right] and self.list[right].weight < self.list[smallest].weight):
-        #     smallest = right
-
-        # self.mapList[self.list[smallest].index] = index
-        # self.mapList[self.list[index].index] = smallest
-
-        # if smallest != index:
-        #     self.list[smallest], self.list[index] = self.list[index], self.list[smallest]
-
-        # self.heapifyDown(smallest)
-
         while (index * 2) <= self.currentSize :
             minChild = self.minChild(index)
             if self.list[index].weight > self.list[minChild].weight: 
@@ -213,6 +166,7 @@ class Heap:
         diminuisci la dimensione dello heap
         esegui heapifyDown per garantire la proprietà dello heap
         ritorna il nodo di peso minore precedentemente salvato
+    Inoltre, nel fare ciò aggiorna anche la mappa delle posizioni
     """
     def extractMin(self):
         if len(self.list) == 1:

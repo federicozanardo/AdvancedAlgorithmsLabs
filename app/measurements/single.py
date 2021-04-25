@@ -111,7 +111,7 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     localEndTime = time.perf_counter_ns()-localStartTime
 
 
-    # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo n volte \
+    # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo n volte
     # tale da avvicinarmi a 1 secondo
     # e ne faccio la media
 

@@ -28,7 +28,7 @@ complessità computazionale costante.
 \subsubsection{Introduzione}
 
 La versione naive dell'algoritmo di Kruskal ha una complessità
-computazionale pari a $\mathcal{O}(mn)$. L'idea alla base di questo
+computazionale pari a $O(mn)$. L'idea alla base di questo
 algoritmo è quella di ordinare i lati in ordine crescente rispetto al
 loro peso $w$. Una volta ordinati, per ogni lato si controlla se
 aggiungendolo al grafo temporaneo questo crei un ciclo. Se crea un
@@ -39,7 +39,7 @@ Ordinando i lati in base al loro peso e controllando che l'inserimento
 di un lato non crei un ciclo nel grafo, si otterà un albero la cui
 somma dei suoi lati sarà minima.
 
-Si illustri lo pseudocodice:
+Si illustri lo pseudo-codice:
 \begin{verbatim}
     Kruskal-Naive(G)
         A = Graph()
@@ -130,7 +130,63 @@ componente connessa in cui vi è $u$).
 
 \subsubsection{Introduzione}
 
-Si illustri lo pseudocodice:
+La versione naive dell'algoritmo di Kruskal svolge ripetutamente
+l'operazione di controllo di aciclicità del grafo $A$. Questo continuo
+controllo è responsabile della complessità computazionale
+dell'algoritmo. Per ottimizzare le prestazioni, il controllo della
+ciclicità del grafo viene catturato tramite l'implementazione di
+una particolare struttura dati: gli \textbf{insiemi disgiunti}
+(o \textbf{disjoint sets}).
+
+\subsubsection{Struttura dati}
+
+La struttura dati per gli insiemi disgiunti è stata implementata
+come un \textit{albero}. Inizialmente, ogni vertice viene
+rappresentato come un albero con un solo nodo, il cui \textit{parent}
+è sè stesso. A mano a mano che si vanno a visitare i vari lati del
+grafo $G$, si controlla se i due vertici, connessi al lato in questione,
+appartengono allo stesso albero o meno. Se appartengono allo stesso
+albero significa che hanno lo stesso nodo radice, se invece appartengono
+ad alberi differenti allora avranno radici diverse. Per
+l'implementazione di questo algoritmo non è importante nè l'ordine dei
+nodi salvati nell'albero, nè quale sia il nodo alla radice dell'albero.
+Se i vertici del lato $(u, v)$ appartengono a due alberi diversi,
+allora si procede ad eseguire una $union$ dei due alberi. Questa
+operazione è stata implementata come una \textit{union-by-size}.
+Per poter implementare tale operazione, nella struttura dati si tiene
+conto anche della \textit{size} di ogni albero: ogni nodo memorizza
+la sua dimensione, che rappresenta il numero di discendenti (incluso
+sè stesso). Nel momento in cui bisogna unire i due alberi, l'albero
+con la dimensione maggiore diventa genitore dell'altro. Nel caso in
+cui i due alberi abbiano la stessa dimensione, allora la scelta
+diventa casuale, a meno che non debbano essere mantenute determinate
+proprietà (non è questo il nostro caso).
+
+I metodi implementati per tale struttura dati sono:
+\begin{enumerate}
+    \item \verb|make_set(x)|: crea un albero costituito da un solo nodo
+    il cui valore è $x$, la \textit{size} è impostata a 1 e il
+    \textit{parent} è sè stesso. Complessità computazionale: costante;
+    \item \verb|find_set(x)|: ritorna il nodo radice dell'albero a cui
+    appartiene il nodo che ha valore $x$. Complessità computazionale:
+    $O(log n)$;
+    \item \verb|union_by_size(x, y)|: dati i valori di due nodi, vengono
+    determinati i nodi radici per ciascuno e se appartengono ad alberi diversi
+    allora si procede nell'unire i due alberi, secondo le procedure definite
+    precedentemente. Complessità computazionale: $O(log(n))$.
+\end{enumerate}
+
+\subsubsection{Implementazione}
+
+Lo pseudo-codice non si discosta molto dalla versione naive dell'algoritmo.
+Le uniche parti che variano, sono:
+\begin{enumerate}
+    \item $A$ non è più un grafo, ma è una collezione di lati;
+    \item Non è più richiesto effettuare il controllo che il grafo sia
+    aciclico.
+\end{enumerate}
+
+Si illustri lo pseudo-codice:
 \begin{verbatim}
     Kruskal-Union-Find(G)
         A = empty_set
@@ -144,8 +200,33 @@ Si illustri lo pseudocodice:
         return A
 \end{verbatim}
 
-\subsubsection{Implementazione}
+Il controllo per la ciclicità del grafo viene sostituito con la verifica
+che i due vertici del lato $(u, v)$ appartengano o meno a due alberi
+distinti. Se i due vertici hanno il nodo radice in comune significa che
+esiste già un percorso da $u$ a $v$ e quindi aggiungendo il lato $(u, v)$
+si creerebbe un ciclo. Se invece i due vertici appartengono a due
+alberi diversi, allora l'introduzione di tale arco non creerà un
+ciclo nel grafo, ma permetterà di scoprire dei nuovi vertici del MST
+$T$ finale. Quindi, il lato $(u, v)$ verrà aggiunto ad $A$ e i due
+alberi verranno uniti in base alla loro \textit{size}.
 
-\subsubsection{Ottimizzazioni implementate}
+L'introduzione degli insiemi disgiunti riduce la complessità computazionale
+a $O(mlog(n))$. Analizzando l'algoritmo, si può osservare che:
+\begin{enumerate}
+    \item vengono svolte $n$ chiamate a \verb|make_set(x)|;
+    \item vengono ordinati i lati in ordine crescente con merge sort,
+    quindi si ha una complessità pari a $\Theta(mlog(m))$;
+    \item il ciclo for ha una complessità pari a $O((n + n)\alpha(n)))$,
+    dove $\alpha$ è una funzione che cresce molto lentamente (è l'inversa
+    della funzione di Ackermann). Assumendo che $G$ sia connesso, le
+    operazioni per gli insiemi disgiunti hanno una complessità pari a
+    $O(m\alpha(n))$. Inoltre, possiamo dire che
+    $\alpha(n) = O(log(n)) = O(log(m))$, quindi la complessità dell'algorimo
+    nel suo complesso diventerebbe $O(m log(m))$.
+
+    Si può osservare però che i grafi rispettano la diseguaglianza $m < n^2$.
+    Quindi, $log(m) = O(log(n))$. Con questa osservazione, la complessità
+    finale dell'algoritmo è $O(mlog(n))$.
+\end{enumerate}
 
 \subsection{Prim}

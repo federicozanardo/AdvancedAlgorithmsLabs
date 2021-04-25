@@ -6,7 +6,7 @@ sys.path.append('../')
 
 class Graph:
     def __init__(self):
-        self.graph = defaultdict(list)  # Adjacency list
+        self.graph = defaultdict(list)  # Lista di adiacenza
         self.V = set()
         self.E = []
 

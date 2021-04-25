@@ -37,13 +37,11 @@ class MergeSort:
 
             k += 1
 
-        # Copy the remaining elements of L[], if there are any
         while i < n1:
             arr[k] = L[i]
             i += 1
             k += 1
 
-        # Copy the remaining elements of R[], if there are any
         while j < n2:
             arr[k] = R[j]
             j += 1

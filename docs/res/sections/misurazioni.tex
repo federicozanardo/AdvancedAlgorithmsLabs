@@ -1,6 +1,61 @@
-\section{Misurazioni ed esecuzione del programma}
+\section{Caratteristiche del programma e Misurazioni}
 
-\subsection{Introduzione} % TODO: cambiare gli apici -_-
+\subsection{Caratteristiche del programma}
+
+\subsubsection{Introduzione}
+
+Il programma è stato realizzato interamente in Python e si struttura di 4 cartelle principali che rappresentano: il modulo degli algoritmi (\textit{algorithms}), il modulo delle strutture dati (\textit{data\_structures}), il modulo delle misurazioni (\textit{measurements}) e il dataset contenente i grafi (\textit{dataset}). 
+
+\subsubsection{Installazione e requisiti}
+
+Prima di eseguire il programma è necessario installare le dipendenze presenti nel file \textit{requirements.txt} eseguendo il seguente comando: \texttt{pip install -r requirements.txt}
+\\Per l'esecuzione è richiesto l'uso di un terminale Windows o Linux con Python 3.x+ e PIP installato.
+
+\subsubsection{Avvio del programma}
+
+Per l'esecuzione del programma è necessario spostarsi nella cartella di progetto ed eseguire il seguente comando: 
+\texttt{python3 main.py [--version] [-h] <type> <dataset>} dove:
+
+\begin{itemize}
+    \item \textbf{type:} rappresenta il tipo di algoritmo o di serie di esecuzioni che si vuole avviare, nello specifico uno tra i seguenti: 
+    \begin{itemize}
+        \item \textit{all} (esegue e salva su file le misurazioni singole);
+        \item \textit{all-quartet} (esegue e salva su file le misurazioni a quartetto);        \item \textit{prim} (esegue le misurazioni con Prim);
+        \item \textit{kruskal} (esegue le misurazioni con Kruskal Naive);
+        \item \textit{kruskal-opt} (esegue le misurazioni con Kruskal Union Find).   
+    \end{itemize} 
+    \item \textbf{dataset:} rappresenta una cartella contenente i file dei dataset formattati come da consegna o singolo file di dataset in input. 
+    \item \textbf{--version:} è opzionale e mostra la versione del programma in esecuzione. 
+    \item \textbf{-h:} è opzionale e mostra un aiuto per i comandi da utilizzare. 
+\end{itemize}
+
+\noindent Un esempio di esecuzione di tutte le misurazioni singole e di un singolo file con kruskal naive è il seguente: \\
+\texttt{python3 main.py all dataset/} \\
+\texttt{python3 main.py kruskal dataset/input\_random\_69\_1000000.txt}
+
+\subsubsection{Considerazioni rilevanti sul programma}
+
+Inizialmente, data la mole di dati da dover analizzare, si è pensato di implementare in modalità multiprocessing il programma, così da favorire l'uso di tutti i threads a disposizione nei moderni processori per computer. Per questo motivo, le misurazioni sono state realizzate con l'idea di poter eseguire un pool di threads dove ciascun thread rappresentava l'avvio di un algoritmo. 
+
+Nel corso delle misurazioni, si è notato però che l'esecuzione rallentava notevolmente dal momento che monitorando l'uso della CPU solo un core veniva usato costantemente al 100\%. Successivamente si è venuti a conoscenza del fatto che nel caso specifico di \textbf{Python} non fosse possibile occupare in modo quasi esclusivo più di un thread della CPU (oltre al \textit{main}), essendoci delle limitazioni interne dipendenti dal linguaggio.
+
+Il codice delle misurazioni pertanto è stato riadattato in modo poter essere eseguito sequenzialmente, lasciando comunque la possibilità a un veloce riadattamento per l'esecuzione in multiprocessing. Alcuni degli aspetti positivi di questa modalità possono riguardare sicuramente l'esecuzione parallela per il calcolo dei risultati degli algoritmi, la cui computazione risulterebbe sicuramente di minore tempistica specialmente nel caso di Kruskal Naive.   
+
+\subsubsection{Caratteristiche tecniche del computer per le misurazioni} % TODO: spostare la sezione?
+
+L'esecuzione del programma e le relative misurazioni sono state effettuate sulla seguente macchina:
+\begin{itemize}
+    \item \textbf{CPU:} Ryzen 9 3900x (12 core / 24 thread), 4.6ghz
+    \item \textbf{RAM:} 32 GB DDR4
+    \item \textbf{SSD:} NVME SSD 512 GB
+\end{itemize}
+
+\noindent Tutte le misurazioni sono state eseguite \textbf{sequenzialmente} monitorando l'uso di un core dedicato della CPU al 100\% per tutta la durata dell'esecuzione.
+
+
+
+
+\subsection{Introduzione alle misurazioni} 
 
 Le misurazioni sono state effettuate attraverso l'implementazione di due moduli che eseguono rispettivamente due tipi di misurazioni:
 
@@ -23,7 +78,8 @@ La misurazione singola è organizzata sequenzialmente eseguendo in base al tipo 
     \item Esegue una volta l'algoritmo applicato al grafo, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione.
     \item Verifica se il tempo di esecuzione è maggiore o meno a 1s.
     \begin{itemize}
-        \item Se il tempo è minore al secondo, esegue nuovamente 1000 volte l'algoritmo, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio sulle 1000 esecuzioni.
+        \item Se il tempo è minore a 1s, esegue nuovamente \(k\) volte l'algoritmo, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio sulle \(k\) esecuzioni, con \(k\) definito come segue:  \[ k = \left\lfloor\frac{10^9 \textrm{ ns}}{\textrm{tempo medio di esecuzione in ns}}\right\rfloor\]
+        ossia il numero di ripetizioni applicate all'algoritmo la cui somma arriva a 1s.
         \item Altrimenti, viene mantenuto il tempo rilevato precedentemente con una singola esecuzione.
     \end{itemize}
     \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
@@ -54,7 +110,8 @@ La misurazione a quartetto è organizzata sequenzialmente eseguendo in base al t
     \item Esegue una volta l'algoritmo applicato al quartetto di grafi, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio.
     \item Verifica se il tempo di esecuzione è maggiore o meno a 1s.
     \begin{itemize}
-        \item Se il tempo è minore al secondo, esegue nuovamente 1000 volte l'algoritmo per ogni quartetto di grafi, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio sulle 1000 esecuzioni.
+        \item Se il tempo è minore a 1s, esegue nuovamente \(k\) volte l'algoritmo per ogni quartetto di grafi, disabilitando il \textit{garbage collector} e salvandosi il tempo di esecuzione medio sulle \(k\) esecuzioni, con \(k\) definito come segue:  \[ k = \left\lfloor\frac{10^9 \textrm{ ns}}{\textrm{tempo medio di esecuzione in ns}}\right\rfloor\]
+        ossia il numero di ripetizioni applicate all'algoritmo la cui somma arriva a 1s.
         \item Altrimenti, viene mantenuto il tempo rilevato precedentemente, pari all'esecuzione media del quartetto di grafi.
     \end{itemize}
     \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
@@ -70,10 +127,7 @@ Il file di output viene salvato direttamente alla fine di ogni esecuzione del me
     \item Numeri di archi dei grafi;
     \item Numero medio di archi nei grafi;
     \item Tempo di esecuzione in nano secondi;
+    \item Tempo di esecuzione in secondi;
     \item Esecuzioni totali effettuate per il quartetto.
+    \item Esecuzioni effettuate per ogni grafo del quartetto.
 \end{itemize}
-
-
-\subsection{Esecuzione del programma}
-
-\subsubsection{Introduzione}

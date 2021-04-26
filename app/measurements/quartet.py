@@ -9,6 +9,7 @@ di grafi composti dallo stesso numero di vertici
 import argparse
 from random import randint
 import gc
+import math
 from time import perf_counter_ns
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
@@ -152,18 +153,19 @@ def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers, f
     averageTimePerQuartet /= 4
 
     # Se la media di esecuzione è sotto al secondo, 
-    # allora faccio una stima di tempo su 1000 esecuzioni per ciascun algoritmo
+    # allora lo eseguo n volte tale da avvicinarmi a 1 secondo
+    # e ne faccio la media
 
     if averageTimePerQuartet <= 1000000000: 
 
-        numCalls = 1000
+        numCalls = 1000000000 // math.floor(averageTimePerQuartet)
         sumTimePerQuartet = 0
         
         for graph in graphs:
             loopStartTime = time.perf_counter_ns()
             gc.disable()
             
-            for i in range(numCalls):
+            for i in range(0, numCalls):
                 executeAlgorithm(algoname, graph)
             
             gc.enable()
@@ -181,9 +183,9 @@ def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers, f
     # Una volta concluso, inserisco in append su un file i risultati
     # con la seguente struttura:
 
-    # ======================================================================
-    # n vertex | dataset number | n edges | avg num edges | time | exe times
-    # ======================================================================
+    # ============================================================================================
+    # n vertex | dataset number | n edges | avg num edges | time | exe times | exe times per graph
+    # ============================================================================================
 
     outFilenumbers = "( "
     for i in filenumbers:
@@ -202,7 +204,7 @@ def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers, f
 
     with fileResultLock: 
         file_object = open(outputfile, 'a')
-        file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\n")
+        file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\t" + str(executionTimes//4) + "\n")
         file_object.close()
 
 

@@ -111,14 +111,17 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     localEndTime = time.perf_counter_ns()-localStartTime
 
 
-    # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo 1000 volte
+    # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo n volte
+    # tale da avvicinarmi a 1 secondo
     # e ne faccio la media
 
     if localEndTime <= 1000000000: 
 
+        numCalls = 1000000000//localEndTime
+
         loopStartTime = time.perf_counter_ns()
         gc.disable()
-        for i in range(0, 1000):
+        for i in range(0, numCalls):
 
             if algoname == "prim":
                 prim = Prim()
@@ -137,8 +140,8 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
             
         gc.enable()
         loopEndTime = time.perf_counter_ns() - loopStartTime
-        rightTime = loopEndTime/1000
-        executionTimes = 1000
+        rightTime = loopEndTime/numCalls
+        executionTimes = numCalls
     else:
         rightTime = localEndTime
     

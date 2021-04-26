@@ -5,7 +5,7 @@
 La struttura dati per il grafo è stata implementata nel seguente
 modo:
 \begin{enumerate}
-    \item \verb|V| è un insime di nodi;
+    \item \verb|V| è un insieme di nodi;
     \item \verb|E| è una lista di lati;
     \item \verb|graph| rappresenta la \textit{lista di adiacenza}.
     Gli indici per accedere alla mappa sono rappresentati dai vertici.
@@ -14,7 +14,7 @@ modo:
     congiunge).
 \end{enumerate}
 
-I metodi implementati sono:
+\noindent I metodi implementati sono:
 \begin{enumerate}
     \item \verb|add_vertex|: aggiunge un vertice al grafo;
     \item \verb|add_edge|: aggiunge un lato al grafo;
@@ -33,13 +33,13 @@ algoritmo è quella di ordinare i lati in ordine crescente rispetto al
 loro peso $w$. Una volta ordinati, per ogni lato si controlla se
 aggiungendolo al grafo temporaneo questo crei un ciclo. Se crea un
 ciclo allora tale lato non verrà inserito, altrimenti il lato farà
-parte dell'MST $T$.
+parte del MST $T$.
 
 Ordinando i lati in base al loro peso e controllando che l'inserimento
-di un lato non crei un ciclo nel grafo, si otterà un albero la cui
+di un lato non crei un ciclo nel grafo, si otterrà un albero la cui
 somma dei suoi lati sarà minima.
 
-Si illustri lo pseudo-codice:
+\noindent Si illustra lo pseudo-codice:
 \begin{verbatim}
     Kruskal-Naive(G)
         A = Graph()
@@ -54,13 +54,13 @@ Si illustri lo pseudo-codice:
 
 \subsubsection{Implementazione}
 
-Nella nostra implementazione, abbiamo utilizzato l'algorimo di
-ordinamento \textit{merge sort}, che cha una complessità
+Nella nostra implementazione abbiamo utilizzato l'algoritmo di
+ordinamento \textit{merge sort}, che ha una complessità
 computazionale pari a $\Theta(n log(n))$, per ordinare i lati
 in ordine crescente rispetto al loro peso.
 
 Il Minimum Spanning Tree viene salvato in una struttura dati
-\verb|Graph|. Il MST può essere esaminato andando ad
+\verb|Graph|; il MST può essere esaminato andando ad
 esplorare la lista di adiacenza \verb|graph| o la lista dei
 lati \verb|E|.
 
@@ -72,19 +72,19 @@ versione modificata della \textit{Depth First Search}
 
 Per ottimizzare l'algoritmo abbiamo apportato delle opportune
 modifiche. A partire dal metodo \verb|kruskal_naive|, ad
-ogni iterazione del ciclo, si controlla se il numero di lati
+ogni iterazione del ciclo si controlla se il numero di lati
 del grafo $A$ (quello che conterrà il MST) ha $n - 1$ lati,
 dove $n$ è il numero di vertici del grafo $G$, fornito in input.
-Quando si raggiunge questa uguaglianza, significa che è stato
+Quando si raggiunge questa uguaglianza significa che è stato
 costruito il MST $T$, pertanto l'algoritmo può terminare.
 Questa prima modifica permette di evitare di fare iterazioni
 inutili che non contribuiranno alla costruzione del MST.
 
 La seconda ottimizzazione implementata riguarda il metodo
 \verb|_is_acyclic|. Un primo controllo riguarda i vertici
-connessi dal lato. Se i due vertici sono uguali significa
+connessi dal lato: se i due vertici sono uguali significa
 che il lato in questione crea un \textit{self-loop}. Con
-questo controllo siamo in grado eliminare i self-loop in
+questo controllo siamo in grado eliminare i \textit{self-loop} in
 tempo costante, senza dover effettuare una chiamata a DFS per verificare
 che l'aggiunta di tale lato crei un ciclo nel grafo $A$.
 Il secondo controllo che è stato implementato in questo metodo
@@ -93,29 +93,29 @@ Se almeno uno dei due lati non è presente nel grafo $A$, allora
 possiamo concludere che tale lato non introdurrà un ciclo nel grafo,
 in quanto il lato in questione permetterà di scoprire almeno un nuovo
 vertice del MST finale. Questa accortezza ci permette di risparmiare
-di effettuare delle chiamate a DFS soprattuto nella fase di avvio
+delle chiamate a DFS soprattutto nella fase di avvio
 dell'algoritmo. Se invece, sia $u$ che $v$ sono già presenti
 nel grafo $A$, allora è necessario fare una chiamata a DFS per verificare
 che quel lato non introduca un ciclo nel grafo.
 
-La terza ottimizzazione riguarda DFS. Il metodo che è stato implementato
+La terza ottimizzazione riguarda DFS: il metodo che è stato implementato
 non rispecchia la versione originale dell'algoritmo. Lo scopo di DFS
 è quello di andare a visitare \textit{tutti} i vertici di un certo
-grafo. Tuttavia, questo non rappresenta il nostro scopo. Il nostro
+grafo; tuttavia, questo non rappresenta il nostro scopo. Il nostro
 intento è quello di cercare, se esiste, un cammino che congiunge $u$ con
 $v$. Se tali vertici si trovano in due componenti connesse distinte
-(può capitare nel momento in cui si stanno aggiungendo i lati al
+(ad esempio nel momento in cui si stanno aggiungendo i lati al
 grafo $A$), significa che l'aggiunta del lato $(u, v)$ al grafo $A$ non
 introdurrà un ciclo. Avviando DFS dal vertice $u$ sul grafo $A$,
 desidero verificare se esiste un cammino che mi porta fino a $v$.
 Se entrambi i vertici sono nella stessa componente connessa, allora
-tale cammino verrà trovato, altrimenti, tale cammino non verrà
-trovato perchè non esiste. Quindi, DFS verrà eseguita soltanto sulla
+tale cammino verrà trovato, altrimenti tale cammino non verrà
+trovato perché non esiste. Quindi, DFS verrà eseguita soltanto sulla
 componente connessa di $u$ e non su tutti i vertici del grafo.
-Questa versione permette di risparmiare di visitare tutto il grafo
+Questa versione permette di risparmiare la visita di tutto il grafo
 e la sua complessità computazionale diventa $O(m)$.
 
-Queste tre ottimizzazioni permettono di evitare di fare eccissive
+Queste tre ottimizzazioni permettono di evitare di fare eccessive
 chiamate a DFS e di evitare di andare a visitare l'intero grafo
 anche quando un cammino da $u$ a $v$ non esiste. La complessità
 computazionale rimane sempre $O(mn)$, però l'esecuzione è sensibilmente
@@ -143,21 +143,21 @@ una particolare struttura dati: gli \textbf{insiemi disgiunti}
 La struttura dati per gli insiemi disgiunti è stata implementata
 come un \textit{albero}. Inizialmente, ogni vertice viene
 rappresentato come un albero con un solo nodo, il cui \textit{parent}
-è sè stesso. A mano a mano che si vanno a visitare i vari lati del
+è sè stesso. Man mano che si vanno a visitare i vari lati del
 grafo $G$, si controlla se i due vertici, connessi al lato in questione,
 appartengono allo stesso albero o meno. Se appartengono allo stesso
 albero significa che hanno lo stesso nodo radice, se invece appartengono
 ad alberi differenti allora avranno radici diverse. Per
-l'implementazione di questo algoritmo non è importante nè l'ordine dei
-nodi salvati nell'albero, nè quale sia il nodo alla radice dell'albero.
+l'implementazione di questo algoritmo non è importante né l'ordine dei
+nodi salvati nell'albero, né quale sia il nodo alla radice dell'albero.
 Se i vertici del lato $(u, v)$ appartengono a due alberi diversi,
 allora si procede ad eseguire una $union$ dei due alberi. Questa
 operazione è stata implementata come una \textit{union-by-size}.
-Per poter implementare tale operazione, nella struttura dati si tiene
+Per poter implementare tale operazione nella struttura dati si tiene
 conto anche della \textit{size} di ogni albero: ogni nodo memorizza
 la sua dimensione, che rappresenta il numero di discendenti (incluso
 sè stesso). Nel momento in cui bisogna unire i due alberi, l'albero
-con la dimensione maggiore diventa genitore dell'altro. Nel caso in
+con la dimensione maggiore diventa genitore dell'altro; nel caso in
 cui i due alberi abbiano la stessa dimensione, allora la scelta
 diventa casuale, a meno che non debbano essere mantenute determinate
 proprietà (non è questo il nostro caso).
@@ -171,7 +171,7 @@ I metodi implementati per tale struttura dati sono:
     appartiene il nodo che ha valore $x$. Complessità computazionale:
     $O(log n)$;
     \item \verb|union_by_size(x, y)|: dati i valori di due nodi, vengono
-    determinati i nodi radici per ciascuno e se appartengono ad alberi diversi
+    determinati i nodi radice per ciascuno e se appartengono ad alberi diversi
     allora si procede nell'unire i due alberi, secondo le procedure definite
     precedentemente. Complessità computazionale: $O(log(n))$.
 \end{enumerate}
@@ -179,14 +179,14 @@ I metodi implementati per tale struttura dati sono:
 \subsubsection{Implementazione}
 
 Lo pseudo-codice non si discosta molto dalla versione naive dell'algoritmo.
-Le uniche parti che variano, sono:
+Le uniche parti che variano sono:
 \begin{enumerate}
     \item $A$ non è più un grafo, ma è una collezione di lati;
     \item Non è più richiesto effettuare il controllo che il grafo sia
     aciclico.
 \end{enumerate}
 
-Si illustri lo pseudo-codice:
+Si illustra lo pseudo-codice:
 \begin{verbatim}
     Kruskal-Union-Find(G)
         A = empty_set
@@ -211,22 +211,22 @@ $T$ finale. Quindi, il lato $(u, v)$ verrà aggiunto ad $A$ e i due
 alberi verranno uniti in base alla loro \textit{size}.
 
 L'introduzione degli insiemi disgiunti riduce la complessità computazionale
-a $O(mlog(n))$. Analizzando l'algoritmo, si può osservare che:
+a $O(m log(n))$. Analizzando l'algoritmo, si può osservare che:
 \begin{enumerate}
     \item vengono svolte $n$ chiamate a \verb|make_set(x)|;
-    \item vengono ordinati i lati in ordine crescente con merge sort,
-    quindi si ha una complessità pari a $\Theta(mlog(m))$;
+    \item vengono ordinati i lati in ordine crescente con \textit{merge sort},
+    quindi si ha una complessità pari a $\Theta(m log(m))$;
     \item il ciclo for ha una complessità pari a $O((n + n)\alpha(n)))$,
     dove $\alpha$ è una funzione che cresce molto lentamente (è l'inversa
     della funzione di Ackermann). Assumendo che $G$ sia connesso, le
     operazioni per gli insiemi disgiunti hanno una complessità pari a
     $O(m\alpha(n))$. Inoltre, possiamo dire che
-    $\alpha(n) = O(log(n)) = O(log(m))$, quindi la complessità dell'algorimo
+    $\alpha(n) = O(log(n)) = O(log(m))$, quindi la complessità dell'algoritmo
     nel suo complesso diventerebbe $O(m log(m))$.
 
     Si può osservare però che i grafi rispettano la diseguaglianza $m < n^2$.
     Quindi, $log(m) = O(log(n))$. Con questa osservazione, la complessità
-    finale dell'algoritmo è $O(mlog(n))$.
+    finale dell'algoritmo è $O(m log(n))$.
 \end{enumerate}
 
 \subsection{Prim}
@@ -240,7 +240,7 @@ l'albero dei nodi del \textit{minimum spanning tree} al nuovo vertice. \\
 Nonostante la complessità sia polinomiale, e quindi efficiente, l'algoritmo può essere ottimizzato
 utilizzando la corretta struttura dati: l'implementazione dell'algoritmo di Prim con l'utilizzo di
 \textit{Heap}, infatti, permette di calcolare il minimo nodo da aggiungere all'albero in tempo logaritmico;
-la complessità computazionale dell'algoritmo in questa implementazione, quindi, diventa \newline $\mathcal{O}(m+n*log(n))$. \\
+la complessità computazionale dell'algoritmo in questa implementazione, quindi, diventa \newline $\mathcal{O}(m+n log(n))$. \\
 Si illustra lo pseudocodice dell'algoritmo di Prim con l'utilizzo di \textit{Heap}:
 \newpage
 \begin{verbatim}
@@ -258,31 +258,30 @@ Si illustra lo pseudocodice dell'algoritmo di Prim con l'utilizzo di \textit{Hea
                     key[v] <- w(u,v)
 \end{verbatim}
 
-\subsubsection{Implementazione}
-La nostra implementazione ricalca l'implementazione standard dell'algoritmo di Prim
-con l'utilizzo di un \textit{MinHeap} come struttura dati a supporto. 
-Nell'implementare l'algoritmo, quindi, abbiamo creato una classe \texttt{Heap} con i segueti campi dati:
+\subsubsection{Struttura dati}
+
+Per la memorizzazione dei vertici del grafo di partenza, e per estrarne successivamente il nodo di peso minimo, abbiamo creato una classe \texttt{Heap} con i seguenti campi dati:
 \begin{itemize}
     \item \texttt{list}, ossia una lista contenente i nodi del grafo rappresentati da oggetti di tipo \texttt{Node};
-    \item \texttt{mapList}, ossia una mappa che permette di associare un nodo alla sua posizione in \texttt{list}. L'utilità
-    di questa variabile viene discussa nel capitolo successivo;
+    \item \texttt{mapList}, ossia una mappa che permette di associare un nodo alla sua posizione in \texttt{list}. L'utilità di questa variabile viene discussa nel capitolo successivo;
     \item \texttt{currentSize}, ossia la dimensione del grafo.
 \end{itemize}
-La classe \texttt{Heap} mette a disposizione i metodi classici della struttura dati \textit{Heap}; particolarmente importanti 
-ai fini del suo utilizzo nell'algoritmo sono i seguenti metodi:
+La classe \texttt{Heap} mette a disposizione i metodi classici della struttura dati \textit{Heap}; particolarmente importanti ai fini del suo utilizzo nell'algoritmo sono i seguenti metodi:
 \begin{itemize}
-    \item \texttt{search} permette di sapere se un nodo è presente o meno nel grafo, ed è di particolare importanza
-    per il controllo dell'esistenza di un nodo durante l'esecuzione dell'algoritmo;
+    \item \texttt{search} permette di sapere se un nodo è presente o meno nel grafo, ed è di particolare importanza per il controllo dell'esistenza di un nodo durante l'esecuzione dell'algoritmo;
     \item \texttt{extractMin} permette di estrarre il nodo di peso minimo in tempo logaritmico;
     \item \texttt{searchAndUpdateWeight} permette di aggiornare il peso di un nodo, ed è necessario
     per l'aggiornamento del grafo in seguito alla rimozione del nodo in testa al ciclo \textit{while}.
 \end{itemize}
-L'algoritmo fa quindi uso di un oggetto \texttt{Heap} per memorizzare i vertici del grafo di partenza e poi estrarne il
-nodo di peso minimo a ogni iterazione del ciclo \textit{while}.
+
+\subsubsection{Implementazione}
+La nostra implementazione ricalca l'implementazione standard dell'algoritmo di Prim con l'utilizzo di un 
+\textit{MinHeap} come struttura dati a supporto; essa non si discosta quindi dallo pseudocodice precedentemente mostrato.
+
 
 \subsubsection{Ottimizzazioni implementate}
 
-Anche per quanto riguarda l'algoritmo di Prim, abbiamo apportato una opportuna modifica per ottimizzarne l'esecuzione. \\
+Anche per quanto riguarda l'algoritmo di Prim abbiamo apportato una opportuna modifica per ottimizzarne l'esecuzione. \\
 Tale ottimizzazione consiste nell'utilizzo di una mappa, concretizzata in una variabile di tipo
 \texttt{defaultdict} in \textit{Python}, che associa a ogni nodo la sua posizione in \texttt{list}, ossia
 la lista dei nodi. Questa implementazione permette di ricercare la presenza di un vertice nello \textit{Heap} in tempo costante,

@@ -30,8 +30,8 @@ L'algoritmo generico per determinare un MST è:
     return A
 \end{verbatim}
 
-Si forniscano alcune definizioni per gli MST:
-\begin{enumerate}
+Si forniscono alcune definizioni per gli MST:
+\begin{enumerate} 
     \item un \textbf{taglio} $(S, V \setminus S)$ di un grafo $G = (V, E)$ è una partizione
     di $V$;
     \item un lato $(u, v) \in E$ \textbf{attraversa il taglio} $(S, V \setminus S)$ se
@@ -43,7 +43,7 @@ Si forniscano alcune definizioni per gli MST:
 
 Per determinare se un lato è \textbf{safe}, si sfrutta il seguente teorema:
 
-\textbf{Teorema}: Sia $G = (V, E)$ u grafo non diretto, connesso e pesato. Sia $A$ un
+\textbf{Teorema}: Sia $G = (V, E)$ un grafo non diretto, connesso e pesato. Sia $A$ un
 sottoinsieme di $E$ incluso in una qualche MST di $G$, sia $(S, V \setminus S)$ un
 taglio che rispetta $A$, e sia $(u, v)$ un \textit{light edge} per $(S, V \setminus S)$.
 Allora $(u, v)$ è \textit{safe} per $A$.

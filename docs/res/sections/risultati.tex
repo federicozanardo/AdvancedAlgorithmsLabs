@@ -9,7 +9,7 @@ vertici nel grafo. Confrontate i tempi misurati con la complessità asintotica a
 teoria. Per ognuna delle istanze del problema, riportate il peso del minimum spanning tree
 ottenuto dagli algoritmi.}
 
-Abbiamo implementato il codice in Python per l'esecuzione dei tre algoritmi su tutto il dataset fornito. I risultati, che sono stati riportati anche nella sezione appendice, sono i seguenti:
+Abbiamo implementato il codice in Python per l'esecuzione dei tre algoritmi su tutto il dataset fornito. I risultati, che sono stati riportati in modo dettagliato e con i relativi pesi anche nella sezione appendice, sono riportati di seguito.
 
 \subsubsection{Risultati con Kruskal naive}
 
@@ -96,7 +96,7 @@ algoritmi rispetti alle varie istanze? C'è un algoritmo che riesce sempre a far
 degli altri? Quale dei tre algoritmi che avete implementato è più efficiente?}
 
 
-Analizzando i tre algoritmi abbiamo epurato che nel caso di Kruskal Naive l'algoritmo richiede un tempo medio di esecuzione in un ordine decisamente superiore rispetto a Kruskal UF e Prim. Infatti, il tempo medio calcolato nel caso del quartetto contenente il maggior numero di nodi (100.000 vertici) i risultati sono stati i seguenti:
+Analizzando i tre algoritmi abbiamo appurato che nel caso di Kruskal Naive l'algoritmo richiede un tempo medio di esecuzione in un ordine decisamente superiore rispetto a Kruskal UF e Prim. Infatti, il tempo medio calcolato nel caso del quartetto contenente il maggior numero di nodi (100000) i risultati sono stati i seguenti:
 
 \begin{table}[H]\centering
 	\begin{tabular}{l|l|l|l|l}
@@ -106,7 +106,7 @@ Analizzando i tre algoritmi abbiamo epurato che nel caso di Kruskal Naive l'algo
 	\end{tabular}
 \end{table}
 
-Confrontando invece i risultati con i grafi a minor numero di vertici abbiamo potuto constatare quanto segue:
+Confrontando invece i risultati dei grafi con un minor numero di vertici abbiamo potuto constatare quanto segue:
 
 \begin{table}[H]\centering
 	\begin{tabular}{l|l|l|l|l}
@@ -118,7 +118,7 @@ Confrontando invece i risultati con i grafi a minor numero di vertici abbiamo po
 	\end{tabular}
 \end{table}
 
-\noindent I tempi rilevati con Kruskal Naive risultano più vicini agli altri algoritmi dal momento che avvicinandoci a un minor numero di nodi non si può apprezzare una differenza di tempi di esecuzione medi, visto che per valori di \(n\) che tendono a 0 le funzioni delle complessità computazionali degli algoritmi restituiscono dei valori molto simili. 
+\noindent I tempi rilevati con Kruskal Naive risultano più vicini agli altri algoritmi dal momento che avvicinandoci a un minor numero di nodi non si può apprezzare una differenza di tempi di esecuzione media, visto che per valori di \(n\) che tendono a 0 le funzioni delle complessità computazionali degli algoritmi restituiscono dei valori molto simili. 
 
 \subsubsection{Confronto Prim-Kruskal Union Find}
 
@@ -146,4 +146,4 @@ Confrontando invece i risultati con i grafi a minor numero di vertici abbiamo po
 \end{figure}
 
 
-Nei grafici appena illustrati (fig. \ref{fig:krukal_vs_primnr}, \ref{fig:krukal_vs_prim}, \ref{fig:kruskal_vs_primlog}) sono riportati tre confronti tra l'algoritmo di Kruskal Union Find e l'algoritmo di Prim: i primi due in scala lineare e il terzo in scala logaritmico. In tutti e tre i casi è possibile vedere chiaramente che l'algoritmo di Kruskal UF risulta essere più efficiente rispetto all'algoritmo di Prim, dal momento che il tempo di esecuzione medio su un quartetto di grafi è moderatamente più basso per Kruskal UF. Da qui pertanto possiamo concludere che l'algoritmo di Kruskal UF tende a fare sempre meglio rispetto agli altri.
+Nei grafici appena illustrati (fig. \ref{fig:krukal_vs_primnr}, \ref{fig:krukal_vs_prim}, \ref{fig:kruskal_vs_primlog}) sono riportati tre confronti tra l'algoritmo di Kruskal Union Find e l'algoritmo di Prim: i primi due in scala lineare e il terzo in scala logaritmica. In tutti e tre i casi è possibile vedere chiaramente che \textbf{l'algoritmo di Kruskal UF risulta essere più efficiente rispetto all'algoritmo di Prim}, dal momento che il tempo di esecuzione medio su un quartetto di grafi è moderatamente più basso per Kruskal UF. Da questo pertanto possiamo concludere che l'algoritmo di Kruskal UF tende a fare sempre meglio rispetto agli altri.

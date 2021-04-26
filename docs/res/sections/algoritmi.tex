@@ -5,7 +5,7 @@
 La struttura dati per il grafo è stata implementata nel seguente
 modo:
 \begin{enumerate}
-    \item \verb|V| è un insime di nodi;
+    \item \verb|V| è un insieme di nodi;
     \item \verb|E| è una lista di lati;
     \item \verb|graph| rappresenta la \textit{lista di adiacenza}.
     Gli indici per accedere alla mappa sono rappresentati dai vertici.
@@ -33,10 +33,10 @@ algoritmo è quella di ordinare i lati in ordine crescente rispetto al
 loro peso $w$. Una volta ordinati, per ogni lato si controlla se
 aggiungendolo al grafo temporaneo questo crei un ciclo. Se crea un
 ciclo allora tale lato non verrà inserito, altrimenti il lato farà
-parte dell'MST $T$.
+parte del MST $T$.
 
 Ordinando i lati in base al loro peso e controllando che l'inserimento
-di un lato non crei un ciclo nel grafo, si otterà un albero la cui
+di un lato non crei un ciclo nel grafo, si otterrà un albero la cui
 somma dei suoi lati sarà minima.
 
 Si illustri lo pseudo-codice:
@@ -54,7 +54,7 @@ Si illustri lo pseudo-codice:
 
 \subsubsection{Implementazione}
 
-Nella nostra implementazione, abbiamo utilizzato l'algorimo di
+Nella nostra implementazione, abbiamo utilizzato l'algoritmo di
 ordinamento \textit{merge sort}, che cha una complessità
 computazionale pari a $\Theta(n log(n))$, per ordinare i lati
 in ordine crescente rispetto al loro peso.
@@ -93,7 +93,7 @@ Se almeno uno dei due lati non è presente nel grafo $A$, allora
 possiamo concludere che tale lato non introdurrà un ciclo nel grafo,
 in quanto il lato in questione permetterà di scoprire almeno un nuovo
 vertice del MST finale. Questa accortezza ci permette di risparmiare
-di effettuare delle chiamate a DFS soprattuto nella fase di avvio
+di effettuare delle chiamate a DFS soprattutto nella fase di avvio
 dell'algoritmo. Se invece, sia $u$ che $v$ sono già presenti
 nel grafo $A$, allora è necessario fare una chiamata a DFS per verificare
 che quel lato non introduca un ciclo nel grafo.
@@ -258,10 +258,10 @@ Si illustra lo pseudocodice dell'algoritmo di Prim con l'utilizzo di \textit{Hea
                     key[v] <- w(u,v)
 \end{verbatim}
 
-\subsubsection{Implementazione}
-La nostra implementazione ricalca l'implementazione standard dell'algoritmo di Prim
-con l'utilizzo di un \textit{MinHeap} come struttura dati a supporto. 
-Nell'implementare l'algoritmo, quindi, abbiamo creato una classe \texttt{Heap} con i segueti campi dati:
+\subsubsection{Struttura dati}
+
+Per la memorizzazione dei vertici del grafo di partenza, e per estrarne successivamente il nodo di peso minimo, abbiamo 
+creato una classe \texttt{Heap} con i seguenti campi dati:
 \begin{itemize}
     \item \texttt{list}, ossia una lista contenente i nodi del grafo rappresentati da oggetti di tipo \texttt{Node};
     \item \texttt{mapList}, ossia una mappa che permette di associare un nodo alla sua posizione in \texttt{list}. L'utilità
@@ -277,12 +277,15 @@ ai fini del suo utilizzo nell'algoritmo sono i seguenti metodi:
     \item \texttt{searchAndUpdateWeight} permette di aggiornare il peso di un nodo, ed è necessario
     per l'aggiornamento del grafo in seguito alla rimozione del nodo in testa al ciclo \textit{while}.
 \end{itemize}
-L'algoritmo fa quindi uso di un oggetto \texttt{Heap} per memorizzare i vertici del grafo di partenza e poi estrarne il
-nodo di peso minimo a ogni iterazione del ciclo \textit{while}.
+
+\subsubsection{Implementazione}
+
+La nostra implementazione ricalca l'implementazione standard dell'algoritmo di Prim con l'utilizzo di un 
+\textit{MinHeap} come struttura dati a supporto; essa non si discosta quindi dallo pseudocodice precedentemente mostrato.
 
 \subsubsection{Ottimizzazioni implementate}
 
-Anche per quanto riguarda l'algoritmo di Prim, abbiamo apportato una opportuna modifica per ottimizzarne l'esecuzione. \\
+Anche per quanto riguarda l'algoritmo di Prim abbiamo apportato una opportuna modifica per ottimizzarne l'esecuzione. \\
 Tale ottimizzazione consiste nell'utilizzo di una mappa, concretizzata in una variabile di tipo
 \texttt{defaultdict} in \textit{Python}, che associa a ogni nodo la sua posizione in \texttt{list}, ossia
 la lista dei nodi. Questa implementazione permette di ricercare la presenza di un vertice nello \textit{Heap} in tempo costante,

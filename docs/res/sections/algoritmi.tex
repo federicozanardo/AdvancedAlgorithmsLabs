@@ -230,3 +230,63 @@ a $O(mlog(n))$. Analizzando l'algoritmo, si può osservare che:
 \end{enumerate}
 
 \subsection{Prim}
+
+\subsubsection{Introduzione}
+
+La versione base dell'algoritmo di Prim ha una complessità computazionale
+pari a $\mathcal{O}(mn)$. L'idea alla base di questo algoritmo è quella di partire da un
+nodo arbitrario e scegliere, a ogni iterazione, l'arco che connetta con il minor peso possibile
+l'albero dei nodi del \textit{minimum spanning tree} al nuovo vertice. \\
+Nonostante la complessità sia polinomiale, e quindi efficiente, l'algoritmo può essere ottimizzato
+utilizzando la corretta struttura dati: l'implementazione dell'algoritmo di Prim con l'utilizzo di
+\textit{Heap}, infatti, permette di calcolare il minimo nodo da aggiungere all'albero in tempo logaritmico;
+la complessità computazionale dell'algoritmo in questa implementazione, quindi, diventa \newline $\mathcal{O}(m+n*log(n))$. \\
+Si illustra lo pseudocodice dell'algoritmo di Prim con l'utilizzo di \textit{Heap}:
+\newpage
+\begin{verbatim}
+    Prim(G,s)
+        for each u in V do
+            key[u] <- +inf
+            parent[u] <- nil
+        key[s] <- 0
+        Q <- V
+        while Q not empty do
+            u <- extractMin(Q)
+            for each v adjacent to u do
+                if v in Q and w(u,v) < key[v] then
+                    parent[v] <- u
+                    key[v] <- w(u,v)
+\end{verbatim}
+
+\subsubsection{Implementazione}
+La nostra implementazione ricalca l'implementazione standard dell'algoritmo di Prim
+con l'utilizzo di un \textit{MinHeap} come struttura dati a supporto. 
+Nell'implementare l'algoritmo, quindi, abbiamo creato una classe \texttt{Heap} con i segueti campi dati:
+\begin{itemize}
+    \item \texttt{list}, ossia una lista contenente i nodi del grafo rappresentati da oggetti di tipo \texttt{Node};
+    \item \texttt{mapList}, ossia una mappa che permette di associare un nodo alla sua posizione in \texttt{list}. L'utilità
+    di questa variabile viene discussa nel capitolo successivo;
+    \item \texttt{currentSize}, ossia la dimensione del grafo.
+\end{itemize}
+La classe \texttt{Heap} mette a disposizione i metodi classici della struttura dati \textit{Heap}; particolarmente importanti 
+ai fini del suo utilizzo nell'algoritmo sono i seguenti metodi:
+\begin{itemize}
+    \item \texttt{search} permette di sapere se un nodo è presente o meno nel grafo, ed è di particolare importanza
+    per il controllo dell'esistenza di un nodo durante l'esecuzione dell'algoritmo;
+    \item \texttt{extractMin} permette di estrarre il nodo di peso minimo in tempo logaritmico;
+    \item \texttt{searchAndUpdateWeight} permette di aggiornare il peso di un nodo, ed è necessario
+    per l'aggiornamento del grafo in seguito alla rimozione del nodo in testa al ciclo \textit{while}.
+\end{itemize}
+L'algoritmo fa quindi uso di un oggetto \texttt{Heap} per memorizzare i vertici del grafo di partenza e poi estrarne il
+nodo di peso minimo a ogni iterazione del ciclo \textit{while}.
+
+\subsubsection{Ottimizzazioni implementate}
+
+Anche per quanto riguarda l'algoritmo di Prim, abbiamo apportato una opportuna modifica per ottimizzarne l'esecuzione. \\
+Tale ottimizzazione consiste nell'utilizzo di una mappa, concretizzata in una variabile di tipo
+\texttt{defaultdict} in \textit{Python}, che associa a ogni nodo la sua posizione in \texttt{list}, ossia
+la lista dei nodi. Questa implementazione permette di ricercare la presenza di un vertice nello \textit{Heap} in tempo costante,
+e ciò è particolarmente utile perché la presenza del vertice deve essere verificata due volte ad ogni iterazione del ciclo \textit{for}
+dell'algoritmo (nella condizione \textit{if} e durante l'\textit{update} dello \textit{Heap}).
+Se non avessimo adottato tale ottimizzazione, queste operazioni avrebbero avuto una complessità lineare, andando così ad aumentare
+polinomialmente la complessità computazionale dell'algoritmo.

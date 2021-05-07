@@ -2,7 +2,7 @@
 
 """
 =================================================
-    Advanced Algorithm - Lab  (2020-21)
+    Advanced Algorithm - Lab 2 (2020-21)
   MD in Computer Science - University of Padua
 =================================================
 """

@@ -1,3 +1,7 @@
-# Advanced Algorithms - Lab1
+# Advanced Algorithms - Labs
 
-Advanced Algorithms UniPD - Lab 1
+Advanced Algorithms UniPD
+
+- Mariano Sciacco 
+- Federico Zanardo
+- Enrico Buratto

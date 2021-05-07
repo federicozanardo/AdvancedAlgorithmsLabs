@@ -10,6 +10,9 @@ from shutil import get_terminal_size
 from threading import Thread
 from time import sleep
 
+
+# TODO: change this into a working one with the new dataset
+
 def populateGraphFromFile(filepath):
     file = open(filepath, 'r')
     g = Graph()

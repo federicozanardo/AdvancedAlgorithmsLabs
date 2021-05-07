@@ -2,13 +2,13 @@
 
 """
 =================================================
-    Advanced Algorithm - Lab 1 (2020-21)
+    Advanced Algorithm - Lab  (2020-21)
   MD in Computer Science - University of Padua
 =================================================
 """
 
 __author__ = "E. Buratto, M. Sciacco, F. Zanardo"
-__version__ = "1.0.0"
+__version__ = "0.0.1"
 __license__ = "Unlicense"
 
 import argparse
@@ -23,10 +23,7 @@ from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
 from algorithms.utils import Loader
-from algorithms.mst import MST
 from algorithms.prim import Prim
-from measurements.single import executeSingleGraphCalculus,executeTheSuperFancyFunctionToCalculateMegaComplexGraphs
-from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets
 import sys
 from os import walk, path
 import time
@@ -36,7 +33,6 @@ import multiprocessing
 def main(args):
 
     start = time.time()  # Timer di partenza del programma
-    fileResultLock = multiprocessing.Lock() # Accesso condiviso per una eventuale implementazione con multithreading
     
     # Recupero il path in input e salvo i grafi individuati
 
@@ -54,30 +50,30 @@ def main(args):
 
     # Eseguo una delle opzioni seguenti
 
-    if sys.argv[1] == "all":
-        executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, fileResultLock)
+    # if sys.argv[1] == "all":
+    #     executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, fileResultLock)
 
-    if sys.argv[1] == "all-quartet":
-        executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
+    # if sys.argv[1] == "all-quartet":
+    #     executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
     
-    if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
-        for graph in graphs:
-            prim = Prim()
-            mst = MST()
-            key,_ = prim.prim_mst(graph, 1)
-            print("Prim \t\t => \t", prim.get_weight(key))
+    # if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
+    #     for graph in graphs:
+    #         prim = Prim()
+    #         mst = MST()
+    #         key,_ = prim.prim_mst(graph, 1)
+    #         print("Prim \t\t => \t", prim.get_weight(key))
 
-    if sys.argv[1] == "kruskal-opt" or sys.argv[1] == "all-single":
-        for graph in graphs:
-            mst = MST()
-            final_graph = mst.kruskal_union_find(graph)
-            print("Kruskal UF \t => \t", mst.get_mst_weight(final_graph))
+    # if sys.argv[1] == "kruskal-opt" or sys.argv[1] == "all-single":
+    #     for graph in graphs:
+    #         mst = MST()
+    #         final_graph = mst.kruskal_union_find(graph)
+    #         print("Kruskal UF \t => \t", mst.get_mst_weight(final_graph))
 
-    if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":
-        for graph in graphs:
-            mst = MST()
-            final_graph = mst.kruskal_naive(graph)
-            print("Kruskal Naive \t => \t", mst.get_mst_weight(final_graph.E))
+    # if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":
+    #     for graph in graphs:
+    #         mst = MST()
+    #         final_graph = mst.kruskal_naive(graph)
+    #         print("Kruskal Naive \t => \t", mst.get_mst_weight(final_graph.E))
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 

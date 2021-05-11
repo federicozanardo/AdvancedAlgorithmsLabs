@@ -18,11 +18,10 @@ from time import perf_counter_ns
 import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
-from algorithms.utils import populateGraphFromFile as populate
-from algorithms.utils import loadFromFolder
+from algorithms.utils import populateTSPFromFile as populate
 from algorithms.utils import loadFromFile
+from algorithms.utils import loadFromFolder
 from algorithms.utils import bcolors as col
-from algorithms.utils import Loader
 from algorithms.prim import Prim
 import sys
 from os import walk, path
@@ -36,7 +35,7 @@ def main(args):
     
     # Recupero il path in input e salvo i grafi individuati
 
-    dirpath = sys.argv[2]
+    dirpath = sys.argv[1]
 
     assert path.isfile(dirpath) or path.isdir(
         dirpath), "File or folder not found"
@@ -82,7 +81,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Required positional arguments
-    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-quartet/all-single/prim/kruskal/kruskal-opt>")
     parser.add_argument("<dataset path>", help="Posizione del singolo file o della cartella con i dataset")
 
     parser.add_argument(

@@ -1,5 +1,6 @@
 import sys
 import math
+from collections import defaultdict
 sys.path.append('../')
 
 # PRE = in nodes le coordinate sono in radianti
@@ -20,15 +21,16 @@ class TSP:
 
     def get_weight(self, first: int, sec: int):
         RRR = 6378.388
-        q1 = math.cos(self.nodes[first][1] - self.nodes[second][1])
-        q2 = math.cos(self.nodes[first][0] - self.nodes[second][0])
-        q3 = math.cos(self.nodes[first][0] + self.nodes[second][0])
+        q1 = math.cos(self.nodes[first][1] - self.nodes[sec][1])
+        q2 = math.cos(self.nodes[first][0] - self.nodes[sec][0])
+        q3 = math.cos(self.nodes[first][0] + self.nodes[sec][0])
         return int(RRR*math.acos(0.5*((1.0+q1)*q2 - (1.0-q1)*q3)) + 1.0)
         
     def calculateAdjMatrix(self):
-        for i in range(self.dimension):
-            self.adjMatrix.append([0 for i in range(self.dimension)])
-    
-        for i in range(self.dimension):
-            for j in range(self.dimension):
-                self.adjMatrix[i][j] = self.adjMatrix[j][i] = self.get_weight(i, j)
+        for i in range(1, self.dimension+1):
+            self.adjMatrix.append([0 for i in range(1, self.dimension+1)])
+
+        for i in range(1, self.dimension):
+            for j in range(1, self.dimension):
+                self.adjMatrix[i][j] = self.get_weight(i, j)
+                self.adjMatrix[j][i] = self.adjMatrix[i][j]

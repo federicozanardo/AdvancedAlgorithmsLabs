@@ -24,7 +24,11 @@ class TSP:
         q1 = math.cos(self.nodes[first][1] - self.nodes[sec][1])
         q2 = math.cos(self.nodes[first][0] - self.nodes[sec][0])
         q3 = math.cos(self.nodes[first][0] + self.nodes[sec][0])
-        return int(RRR*math.acos(0.5*((1.0+q1)*q2 - (1.0-q1)*q3)) + 1.0)
+        final = RRR*math.acos(0.5*((1.0+q1)*q2 - (1.0-q1)*q3)) + 1.0
+        if self.etype == 'GEO':
+            return math.floor(final)
+        else:
+            return int(round(final))
         
     def calculateAdjMatrix(self):
         for i in range(1, self.dimension+1):

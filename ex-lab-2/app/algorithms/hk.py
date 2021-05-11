@@ -21,7 +21,6 @@ class HeldKarp:
         S = []
         for i in range(1, self.tsp.dimension+1):
             S.append(i)
-            print(self.tsp.nodes)
             self.d[i].append(None)
             self.p[i].append(None)
         return self.hk_visit(1, S)
@@ -34,7 +33,7 @@ class HeldKarp:
         print("Visiting: ", v, "Remaining: ", len(S))
         if len(S) == 1 and v in S: # S[v] != null
             return self.tsp.get_weight(v, 1)
-        elif self.d[v][0] != None: # d[v] != null
+        elif v in self.d and self.d[v][0] != None: # d[v] != null
             return self.d[v][0]
         else:
             mindist = float('inf')

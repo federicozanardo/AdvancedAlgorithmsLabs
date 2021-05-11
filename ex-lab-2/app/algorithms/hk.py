@@ -21,6 +21,7 @@ class HeldKarp:
         S = []
         for i in range(1, self.tsp.dimension+1):
             S.append(i)
+            print(self.tsp.nodes)
             self.d[i].append(None)
             self.p[i].append(None)
         return self.hk_visit(1, S)
@@ -33,16 +34,17 @@ class HeldKarp:
         print("Visiting: ", v, "Remaining: ", len(S))
         if len(S) == 1 and v in S: # S[v] != null
             return self.tsp.get_weight(v, 1)
-        elif v in self.d and self.d[v][0] != None: # d[v] != null
+        elif self.d[v][0] != None: # d[v] != null
             return self.d[v][0]
         else:
             mindist = float('inf')
             minprec = None
         
             # FIXME: many doubts about the legality of this move
-            S.remove(v)
-            for u in S:
-                dist = self.hk_visit(u, S)
+            SS = copy.deepcopy(S)
+            SS.remove(v)
+            for u in SS:
+                dist = self.hk_visit(u, SS)
                 w = self.tsp.get_weight(u, v)
                 if dist + w < mindist:
                     mindist = dist + w

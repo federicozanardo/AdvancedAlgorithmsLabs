@@ -17,15 +17,35 @@ def populateTSPFromFile(filepath):
     file = open(filepath, 'r')
     formatted_file = file.read().split('\n')
     tsp = TSP()
-    tsp.name, tsp.dimension, tsp.etype = formatted_file[0].split(':')[1], int(formatted_file[3].split(':')[1]), formatted_file[4].split(':')[1]
+
+    absolutelyUsefulVariableIndexBecausePregMatchBad = 0
+    for i in range(10):
+        absolutelyUsefulVariableIndexBecausePregMatchBad += 1 # (i+1) past the NODE_COORD_SECTION
+
+        if formatted_file[i].split(':')[0] == "NAME":
+            tsp.name = formatted_file[i].split(':')[1]
+            
+        if formatted_file[i].split(':')[0] == "TYPE":
+            tsp.etype = formatted_file[i].split(':')[1]
+
+        if formatted_file[i].split(':')[0] == "DIMENSION":
+            tsp.dimension = int(formatted_file[i].split(':')[1])
+    
+        if formatted_file[i] == "NODE_COORD_SECTION":
+            break
+
+    if absolutelyUsefulVariableIndexBecausePregMatchBad == 10:
+        print("where banana")
+        exit()
 
     for i in range(tsp.dimension):
-        row = formatted_file[i+5].split(' ')
-        tsp.add_node(int(row[0]), float(row[1]), float(row[2]))
-
+        row = formatted_file[i+absolutelyUsefulVariableIndexBecausePregMatchBad].split(' ')
+        tsp.add_node(float(row[0]), float(row[1]), float(row[2]))
     file.close()
 
-    return t
+    tsp.calculateAdjMatrix()
+
+    return tsp
 
 
 def loadFromFolder(dirpath):

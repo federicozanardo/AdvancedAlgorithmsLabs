@@ -11,7 +11,7 @@ from threading import Thread
 from time import sleep
 
 
-# TODO: change this into a working one with the new dataset
+
 
 def populateTSPFromFile(filepath):
     file = open(filepath, 'r')
@@ -25,15 +25,16 @@ def populateTSPFromFile(filepath):
         if formatted_file[i].split(':')[0] == "NAME":
             tsp.name = formatted_file[i].split(':')[1]
             
-        if formatted_file[i].split(':')[0] == "TYPE":
-            tsp.etype = formatted_file[i].split(':')[1]
+        elif formatted_file[i].split(':')[0] == "EDGE_WEIGHT_TYPE":
+            tsp.etype = formatted_file[i].split(':')[1].strip()
 
-        if formatted_file[i].split(':')[0] == "DIMENSION":
+        elif formatted_file[i].split(':')[0] == "DIMENSION":
             tsp.dimension = int(formatted_file[i].split(':')[1])
     
-        if formatted_file[i] == "NODE_COORD_SECTION":
+        elif formatted_file[i] == "NODE_COORD_SECTION":
             break
 
+    # How to lose time to fix datasets :))))
     if absolutelyUsefulVariableIndexBecausePregMatchBad == 10:
         print("where banana")
         exit()

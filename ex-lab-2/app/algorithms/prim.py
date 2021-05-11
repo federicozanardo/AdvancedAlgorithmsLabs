@@ -65,7 +65,7 @@ class Prim:
             for (v,w) in G.graph[u[0]]:
                 if Q.search(v) and w < key[v]:
                     parent[v] = u
-                    key[v] = w 
+                    key[v] = w
                     Q.searchAndUpdateWeight(v, key[v])
                     
         return key, parent

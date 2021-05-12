@@ -19,9 +19,10 @@ class HeldKarp:
     def hk_init(self, tsp):
         self.tsp = copy.deepcopy(tsp)
         S = []
+        print(self.tsp.etype)
         for i in range(1, self.tsp.dimension+1):
             S.append(i)
-            self.d[i].append(None)
+            self.d[i] = {"w": None, "path": []}
             self.p[i].append(None)
         return self.hk_visit(1, S)
 
@@ -30,24 +31,40 @@ class HeldKarp:
     # S = vertici da scorrere presenti in V
     # v = vertice corrente
     def hk_visit(self, v, S):
-        print("Visiting: ", v, "Remaining: ", len(S))
-        if len(S) == 1 and v in S: # S[v] != null
-            return self.tsp.get_weight(v, 1)
-        elif v in self.d and self.d[v][0] != None: # d[v] != null
-            return self.d[v][0]
+        # print("Visiting: ", v, "Remaining: ", len(S))
+        
+        # Caso base 1: soluzione è il peso dell'arco {v, 1}
+        if len(S) == 1 and v == S[0]:
+            return self.tsp.adjMatrix[v][1]
+
+        # Caso base 2: se il peso è già stato calcolato ritorno il peso
+        elif self.d[v]['w'] != None: 
+            return self.d[v]['w']
+
+        # Caso ricorsivo: cerco il cammino minimo tra tutti i sottocammini 
         else:
             mindist = float('inf')
             minprec = None
-        
-            # FIXME: many doubts about the legality of this move
+
+            # Ottengo SS = S \ {v}
             SS = copy.deepcopy(S)
             SS.remove(v)
+
             for u in SS:
+                
+                # Calcolo ricorsivamente il peso della distanza nei sottocammini
                 dist = self.hk_visit(u, SS)
-                w = self.tsp.get_weight(u, v)
-                if dist + w < mindist:
+
+                # Recupero il peso dell'arco {u, v}
+                w = self.tsp.adjMatrix[u][v]
+
+                # Prendo il minimo della distanza tra quello precedente e quello nuovo
+                if (dist + w) < mindist:
                     mindist = dist + w
                     minprec = u
-            self.d[v][0] = mindist
-            self.p[v][0] = minprec
+                    self.d[v]['path'].append(u)
+            
+            # Assegno il nuovo peso calcolato che risulta il cammino minimo
+            self.d[v]['w'] = mindist
+            self.p[v] = minprec
             return mindist

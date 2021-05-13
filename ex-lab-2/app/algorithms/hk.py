@@ -11,15 +11,18 @@ class HeldKarp:
         self.d = defaultdict(list)
         self.p = defaultdict(list)
         self.tsp = None
-        #self.timeStart = None
+        self.timeStart = None
+        self.timeEnd = None
 
     def hk_init(self, tsp):
         self.tsp = tsp
         S = []
         for i in range(1, self.tsp.dimension+1):
             S.append(i)
-        #self.timeStart = time.time()
-        return self.hk_visit(1, S)
+        self.timeStart = time.time()
+        result = self.hk_visit(1, S)
+        self.timeEnd = time.time() - self.timeStart
+        return result
         
     # PRE: S sottoinsieme di V, v € S
     # POST: d[v,S] è il peso / distanza del cammino minimo da 0 che visita tutti i vertici in S, 
@@ -52,17 +55,19 @@ class HeldKarp:
                     SE.append(x)
             
             for u in SE:
-                
-                # Calcolo ricorsivamente il peso della distanza nei sottocammini
-                dist = self.hk_visit(u, SE)
+                if time.time() - self.timeStart < 190.0:
+                    # Calcolo ricorsivamente il peso della distanza nei sottocammini
+                    dist = self.hk_visit(u, SE)
 
-                # Recupero il peso dell'arco {u, v}
-                w = self.tsp.adjMatrix[u][v]
+                    # Recupero il peso dell'arco {u, v}
+                    w = self.tsp.adjMatrix[u][v]
 
-                # Prendo il minimo della distanza tra quello precedente e quello nuovo
-                if (dist + w) < mindist:
-                    mindist = dist + w
-                    minprec = u
+                    # Prendo il minimo della distanza tra quello precedente e quello nuovo
+                    if (dist + w) < mindist:
+                        mindist = dist + w
+                        minprec = u
+                else:
+                    return mindist
          
             # Assegno il nuovo peso calcolato che risulta il cammino minimo
             self.d[currentKey] = mindist 

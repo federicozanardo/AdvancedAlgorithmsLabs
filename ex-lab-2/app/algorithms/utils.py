@@ -1,7 +1,7 @@
 #!/user/bin/env python3
 
 import sys
-from data_structures.graph import Graph
+from data_structures.tsp import TSP
 from os import walk
 sys.path.append('../')
 
@@ -11,31 +11,49 @@ from threading import Thread
 from time import sleep
 
 
-# TODO: change this into a working one with the new dataset
 
-def populateGraphFromFile(filepath):
+
+def populateTSPFromFile(filepath):
     file = open(filepath, 'r')
-    g = Graph()
     formatted_file = file.read().split('\n')
-    n_vertices, n_edges = int(formatted_file[0].split(
-        ' ')[0]), int(formatted_file[0].split(' ')[1])
+    tsp = TSP()
 
-    for i in range(n_edges):
-        row = formatted_file[i+1].split(' ')
-        g.add_vertex(int(row[0]))
-        g.add_vertex(int(row[1]))
-        g.add_edge(int(row[0]), int(row[1]), int(row[2]))
+    absolutelyUsefulVariableIndexBecausePregMatchBad = 0
+    for i in range(10):
+        absolutelyUsefulVariableIndexBecausePregMatchBad += 1 # (i+1) past the NODE_COORD_SECTION
 
+        if formatted_file[i].split(':')[0] == "NAME":
+            tsp.name = formatted_file[i].split(':')[1]
+            
+        elif formatted_file[i].split(':')[0] == "EDGE_WEIGHT_TYPE":
+            tsp.etype = formatted_file[i].split(':')[1].strip()
+
+        elif formatted_file[i].split(':')[0] == "DIMENSION":
+            tsp.dimension = int(formatted_file[i].split(':')[1])
+    
+        elif formatted_file[i] == "NODE_COORD_SECTION":
+            break
+
+    # How to lose time to fix datasets :))))
+    if absolutelyUsefulVariableIndexBecausePregMatchBad == 10:
+        print("where banana")
+        exit()
+
+    for i in range(tsp.dimension):
+        row = formatted_file[i+absolutelyUsefulVariableIndexBecausePregMatchBad].split(' ')
+        tsp.add_node(int(row[0]), float(row[1]), float(row[2]))
     file.close()
 
-    return g
+    tsp.calculateAdjMatrix()
+
+    return tsp
 
 
 def loadFromFolder(dirpath):
     print("Loading dataset files...", end="")
     sys.stdout.flush()
 
-    graphs = []
+    tsps = []
     filenames = []
 
     for root, dirs, files in walk(dirpath):  # load filenames
@@ -44,25 +62,25 @@ def loadFromFolder(dirpath):
     filenames.sort() 
 
     for file in filenames:  # load files
-        g = populateGraphFromFile(dirpath + '/' + file)
-        graphs.append(g)
+        p = populateTSPFromFile(dirpath + '/' + file)
+        tsps.append(p)
 
     print("DONE")
     sys.stdout.flush()
 
-    return graphs
+    return tsps
 
 
 def loadFromFile(filepath):
     print("Loading dataset files...", end="")
     sys.stdout.flush()
 
-    graph = populateGraphFromFile(filepath)
+    tsp = populateTSPFromFile(filepath)
 
     print("DONE")
     sys.stdout.flush()
 
-    return graph
+    return tsp
 
 
 class bcolors:
@@ -75,47 +93,3 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
-
-class Loader:
-    def __init__(self, desc="Loading...", end="Done!", timeout=0.1):
-        """
-        A loader-like context manager
-
-        Args:
-            desc (str, optional): The loader's description. Defaults to "Loading...".
-            end (str, optional): Final print. Defaults to "Done!".
-            timeout (float, optional): Sleep time between prints. Defaults to 0.1.
-        """
-        self.desc = desc
-        self.end = end
-        self.timeout = timeout
-
-        self._thread = Thread(target=self._animate, daemon=True)
-        self.steps = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
-        self.done = False
-
-    def start(self):
-        self._thread.start()
-        return self
-
-    def _animate(self):
-        for c in cycle(self.steps):
-            if self.done:
-                break
-            print(f"\r{self.desc} {c}", flush=True, end="")
-            sleep(self.timeout)
-
-    def __enter__(self):
-        self.start()
-
-    def stop(self):
-        self.done = True
-        cols = get_terminal_size((80, 20)).columns
-        print("\r" + " " * cols, end="", flush=True)
-        print(f"\r{self.end}", flush=True)
-
-    def __exit__(self, exc_type, exc_value, tb):
-        # handle exceptions with those variables ^
-        self.stop()
-        

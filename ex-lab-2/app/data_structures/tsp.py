@@ -2,7 +2,6 @@ import sys
 import math
 from collections import defaultdict
 sys.path.append('../')
-import numpy
 
 # PRE = in nodes le coordinate sono in radianti
 class TSP:
@@ -29,7 +28,7 @@ class TSP:
             q3 = math.cos(self.nodes[first][0] + self.nodes[sec][0])
             return int(RRR * math.acos( 0.5*((1.0+q1)*q2 - (1.0-q1)*q3) ) + 1.0)
         else:
-            return math.floor(math.sqrt((self.nodes[sec][1]-self.nodes[first][1])**2 + (self.nodes[sec][0]-self.nodes[first][0])**2))
+            return math.sqrt((self.nodes[sec][1]-self.nodes[first][1])**2 + (self.nodes[sec][0]-self.nodes[first][0])**2)
 
     def calculateAdjMatrix(self):
         for i in range(self.dimension+1):

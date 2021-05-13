@@ -58,17 +58,19 @@ def main(args):
     # if sys.argv[1] == "all-quartet":
     #     executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
 
-    if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
-        for tsp in tsps:
-            hk = HeldKarp()
-            res = hk.hk_init(tsp)
-            print("Held and Karp \t => \t", res, hk.d)
+
 
     if sys.argv[1] == "2ap" or sys.argv[1] == "all-single":
         for tsp in tsps:
             final = TwoApproximation()
             res = final.algorithm(tsp)
             print("2 approximation \t => \t", res)
+
+    if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
+        for tsp in tsps:
+            hk = HeldKarp()
+            res = hk.hk_init(tsp)
+            print("Held and Karp \t => \t", res)    
 
 
     if sys.argv[1] == "nn" or sys.argv[1] == "all-single":

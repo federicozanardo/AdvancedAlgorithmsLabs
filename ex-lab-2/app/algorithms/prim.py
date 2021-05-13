@@ -70,12 +70,12 @@ class Prim:
         #print(len(T.adjMatrix[0]))
         while Q.currentSize != 0:
             u = (Q.extractMin()).toTuple()
-            print('U=',u)
+            # print('U=',u)
             for j in range(1, len(T.adjMatrix[int(u[0])])):
                 if Q.search(j) and T.adjMatrix[int(u[0])][j] < key[j]:
                     parent[j] = u
                     key[j] = T.adjMatrix[int(u[0])][j]
-                    print('J=',j)
+                    #print('J=',j)
                     Q.searchAndUpdateWeight(j, key[j])
 
             # for (v,w) in G.graph[u[0]]:

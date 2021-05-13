@@ -15,7 +15,7 @@ import argparse
 from random import randint
 import gc
 from time import perf_counter_ns
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
 from algorithms.utils import populateTSPFromFile as populate
@@ -51,7 +51,7 @@ def main(args):
     kek = TwoApproximation()
 
     sum = kek.algorithm(tsps[0])
-    print(sum)
+    # print(sum)
     # Eseguo una delle opzioni seguenti
 
     # if sys.argv[1] == "all":
@@ -73,14 +73,15 @@ def main(args):
     #         final_graph = mst.kruskal_union_find(graph)
     #         print("Kruskal UF \t => \t", mst.get_mst_weight(final_graph))
 
-    if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
-        for graph in graphs:
-            hk = HeldKarp()
-            final = hk.hk_init(graphs[0]) # FIXME: with correct variables
-            res = hk.d
-            print("Held and Karp \t => \t", final, res)
+    # if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
+    #     for graph in graphs:
+    #         hk = HeldKarp()
+    #         final = hk.hk_init(graphs[0]) # FIXME: with correct variables
+    #         res = hk.d
+    #         print("Held and Karp \t => \t", final, res)
 
-    print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
+    print(
+        ">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time() - start, 8)) + "s" + col.ENDC)
 
 
 if __name__ == "__main__":

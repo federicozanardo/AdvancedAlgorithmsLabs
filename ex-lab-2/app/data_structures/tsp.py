@@ -1,10 +1,16 @@
 import sys
 import math
 from collections import defaultdict
+
 sys.path.append('../')
-import numpy
+# import numpy
+
+PI = 3.141592
+
 
 # PRE = in nodes le coordinate sono in radianti
+
+
 class TSP:
     def __init__(self):
         self.name = ''
@@ -13,12 +19,12 @@ class TSP:
         self.nodes = defaultdict(list)
         self.adjMatrix = []
 
-
     def add_node(self, i: int, x: float, y: float):
-        if(self.etype == 'GEO'):
+        if self.etype == 'GEO':
             degX, degY = int(x), int(y)
             minX, minY = x - degX, y - degY
-            x, y = math.pi*(degX+5.0*minX/3.0)/180.0, math.pi*(degY+5.0*minY/3.0)/180.0
+            # x, y = math.pi*(degX+5.0*minX/3.0)/180.0, math.pi*(degY+5.0*minY/3.0)/180.0
+            x, y = PI * (degX + 5.0 * minX / 3.0) / 180.0, PI * (degY + 5.0 * minY / 3.0) / 180.0
         self.nodes[i] = [x,y]
 
     def get_weight(self, first: int, sec: int):
@@ -30,8 +36,8 @@ class TSP:
             return int(RRR * math.acos( 0.5*((1.0+q1)*q2 - (1.0-q1)*q3) ) + 1.0)
         else:
             # return math.floor(math.sqrt((self.nodes[sec][1]-self.nodes[first][1])**2 + (self.nodes[sec][0]-self.nodes[first][0])**2))
-            return math.sqrt(
-                (self.nodes[sec][1] - self.nodes[first][1]) ** 2 + (self.nodes[sec][0] - self.nodes[first][0]) ** 2)
+            return round(math.sqrt(
+                (self.nodes[sec][1] - self.nodes[first][1]) ** 2 + (self.nodes[sec][0] - self.nodes[first][0]) ** 2))
 
     def calculateAdjMatrix(self):
         for i in range(self.dimension+1):
@@ -58,7 +64,6 @@ class TSP:
             for i in range(1, self.dimension+1):
                 self.adjMatrix[i][index] = self.adjMatrix[index][i] = 0
             self.dimension = self.dimension - 1
-
 
     def get_min_node(self, visited, index: int):
         minWeight = float('inf')

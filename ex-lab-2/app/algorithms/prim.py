@@ -49,8 +49,8 @@ class Prim:
             key[i] = 0 if s==i else float('inf')
             parent[i] = None
             Q.insert(Node(i, key[i]))
-            
-        print('dimensione di Q', len(Q.list))
+
+        # print('dimensione di Q', len(Q.list))
 
         # for node in T.nodes:
         #     key[node] = 0 if s==node else float('inf')

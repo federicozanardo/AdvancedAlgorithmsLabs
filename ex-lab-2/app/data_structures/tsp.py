@@ -21,18 +21,6 @@ class TSP:
             x, y = math.pi*(degX+5.0*minX/3.0)/180.0, math.pi*(degY+5.0*minY/3.0)/180.0
         self.nodes[i] = [x,y]
 
-    # FUNZIONA (tm) ?
-    # def get_weight(self, first: int, sec: int):
-    #     RRR = 6378.388
-    #     q1 = math.cos(self.nodes[first][1] - self.nodes[sec][1])
-    #     q2 = math.cos(self.nodes[first][0] - self.nodes[sec][0])
-    #     q3 = math.cos(self.nodes[first][0] + self.nodes[sec][0])
-    #     final = (RRR*math.acos((0.5*((1.0+q1)*q2 - (1.0-q1)*q3))) + 1.0)
-    #     if self.etype == 'GEO':
-    #         return math.floor(final)
-    #     else:
-    #         return int(round(final))
-
     def get_weight(self, first: int, sec: int):
         if self.etype == 'GEO':
             RRR = 6378.388

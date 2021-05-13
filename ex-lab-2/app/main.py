@@ -18,6 +18,7 @@ from time import perf_counter_ns
 # import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
+from data_structures.tsp import TSP
 from algorithms.utils import populateTSPFromFile as populate
 from algorithms.utils import loadFromFile
 from algorithms.utils import loadFromFolder
@@ -25,6 +26,7 @@ from algorithms.utils import bcolors as col
 from algorithms.prim import Prim
 from algorithms.hk import HeldKarp
 from algorithms.two_approximation import TwoApproximation
+from algorithms.nearestneighbor import NearestNeighbor
 import sys
 from os import walk, path
 import time
@@ -59,29 +61,26 @@ def main(args):
 
     # if sys.argv[1] == "all-quartet":
     #     executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
-    
-    # if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
-    #     for graph in graphs:
-    #         prim = Prim()
-    #         mst = MST()
-    #         key,_ = prim.prim_mst(graph, 1)
-    #         print("Prim \t\t => \t", prim.get_weight(key))
 
-    # if sys.argv[1] == "kruskal-opt" or sys.argv[1] == "all-single":
-    #     for graph in graphs:
-    #         mst = MST()
-    #         final_graph = mst.kruskal_union_find(graph)
-    #         print("Kruskal UF \t => \t", mst.get_mst_weight(final_graph))
+    if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
+        for tsp in tsps:
+            hk = HeldKarp()
+            res = hk.hk_init(tsp)
+            print("Held and Karp \t => \t", res, hk.d)
 
-    # if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
-    #     for graph in graphs:
-    #         hk = HeldKarp()
-    #         final = hk.hk_init(graphs[0]) # FIXME: with correct variables
-    #         res = hk.d
-    #         print("Held and Karp \t => \t", final, res)
+    if sys.argv[1] == "2ap" or sys.argv[1] == "all-single":
+        for tsp in tsps:
+            final = TwoApproximation()
+            res = final.algorithm(tsp)
+            print("2 approximation \t => \t", res)
 
-    print(
-        ">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time() - start, 8)) + "s" + col.ENDC)
+
+    if sys.argv[1] == "nn" or sys.argv[1] == "all-single":
+        for tsp in tsps:
+            res = NearestNeighbor().algorithm(tsp)
+            print("Nearest neighbor \t => \t", res)
+
+    print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 
 
 if __name__ == "__main__":

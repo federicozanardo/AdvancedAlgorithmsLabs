@@ -23,6 +23,7 @@ from algorithms.utils import loadFromFile
 from algorithms.utils import loadFromFolder
 from algorithms.utils import bcolors as col
 from algorithms.prim import Prim
+from algorithms.two_approximation import TwoApproximation
 import sys
 from os import walk, path
 import time
@@ -41,12 +42,15 @@ def main(args):
         dirpath), "File or folder not found"
 
     if path.isdir(dirpath):
-        graphs = loadFromFolder(dirpath)
+        tsps = loadFromFolder(dirpath)
     elif path.isfile(dirpath):     
-        graph = loadFromFile(dirpath)
-        graphs = [graph]
+        tsp = loadFromFile(dirpath)
+        tsps = [tsp]
 
+    kek = TwoApproximation()
 
+    sum = kek.algorithm(tsps[0])
+    print(sum)
     # Eseguo una delle opzioni seguenti
 
     # if sys.argv[1] == "all":

@@ -41,7 +41,7 @@ def populateTSPFromFile(filepath):
 
     for i in range(tsp.dimension):
         row = formatted_file[i+absolutelyUsefulVariableIndexBecausePregMatchBad].split(' ')
-        tsp.add_node(float(row[0]), float(row[1]), float(row[2]))
+        tsp.add_node(int(row[0]), float(row[1]), float(row[2]))
     file.close()
 
     tsp.calculateAdjMatrix()

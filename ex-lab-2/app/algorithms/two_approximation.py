@@ -4,10 +4,13 @@ from data_structures.tsp import TSP
 
 class TwoApproximation:
     def algorithm(self, graph: TSP):
+        print('[TwoApproximation] AdjMatrix')
+        print(graph.adjMatrix)
+        
         starting_node = 1
         prim = Prim()
-        key, mst = prim.prim_mst(graph, starting_node)
-        print('Result of Prim: ', mst)
+        _, mst = prim.prim_mst(graph, starting_node)
+        print('[TwoApproximation] Result of Prim: ', mst)
 
         tree = {}
 
@@ -15,23 +18,23 @@ class TwoApproximation:
         # Complexity: O(m)
         for index in mst:
             if mst[index] != None:
-                (parent, w) = mst[index]
-                print('mst[index]: ', mst[index])
+                (parent, _) = mst[index]
+                #print('mst[index]: ', mst[index])
                 if parent not in tree:
                     tree[parent] = []
                 tree[parent].append(index)
 
-        print('Tree: {}\n'.format(tree))
+        print('[TwoApproximation] Tree: {}\n'.format(tree))
 
         preorder_result = []
         sum = self.preorder(graph, tree, starting_node, preorder_result)
-        print('Result of preorder: ', preorder_result)
+        print('[TwoApproximation] Result of preorder: ', preorder_result)
         
         # Add the weight of the edge between the starting node and the last node of the MST to create a cycle
         #sum += int(graph.get_weight(preorder_result[len(preorder_result) - 1], 1))
         sum += int(graph.adjMatrix[preorder_result[len(preorder_result) - 1]][1])
         
-        print('Result: {}'.format(str(sum)))
+        print('[TwoApproximation] Result: {}'.format(str(sum)))
 
         return sum
 

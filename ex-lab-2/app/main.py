@@ -23,6 +23,7 @@ from algorithms.utils import loadFromFile
 from algorithms.utils import loadFromFolder
 from algorithms.utils import bcolors as col
 from algorithms.prim import Prim
+from algorithms.hk import HeldKarp
 import sys
 from os import walk, path
 import time
@@ -35,7 +36,7 @@ def main(args):
     
     # Recupero il path in input e salvo i grafi individuati
 
-    dirpath = sys.argv[1]
+    dirpath = sys.argv[2]
 
     assert path.isfile(dirpath) or path.isdir(
         dirpath), "File or folder not found"
@@ -68,11 +69,12 @@ def main(args):
     #         final_graph = mst.kruskal_union_find(graph)
     #         print("Kruskal UF \t => \t", mst.get_mst_weight(final_graph))
 
-    # if sys.argv[1] == "kruskal" or sys.argv[1] == "all-single":
-    #     for graph in graphs:
-    #         mst = MST()
-    #         final_graph = mst.kruskal_naive(graph)
-    #         print("Kruskal Naive \t => \t", mst.get_mst_weight(final_graph.E))
+    if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
+        for graph in graphs:
+            hk = HeldKarp()
+            final = hk.hk_init(graphs[0]) # FIXME: with correct variables
+            res = hk.d
+            print("Held and Karp \t => \t", final, res)
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 
@@ -81,12 +83,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Required positional arguments
+    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-single>")
     parser.add_argument("<dataset path>", help="Posizione del singolo file o della cartella con i dataset")
 
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s MSTCalculator (version {version}) by {authors}".format(version=__version__,authors=__author__))
+        version="%(prog)s TSPCalculator (version {version}) by {authors}".format(version=__version__,authors=__author__))
 
     args = parser.parse_args()
     main(args)

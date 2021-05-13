@@ -1,8 +1,8 @@
 from collections import defaultdict
 import sys
+import time
 sys.path.append('../')
 from data_structures.tsp import TSP
-
 
 
 class HeldKarp:
@@ -11,19 +11,14 @@ class HeldKarp:
         self.d = defaultdict(list)
         self.p = defaultdict(list)
         self.tsp = None
-
-    def _keygen(self, v, S):
-        o = str(v) + ",[ "
-        for x in S:
-            o = o + str(x) + " "
-        o = o + "]"
-        return o
+        #self.timeStart = None
 
     def hk_init(self, tsp):
         self.tsp = tsp
         S = []
         for i in range(1, self.tsp.dimension+1):
             S.append(i)
+        #self.timeStart = time.time()
         return self.hk_visit(1, S)
         
     # PRE: S sottoinsieme di V, v € S
@@ -33,7 +28,7 @@ class HeldKarp:
     # v = vertice corrente
     def hk_visit(self, v, S):
         
-        currentKey = self._keygen(v, S)
+        currentKey = str(v) + str(S)
         # print(currentKey)
         
         # Caso base 1: soluzione è il peso dell'arco {v, 1}
@@ -42,14 +37,14 @@ class HeldKarp:
 
         # Caso base 2: se il peso è già stato calcolato ritorno il peso
         elif currentKey in self.d.keys():
-            return self.d[currentKey]
+                return self.d[currentKey]
 
         # Caso ricorsivo: cerco il cammino minimo tra tutti i sottocammini 
         else:
             mindist = float('inf')
             minprec = None
             
-            # Ricavo insieme SS = S \ {v}
+            # Ricavo insieme SE = S \ {v}
             # ndr: più veloce rispetto a una deepcopy, complessità O(n-1)
             SE = []
             for x in S:

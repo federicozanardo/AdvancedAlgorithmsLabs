@@ -22,14 +22,14 @@ def populateTSPFromFile(filepath):
     for i in range(10):
         absolutelyUsefulVariableIndexBecausePregMatchBad += 1 # (i+1) past the NODE_COORD_SECTION
 
-        if formatted_file[i].split(':')[0] == "NAME":
-            tsp.name = formatted_file[i].split(':')[1]
+        if formatted_file[i].split(':')[0].strip() == "NAME":
+            tsp.name = formatted_file[i].split(':')[1].strip()
             
-        elif formatted_file[i].split(':')[0] == "EDGE_WEIGHT_TYPE":
+        elif formatted_file[i].split(':')[0].strip() == "EDGE_WEIGHT_TYPE":
             tsp.etype = formatted_file[i].split(':')[1].strip()
 
-        elif formatted_file[i].split(':')[0] == "DIMENSION":
-            tsp.dimension = int(formatted_file[i].split(':')[1])
+        elif formatted_file[i].split(':')[0].strip() == "DIMENSION":
+            tsp.dimension = int(formatted_file[i].split(':')[1].strip())
     
         elif formatted_file[i] == "NODE_COORD_SECTION":
             break

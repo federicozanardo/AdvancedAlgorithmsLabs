@@ -1,5 +1,59 @@
 \section{Introduzione}
 
-\subsection{Abstract}
+\subsection{Descrizione del problema}
 
-In questa relazione illustreremo dei confronti tra tre algoritmi per il calcolo del ...
+In questa relazione illustreremo dei confronti tra tre algoritmi per risolvere un problema
+intrattabile, confrontando i tempi di calcolo e la \textit{qualità} delle soluzioni
+che si possono ottenere con \textbf{algoritmi esatti} e con \textbf{algoritmi di approssimazione}.
+Il problema in questione è il \textbf{Travelling Salesman Problem} (\textbf{TSP} o
+\textit{Problema del Commesso Viaggiatore}). Il nome di questo problema deriva dalla sua
+rappresentazione: data una rete di città, connesse tra loro tramite strade, si determini il
+percorso di minore distanza che un commesso viaggiatore deve fare per visitare tutte le città
+\textit{una ed una sola volta}.
+
+Il TSP si può rappresentare con un grafo non orientato, pesato e
+\textit{completo} $G = (V,E)$, dove i vertici sono le città ed il peso del lato ${u,v}$
+è uguale alla distanza da $u$ a $v$. Risolvere il TSP significa trovare un
+\textbf{circuito Hamiltoniano}, ovvero, un ciclo di costo minimo che visita tutti
+i vertici \textit{esattamente una volta}.
+
+\subsection{NP-completezza del problema}
+
+Precedentemente è stato detto che il fatto di risolvere il TSP corrisponde a risolvere
+il problema della ricerca di un circuito Hamiltoniano. Quest'ultimo problema è noto
+essere un problema \textit{NP-completo}, pertanto anche TSP sarà NP-completo.
+Il fatto di stabilire che TSP è un problema NP-completo, indica che molto probabilmente
+non esiste una soluzione polinomiale al problema.
+
+Per poter stabilire con precisione la sua complessità dobbiamo prima
+“trasformarlo” in un problema di decisione, aggiungendo un limite k per il peso del ciclo
+all’input del problema.
+
+\textbf{Teorema}: se $\mathcal{P} \ne \mathcal{NP}$, non può esistere alcun algoritmo
+di $\rho$-approssimazione per TSP con $\rho = \mathcal{O}(1)$.
+
+\textit{Dimostrazione}: se per assurdo si supponga che $\exists$ un algoritmo $A_\rho$
+polinomiale di $\rho$-approssimazione per TSP, dimostro come costruire $A_{Hamilton}$
+che decide il problema del ciclo Hamiltoniano in tempo polinomiale. Sia $I = G =(V,E)$
+e $O = G$ contiene un ciclo Hamiltoniano? Si effettui una \textit{riduzione}:
+\[
+    G \rightarrow G' = (V, E') \textnormal{ completo}
+    c(e \in E') = 1 \textnormal{ se } e \in E \textnormal{, } \rho|V| + 1 \textnormal{ altrimenti.}
+\]
+Eseguo $A_\rho(G') \rightarrow C \textnormal{ (ciclo), } c(C) \textnormal{(costo di $C$)}$ e si
+determina:
+\begin{enumerate}
+\item $G \in HAMILTON \Rightarrow c(C^*) = |V| \Rightarrow A_\rho$, ritorna un ciclo $C$
+con $c(C) \le \rho|V|$;
+\item $G \not\in HAMILTON \Rightarrow C$ contiene almeno un lato non in
+$G \Rightarrow c(C) \ge \rho|V| + 1$.
+\end{enumerate}
+
+È possibile notare che si può costruire il grafo $G'$ in tempo polinomiale rispetto al numero
+di vertici $|V|$ del grafo di partenza $G$. Il grafo $G$ contiene un circuito Hamiltoniano se e
+solo se $G'$ ha un ciclo di peso minore o uguale a 0. Supponiamo che $G$ contenga un circuito
+Hamiltoniano $h = v_1, ..., v_n$. Ogni lato che compone $h$ è presente in $E$ e quindi ha peso 0 in $G'$.
+Di conseguenza, $h$ è un ciclo di $G'$ di peso uguale a 0. Viceversa, supponiamo che $G'$ contenga un ciclo
+semplice $t$ che attraversa tutti i vertici e di peso minore o uguale a 0. Poiché i pesi dei lati
+in $G'$ sono solo 0 oppure 1, tutti i lati che compongono $t$ devono avere costo 0. Quindi tutti i
+lati del ciclo sono presenti anche in $E$ e $t$ è un circuito Hamiltoniano per $G$.

@@ -55,7 +55,8 @@ class HeldKarp:
                     SE.append(x)
             
             for u in SE:
-                if time.time() - self.timeStart < 190.0:
+                # if time.time() - self.timeStart < 190.0:
+                if time.perf_counter() - self.timeStart < 180.0:
                     # Calcolo ricorsivamente il peso della distanza nei sottocammini
                     dist = self.hk_visit(u, SE)
 
@@ -68,8 +69,16 @@ class HeldKarp:
                         minprec = u
                 else:
                     return mindist
-         
+
             # Assegno il nuovo peso calcolato che risulta il cammino minimo
-            self.d[currentKey] = mindist 
+            self.d[currentKey] = mindist
             self.p[currentKey] = minprec
             return mindist
+
+# burma14.tsp 3323
+# ulysses16.tsp 6859
+# ulysses22.tsp 7188
+# eil51.tsp 1050
+# berlin52.tsp 17917
+# kroD100.tsp 148525
+# kroA100.tsp 167464

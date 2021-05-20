@@ -26,7 +26,16 @@ modo:
 
 \subsubsection{Introduzione}
 
-\textbf{Definizione di MST}
+L'algortimo 2-approssimato è in grado di determinare un'approssimazione del TSP sotto la condizione che le
+distanze rispettino la \textit{disuguaglianza triangolare}, ovvero:
+\begin{equation}
+    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)
+\end{equation}
+
+dove $c$ è la \textit{funzione di costo}. Questo implica che il cammino con un lato $c(u, v)$ ha un costo
+minore o uguale al costo del cammino con due lati $c(u, w, v)$. Il nome di questo problema è \textbf{TRIANGLE\_TSP}.
+
+\subsubsection{Definizione di MST}
 
 Sia $V$ l'insieme dei nodi che costituiscono il grafo pesato $G$ e sia $E$ la collezione dei lati di tale
 grafo. Ai fini delle analisi della complessità degli algoritmi, sia $|V| = n$ e $|E| = m$.
@@ -67,6 +76,62 @@ Per determinare se un lato è \textbf{safe}, si sfrutta il seguente teorema:
 sottoinsieme di $E$ incluso in una qualche MST di $G$, sia $(S, V \setminus S)$ un
 taglio che rispetta $A$, e sia $(u, v)$ un \textit{light edge} per $(S, V \setminus S)$.
 Allora $(u, v)$ è \textit{safe} per $A$.
+
+\subsubsection{Algoritmo}
+
+L'idea che sta dietro a questo algoritmo consiste nell'utilizzare un algoritmo per il calcolo
+del MST. Tuttavia, il MST è un albero e quello che vogliamo ottenere invece è un
+ciclo hamiltoniano. Per fare ciò, eseguiamo una visita in \textit{preorder} del MST
+e aggiungiamo la radice di tale MST alla lista della determinata dalla preorder. Questo è un ciclo
+hamiltoniano del grafo originale, in quanto quest'ultimo è completo. Pertanto, esiste sempre un
+lato tra ogni coppia di vertici.
+
+\begin{verbatim}
+    2-APPROXIMATION(G=(V,E), c)
+        root <- v1 in V         // scelgo un nodo di V come radice per Prim
+        T <- Prim(G, c, root)
+        H' <- preorder(root)    // visita in preorder
+        H <- H U {root}           // aggiungo il percorso che va dalll'ultimo nodo
+                                // della visita in preorder alla radice
+        return H
+
+\end{verbatim}
+
+\subsubsection{Analisi della qualità della soluzione}
+
+Si illustri l'analisi della qualità della soluzione ritornata dall'algoritmo:
+\begin{enumerate}
+    \item Il costo di $H'$ è basso per la definizione di MST;
+    \item supponiamo che presi due vertici $a$ e $b$ non siano collegati da un lato (anche se
+    sappiamo che il grafo è completo), L'idea è che il costo di $(a, b)$ è minore rispetto
+    al costo di fare un giro più largo, in quanto vale la \textit{disuguaglianza triangolare}.
+    Quindi in questo caso $(a, b)$ è un \textit{shortcut}.
+\end{enumerate}
+
+\subsubsection{Analisi del fattore di approssimazione}
+Si illustri l'analisi del fattore di approssimazione dell'algoritmo:
+\begin{enumerate}
+    \item \textit{Limite inferiore al costo della soluzione ottima $H$}: sia $H$ il ciclo
+    ottimo $H^{ottimo} = <v_{j1}, ..., v_{jn}, v_{j1}>$.
+    Sia $H'^{ottimo} = <v_{j1}, ..., v_{jn}>$ un cammino
+    (è uno spanning tree, non un ciclo) hamiltoniano. Quindi, $c(H') \ge c(T)$, dove $T$ è
+    il MST, e $c(H^{ottimo}) \ge c(H'^{ottimo})$ prechè i costi sono maggiori o uguali a zero.
+
+    \item \textit{Limite superiore al costo della soluzione restituita $H$}: dato un albero,
+    una \textit{full preorder chain} è una lista con ripetizioni dei nodi dell'albero che
+    indica i nodi raggiunti dalle chiamate ricorsive dell'algoritmo \verb|Preorder|.
+
+    \textit{Proprietà}: in una full preorder chain ogni arco di $T$ appare esattamente due
+    volte. Quindi $c(\textnormal{full preorder chain}) = 2 \cdot c(T)$. Se si eliminano
+    dalla full preorder chain tutte le occorrenze successive alla prima dei nodi interni
+    (tranne l'ultima occorrenza della radice) otteniamo, grazie alla
+    \textit{disuguaglianza triangolare}:
+    \[
+        2 \cdot c(T) \ge c(H) \Rightarrow 2 \cdot c(H^{ottimo}) \ge 2 \cdot c(T) \ge c(H)
+        \Rightarrow \frac{c(H)}{c(H^{ottimo})} \le 2
+    \]
+
+\end{enumerate}
 
 \subsubsection{Implementazione}
 

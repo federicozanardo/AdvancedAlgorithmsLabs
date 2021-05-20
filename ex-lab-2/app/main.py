@@ -76,7 +76,6 @@ def main(args):
             res = hk.hk_init(tsp)
             print("Held and Karp \t => \t", res)    
 
-
     if sys.argv[1] == "nn" or sys.argv[1] == "all-single":
         for tsp in tsps:
             res = NearestNeighbor().algorithm(tsp)

@@ -1,11 +1,12 @@
 from collections import defaultdict
 import sys
-sys.path.append('../')
-from data_structures.tsp import TSP
 from data_structures.heap import Heap, Node
+from data_structures.tsp import TSP
+
+sys.path.append('../')
+
 
 class Prim:
-
     """
     Algoritmo MST di Prim con Heap
 
@@ -28,8 +29,8 @@ class Prim:
         s = nodo di partenza per l´algoritmo
     Ritorna le mappe delle chiavi e dei parent
     """
-    def prim_mst(self, T, s):
 
+    def prim_mst(self, T: TSP, s):
         """
         key: defaultdict(list) = mappa delle chiavi. Un valore è in forma key[nodo] = peso_nodo
         parent: defaultdict(list) = mappa dei parent. Un valore è in forma parent[nodo] = nodo_di_provenienza
@@ -45,7 +46,7 @@ class Prim:
         * Per ogni nodo node di G, parent[node] = nil
         * Q <- V
         """
-        for i in range(len(T.nodes)+1):
+        for i in range(len(T.nodes) + 1):
             key[i] = 0 if s == i else float('inf')
             parent[i] = None
             Q.insert(Node(i, key[i]))
@@ -64,10 +65,11 @@ class Prim:
             u = (Q.extractMin()).toTuple()
             for j in range(1, len(T.adjMatrix[int(u[0])])):
                 if Q.search(j) and T.adjMatrix[int(u[0])][j] < key[j]:
-                    parent[j] = u
+                    (identifier, o) = u
+                    parent[j] = (identifier, o, T.adjMatrix[int(u[0])][j])
                     key[j] = T.adjMatrix[int(u[0])][j]
                     Q.searchAndUpdateWeight(j, key[j])
-                    
+
         return key, parent
 
     """

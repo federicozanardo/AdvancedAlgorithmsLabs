@@ -6,102 +6,69 @@ class TwoApproximation:
     def algorithm(self, graph: TSP):
         starting_node = 1
         prim = Prim()
-        _, mst = prim.prim_mst(graph, starting_node)
+        key, parent = prim.prim_mst(graph, starting_node)
 
-        tree = {}
+        print(parent)
+        print()
 
         # Convert the MST result to a tree-like structure
-        # Complexity: O(m)
-        for index in mst:
-            if mst[index] != None:
-                (parent, _) = mst[index]
-                if parent not in tree:
-                    tree[parent] = []
-                tree[parent].append(index)
 
-        # print('[TwoApproximation] Tree: {}\n'.format(tree))
+        # Prepare the tree-like structure
+        # Complexity: teta(n)
+        tree = {}
+        for i in range(1, len(graph.adjMatrix)):
+            tree[i] = []
 
+        # Complexity: O(n log(n))
+        for index in parent:
+            if parent[index] != None:
+                (p, _, weight) = parent[index]
+                tree[p].insert(self._insert(tree[p], parent[index]), (index, weight))
+
+        print(tree)
+        print()
+
+        # Visit the MST in preorder
         preorder_result = []
-        self.preorder(graph, tree, starting_node, preorder_result)
+        self._preorder_visit(graph, tree, (starting_node, 0), preorder_result)
         preorder_result.append(starting_node)
-        # print('[TwoApproximation] Result of preorder: ', preorder_result)
-        # print(preorder_result)
 
+        print(preorder_result)
+        print()
+
+        i, j = 3, 1
+        print('({}, {}): {}'.format(str(i), str(j), str(graph.adjMatrix[i][j])))
+
+        # Sum all the weights
         summation = 0
         for i in range(len(preorder_result) - 1):
-            # print('Weight ({}, {}): {}'.format(str(i), str(i + 1), str(graph.adjMatrix[preorder_result[i]][preorder_result[i + 1]])))
             summation += graph.adjMatrix[preorder_result[i]][preorder_result[i + 1]]
 
         return int(summation)
 
     # Complexity: teta(n)
-    def preorder(self, graph: TSP, tree, v, result):
-        if v not in result:
-            result.append(v)
-        if v in tree:
-            for u in tree[v]:
-                self.preorder(graph, tree, u, result)
+    def _preorder_visit(self, graph: TSP, tree, v, path):
+        (identifier, weight) = v
+        path.append(identifier)
+        for (u, w) in tree[identifier]:
+            self._preorder_visit(graph, tree, (u, w), path)
 
-# SENZA ROUND
-#             Our     TS     Other
-# berlin52   10403   10402   10403  * TS
-# burma14    4003    4003    4003
-# ch150      9202    9053    9202   * TS
-# d493       45375   45114   45717  **
-# dsj1000    25526009   25526005    25526009    * TS
-# eil51      615     567     615    * TS
-# gr202      52615   52615   52615
-# gr229      179335  179335  179335
-# kroA100    30516   30536   30516  * TS
-# kroD100    28599   28599   28599
-# pcb442     75763   74856   76004  **
-# ulysses16  7788    7788    7788
-# ulysses22  8308    8308    8308
+    # Complexity: O(log(n))
+    def _insert(self, array, x, low=0, high=None):
+        (p, _, w) = x
 
-# CON ROUND
-#             Our     TS     Other
-# berlin52   10402   10402   10403  * Other
-# burma14    4003    4003    4003
-# ch150      9250    9053    9202   **
-# d493       45585   45114   45717  **
-# dsj1000    25526005   25526005    25526009    * Other
-# eil51      567     567     615    * Other
-# gr202      52615   52615   52615
-# gr229      179335  179335  179335
-# kroA100    30536   30536   30516  * Other
-# kroD100    28599   28599   28599
-# pcb442     75305   74856   76004  **
-# ulysses16  7788    7788    7788
-# ulysses22  8308    8308    8308
+        if high is None:
+            high = len(array)
+        while low < high:
+            mid = (low + high) // 2
+            (c_i, w_i) = array[mid]
+            if w < w_i:
+                high = mid
+            else:
+                low = mid + 1
+        return low
 
-# Ludo
-#
-# 4003
-# 7788
-# 8308
-# 605 *
-# 10402
-# 28599
-# 30516 *
-# 9126 *
-# 52615
-# 179335
-# 72853 *
-# 45595 *
-# 25526005
-
-# CON ROUND E PI NUOVO
-#             Our     TS     Other
-# berlin52   10402   10402   10403  * Other
-# burma14    4003    4003    4003
-# ch150      9250    9053    9202   **
-# d493       45585   45114   45717  **
-# dsj1000    25526005   25526005    25526009    * Other
-# eil51      567     567     615    * Other
-# gr202      52615   52615   52615
-# gr229      179335  179335  179335
-# kroA100    30536   30536   30516  * Other
-# kroD100    28599   28599   28599
-# pcb442     75305   74856   76004  **
-# ulysses16  7788    7788    7788
-# ulysses22  8308    8308    8308
+# kroA100
+# ch150
+# pcb
+# d493

@@ -1,3 +1,4 @@
 random2>=1.0
 matplotlib>=3.3.4,<3.4
 pandas>=1.2.3
+tabulate>=0.8.9

@@ -8,7 +8,7 @@ Il TSP prende in input un grafo \textit{completo}, ovvero, un grafo in cui:
 \[
     \forall u, v \in V \textnormal{ } \exists (u, v) \in E
 \]
-Il grafo in questione viene definito \textit{denso} e la stuttura dati indicata per rappresentarlo è
+Il grafo in questione viene definito \textit{denso} e la struttura dati indicata per rappresentarlo è
 la \textit{matrice di adiacenza}, di dimensione $|V| \times |V|$. Le celle della matrice contengono
 i pesi dei lati che congiungono i due vertici.
 
@@ -21,7 +21,66 @@ modo:
 
 \subsubsection{Introduzione}
 
+L'algoritmo di Held and Karp è un algoritmo di programmazione dinamica che permette di determinare in modo esatto il risultato di TSP sfruttando la scomposizione del problema in sotto-problemi e in sotto-sotto-problemi che vengono ricorsivamente risolti. Per ciascun sotto-problema viene generato un risultato che viene salvato all'interno di una tabella contenente tutte le soluzioni che portano poi alla determinazione del cammino minimo di TSP.
+
+L'algoritmo si basa sulla proprietà secondo la quale ogni sottocammino di un cammino minimo è a sua volta un cammino minimo, e ciò ci permette di calcolare i sottoproblemi ricorsivamente nel seguente modo: 
+
+\begin{itemize}
+    \item  pongo \(1 ... n\) città (i.e. nodi) da visitare;
+    \item  pongo \(S \subseteq V\) e \(v \in S\), dove \(V\) sono le tutte le città in esame, \(S\) le città visitate fino a quel momento e \(v\) la città corrente;
+
+\item definisco \(d[v, S]\) peso del cammino minimo nella città \(v\) a partire dalla città 1 percorrendo \(S\) città;
+\item definisco \(\pi[v, S]\) predecessore di \(v\) nel cammino minimo percorrendo \(S\) città.
+\end{itemize}
+
+L'esecuzione dell'algoritmo a partire dalla città \(1\) visitando tutti i nodi \(S\) porterà al risultato del cammino minimo che sarà contenuto nel vettore \(d[1, S]\), ripercorribile poi con il vettore \(\pi\). Chiaramente questo tipo di algoritmo esegue in modalità \textit{brute force} tutte le possibili soluzioni e restituisce il cammino minimo una volta raccolti tutti i possibili cammini.
+
+\subsubsection{Algoritmo}
+
+Il seguente psuedocodice mostra la funzione HK-INIT utilizzata per l'inizializzazione dei vettori e del tempo iniziale. 
+\begin{verbatim}
+HK-INIT(G)
+    (V,E) = G
+    d = NULL
+    pi = NULL
+    global_time_start = time.now
+    return HK-VISIT(0,V)
+\end{verbatim}    
+
+Lo pseudocodice della funzione HK-VISIT mostra esattamente i casi base e i casi ricorsivi per la risoluzione del problema in modo ricorsivo sfruttando l'algoritmo di Held and Karp.
+\begin{verbatim}
+HK-VISIT(v,S)
+    // Caso base 1: ritorno il peso dell'arco {v,0}
+    if len(S) = 1 and S = {v} then 
+        return w[v,0]
+    // Caso base 2: se la distanza è già stata calcolata, ritorno peso dell'arco
+    else if d[v,S] is not empty then 
+        return d[v,S]
+    // Caso ricorsivo: cerco il cammino minimo tra tutti i sottocammini
+    else
+        mindist = inf
+        minprec = NULL
+        for all u in S \ {v} do
+            if time.now - global_time_start < 180 then
+                dist = HK-VISIT(u,S \ {v})
+                if dist + w[u, v] < mindist then
+                    mindist = dist + w[u, v]
+                    minprec = u
+                end if
+            else
+                return mindist
+            end if
+        end for
+        d[v,S] = mindist
+        pi[v,S] = minprec
+        return mindist
+    end if
+\end{verbatim}
+
+
 \subsubsection{Implementazione}
+
+L'implementazione dell'algoritmo è stata strutturata in modo tale che fosse a partire da una visita in profondità (dall'alto) mediante l'uso di due funzioni principali \texttt{hk\_init} e \texttt{hk\_visit}. 
 
 \subsubsection{Ottimizzazioni implementate}
 
@@ -37,7 +96,7 @@ modo:
 
 \subsubsection{Introduzione}
 
-L'algortimo 2-approssimato è in grado di determinare un'approssimazione del TSP sotto la condizione che le
+L'algoritmo 2-approssimato è in grado di determinare un'approssimazione del TSP sotto la condizione che le
 distanze rispettino la \textit{disuguaglianza triangolare}, ovvero:
 \begin{equation}
     \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)

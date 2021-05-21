@@ -26,7 +26,7 @@ L'algoritmo di Held and Karp è un algoritmo di programmazione dinamica che perm
 L'algoritmo si basa sulla proprietà secondo la quale ogni sottocammino di un cammino minimo è a sua volta un cammino minimo, e ciò ci permette di calcolare i sottoproblemi ricorsivamente nel seguente modo: 
 
 \begin{itemize}
-    \item  pongo \(1 ... n\) città (i.e. nodi) da visitare;
+    \item  pongo \(1 \dots n\) città (i.e. nodi) da visitare;
     \item  pongo \(S \subseteq V\) e \(v \in S\), dove \(V\) sono le tutte le città in esame, \(S\) le città visitate fino a quel momento e \(v\) la città corrente;
 
 \item definisco \(d[v, S]\) peso del cammino minimo nella città \(v\) a partire dalla città 1 percorrendo \(S\) città;
@@ -51,7 +51,7 @@ Lo pseudocodice della funzione HK-VISIT mostra esattamente i casi base e i casi 
 \begin{verbatim}
 HK-VISIT(v,S)
     // Caso base 1: ritorno il peso dell'arco {v,0}
-    if len(S) = 1 and S = {v} then 
+    if |S| = 1 and S = {v} then 
         return w[v,0]
     // Caso base 2: se la distanza è già stata calcolata, ritorno peso dell'arco
     else if d[v,S] is not empty then 
@@ -80,9 +80,32 @@ HK-VISIT(v,S)
 
 \subsubsection{Implementazione}
 
-L'implementazione dell'algoritmo è stata strutturata in modo tale che fosse a partire da una visita in profondità (dall'alto) mediante l'uso di due funzioni principali \texttt{hk\_init} e \texttt{hk\_visit}. 
+L'implementazione dell'algoritmo si è basata a partire da una visita in profondità (dall'alto) dei nodi mediante l'uso di due funzioni principali \texttt{hk\_init} e \texttt{hk\_visit}. Queste due funzioni sono contenute dentro una classe Python chiamata \texttt{HeldKarp} che contiene delle variabili per i vettori \(d\) e \(\pi\), nonché per il tempo di esecuzione di inizio usato per bloccare l'algoritmo se il tempo totale supera i tre minuti, come richiesto dalla consegna del progetto.
+
+Al fine di realizzare i vettori \(d\) e \(\pi\) si è deciso di utilizzare la struttura dati \texttt{defaultdict} in modo analogo a una mappa una chiave con un suo valore relativo. Questo è stato particolarmente utile per inserire delle chiavi complesse formate da una stringa generata la seguente struttura: 
+
+\[ v [ p \dots q ]\]
+
+dove \(v\) rappresenta il nodo corrente, mentre \(p\) e \(q\) indicano rispettivamente il nodo iniziale e finale visitato in \(S\), tale per cui \(p \in S\) e \(q \in S\).
+
+Per quanto concerne la complessità, si può affermare che, sebbene l'approccio originale dell'algoritmo porta a concludere la risoluzione dell'intero problema seguendo un approccio "\textit{brute force}", il caso peggiore è certamente inferiore rispetto \(O(n!)\). 
+Nello specifico, analizzando i singoli valori:
+
+\begin{itemize}
+    \item \(O(n)\) relativo alle \(n-1\) iterazioni richieste per il ciclo che itera tutti i vertici in \(S \ {v}\);
+    \item \(O(n\cdot2^n)\) relativo alle coppie usate per l'indicizzazione con \(v\) e \(S\) che sono rispettivamente al più \(n\) e \(2^n\) nel vettore \(d\).
+\end{itemize}
+Pertanto in totale la complessità può essere riassunta come \(O(n) \cdot O(n\cdot2^n)\), ossia \(O(n^2\cdot2^n)\).
 
 \subsubsection{Ottimizzazioni implementate}
+
+Nell'algoritmo ci sono state piccole ottimizzazioni a livello di codice di programmazione che hanno permesso di evitare delle operazioni computazionalmente semplici ma che con la complessità analizzata aumentavano di molto il tempo necessario alla computazione. Per prima cosa, l'uso di variabili temporanee hanno permesso il riutilizzo di valori precedentemente trovati evitando di doverne ri-eseguire il ricalcolo, come nel caso della generazione della chiave. Nello specifico, la chiave viene generata all'inizio dell'algoritmo a partire dalla conversione in stringa del nodo \(v\) corrente concatenato alla lista \(S\), a sua volta convertita in stringa.
+Ci si è accorti che l'uso di una funzione che potesse generare questo tipo di stringa avrebbe aumentato di molto il tempo richiesto per la risoluzione del problema, mentre l'uso di una variabile iniziale ha ridotto di molto il tempo per ricavare il valore della chiave.
+
+% TODO: ricontrollare che non ci sia scritto una baggianata nei calcoli della complessità
+Secondariamente, una seconda ottimizzazione è stata fatta prima di arrivare alla guardia del primo ciclo dove è necessario ricavare un vettore \(S - {v}\) che richiede inevitabilmente la copia profonda e la rimozione di \(v\) con complessità \(O(n) + O(n-1) = O(n)\). Al fine di evitare l'uso della libreria di copia profonda, si è pensato trivialmente di eseguire un ciclo di cui copiare i valori di \(S\) evitando \(v\) e ottenendo pertanto una complessità di \(O(n-1) = O(n)\). 
+Contrariamente a quanto si possa pensare, sebbene sulla teoria la complessità è la medesima, il valore ricavato ottimizza di molto le istruzioni effettive necessarie per attuare una copia di questo tipo. A titolo esemplificativo e puramente informale si è rilevato nel caso del dataset \textit{burma14} un decremento del 35\% del tempo impiegato per l'esecuzione sfruttando un ciclo con un \textit{if statement} al posto della copia profonda e della successiva rimozione. 
+
 
 \subsection{Nearest Neighbor}
 

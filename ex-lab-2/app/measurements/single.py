@@ -7,7 +7,7 @@ Modulo di misurazione dei dataset con output del tempo di esecuzione dei singoli
 
 from random import randint
 import gc
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.tsp import TSP
 from data_structures.disjoint_set import DisjointSet

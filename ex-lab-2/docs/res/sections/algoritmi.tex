@@ -112,9 +112,61 @@ Contrariamente a quanto si possa pensare, sebbene sulla teoria la complessità �
 
 \subsubsection{Introduzione}
 
+L'algoritmo \textit{Nearest Neighbor} per il problema del Traveling Salesman Problem rientra nelle cosidette \textit{euristiche costruttive}; queste sono una famiglia di algoritmi che, a partire da un vertice iniziale, procedono aggiungendo un vertice alla volta al sottoinsieme corrispondente alla soluzione parziale. Questa aggiunta viene eseguita secondo regole prefissate, fino all'individuazione di una soluzione approssimata.
+
+\subsubsection{Algoritmo}
+
+Come tutte le euristiche costruttive per il problema TSP, l'algoritmo \textit{nearest neighbor} può essere scomposto in tre fasi: inizializzazione, selezione, inserimento. Viene qui illustrato l'algoritmo in pseudocodice, e di seguito vengono analizzate nello specifico le tre fasi.
+
+\begin{verbatim}
+    NearestNeighbor(G=(V,E))
+    # il cammino iniziale è composto unicamente dal primo nodo del grafo
+    path <- v1 in V
+
+    # si itera finché tutti i nodi del grafo non sono stati inseriti nel path
+    while path != V 
+        # si seleziona il nodo di distanza minima dall'ultimo nodo inserito nel path
+        nextNode <- MinAdj(path, path.lastV)
+
+        # si inserisce il nodo successivo nel path
+        path <- nextNode
+    
+    # si aggiunge infine il nodo di partenza per chiudere il ciclo
+    path <- path + v1
+
+    return path
+
+
+    MinAdj(G=(V,E), path, lastV)
+        return minimum distance node from lastV in {E-path}
+
+\end{verbatim}
+
+Le tre fasi quindi sono:
+\begin{enumerate}
+    \item \textbf{Inizializzazione}: si parte con il cammino composto unicamente dal primo vertice;
+    \item \textbf{Selezione}: sia $(v_0,...,v_k)$ il cammino corrente; il vertice successivo è il vertice $v_{k+1}$, non presente nel cammino, a distanza minima da $v_k$;
+    \item \textbf{Inserimento}: viene inserito $v_{k+1}$ subito dopo $v_k$ nel cammino.
+\end{enumerate}
+
+Le fasi 2 e 3 vengono ripetute finché tutti i vertici non sono nel cammino finale. Una volta verificata questa condizione è necessario eseguire un'ulteriore singola istruzione: aggiungere in coda al percorso finale il nodo iniziale. Questa operazione è infatti necessaria per definizione del problema.
+
+\subsubsection{Analisi dei fattori di approssimazione}
+
+Definiamo la disuguaglianza triangolare come:
+\begin{equation}
+    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)
+\end{equation}
+
+L'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare è rispettata.
+
 \subsubsection{Implementazione}
 
 \subsubsection{Ottimizzazioni implementate}
+
+
+
+
 
 \subsection{2-approssimato}
 

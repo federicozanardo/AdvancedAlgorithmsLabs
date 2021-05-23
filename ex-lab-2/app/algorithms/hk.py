@@ -7,6 +7,7 @@ from data_structures.tsp import TSP
 
 class HeldKarp:
 
+    # Costruttore di classe
     def __init__(self):
         self.d = defaultdict(list)
         self.p = defaultdict(list)
@@ -14,14 +15,17 @@ class HeldKarp:
         self.timeStart = None
         self.timeEnd = None
 
+
+    # Inizializzazione e ritorno dei risultati di Held and Karp
     def hk_init(self, tsp):
         self.tsp = tsp
         S = []
+        # Popolamento iniziale di S a partire dai nodi V
         for i in range(1, self.tsp.dimension+1):
             S.append(i)
-        self.timeStart = time.time()
+        self.timeStart = time.perf_counter()
         result = self.hk_visit(1, S)
-        self.timeEnd = time.time() - self.timeStart
+        self.timeEnd = time.perf_counter() - self.timeStart
         return result
         
     # PRE: S sottoinsieme di V, v € S
@@ -55,7 +59,6 @@ class HeldKarp:
                     SE.append(x)
             
             for u in SE:
-                # if time.time() - self.timeStart < 190.0:
                 if time.perf_counter() - self.timeStart < 180.0:
                     # Calcolo ricorsivamente il peso della distanza nei sottocammini
                     dist = self.hk_visit(u, SE)

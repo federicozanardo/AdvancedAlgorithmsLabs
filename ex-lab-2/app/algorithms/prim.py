@@ -46,7 +46,7 @@ class Prim:
         * Per ogni nodo node di G, parent[node] = nil
         * Q <- V
         """
-        for i in range(len(T.nodes) + 1):
+        for i in range(1, len(T.adjMatrix[0])):
             key[i] = 0 if s == i else float('inf')
             parent[i] = None
             Q.insert(Node(i, key[i]))

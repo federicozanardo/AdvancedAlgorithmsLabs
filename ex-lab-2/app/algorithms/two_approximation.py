@@ -6,9 +6,11 @@ class TwoApproximation:
     def algorithm(self, graph: TSP):
         starting_node = 1
         prim = Prim()
-        key, parent = prim.prim_mst(graph, starting_node)
+        key, mst = prim.prim_mst(graph, starting_node)
 
-        print(parent)
+        print('MST weight: {}'.format(prim.get_weight(key)))
+
+        print(mst)
         print()
 
         # Convert the MST result to a tree-like structure
@@ -20,24 +22,25 @@ class TwoApproximation:
             tree[i] = []
 
         # Complexity: O(n log(n))
-        for index in parent:
-            if parent[index] != None:
-                (p, _, weight) = parent[index]
-                tree[p].insert(self._insert(tree[p], parent[index]), (index, weight))
+        for index in mst:
+            if mst[index] != None:
+                (parent, _, weight) = mst[index]
+                tree[parent].insert(self._insert(tree[parent], mst[index]), (index, weight))
 
+        print('Tree')
         print(tree)
         print()
 
         # Visit the MST in preorder
         preorder_result = []
         self._preorder_visit(graph, tree, (starting_node, 0), preorder_result)
+
+        # Add the root to create a cycle
         preorder_result.append(starting_node)
 
+        print('preorder_result')
         print(preorder_result)
         print()
-
-        i, j = 3, 1
-        print('({}, {}): {}'.format(str(i), str(j), str(graph.adjMatrix[i][j])))
 
         # Sum all the weights
         summation = 0
@@ -68,7 +71,6 @@ class TwoApproximation:
                 low = mid + 1
         return low
 
-# kroA100
-# ch150
-# pcb
+# eil51
+# pcb442
 # d493

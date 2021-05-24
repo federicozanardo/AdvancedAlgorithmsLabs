@@ -8,11 +8,6 @@ class TwoApproximation:
         prim = Prim()
         key, mst = prim.prim_mst(graph, starting_node)
 
-        print('MST weight: {}'.format(prim.get_weight(key)))
-
-        print(mst)
-        print()
-
         # Convert the MST result to a tree-like structure
 
         # Prepare the tree-like structure
@@ -27,20 +22,12 @@ class TwoApproximation:
                 (parent, _, weight) = mst[index]
                 tree[parent].insert(self._insert(tree[parent], mst[index]), (index, weight))
 
-        print('Tree')
-        print(tree)
-        print()
-
         # Visit the MST in preorder
         preorder_result = []
         self._preorder_visit(graph, tree, (starting_node, 0), preorder_result)
 
         # Add the root to create a cycle
         preorder_result.append(starting_node)
-
-        print('preorder_result')
-        print(preorder_result)
-        print()
 
         # Sum all the weights
         summation = 0
@@ -70,7 +57,3 @@ class TwoApproximation:
             else:
                 low = mid + 1
         return low
-
-# eil51
-# pcb442
-# d493

@@ -12,10 +12,29 @@ Il grafo in questione viene definito \textit{denso} e la struttura dati indicata
 la \textit{matrice di adiacenza}, di dimensione $|V| \times |V|$. Le celle della matrice contengono
 i pesi dei lati che congiungono i due vertici.
 
-La struttura dati per il grafo è stata implementata nel seguente
-modo:
-
 \subsubsection{Implementazione}
+
+La struttura dati per il grafo è rappresentata dalla classe \texttt{TSP}; questa possiede i seguenti campi dati:
+\begin{itemize}
+    \item \texttt{name}: il nome del dataset che un oggetto \texttt{TSP} rappresenta;
+    \item \texttt{dimension}: la dimensione, ossia il numero di nodi, del dataset;
+    \item \texttt{etype}: il tipo di rappresentazione delle coordinate dei vertici del dataset. Nel nostro programma questa assume uno dei due seguenti valori: \begin{itemize}
+        \item \texttt{EUC\_2D} nel caso in cui le coordinate siano rappresentate in forma euclidea;
+        \item \texttt{GEO} nel caso in cui le coordinate siano rappresentate da latitudine e longitudine;
+    \end{itemize}
+    \item \texttt{nodes}: struttura dati di tipo \texttt{defaultdict(list)}, ossia lista a dizionario. Questo campo dati contiene i vertici del grafo, indicizzati per indice riportato nel dataset;
+    \item \texttt{adjMatrix}: matrice di adiacenza dei nodi. La matrice è di dimensione $|V|*|V|$, e conserva la seguente proprietà: \textit{Detti i,j gli indici di due nodi, adjMatrix[i][j] = adjMatrix[j][i] = w(i,j)}.
+\end{itemize}
+
+La classe presenta inoltre i seguenti metodi:
+\begin{itemize}
+    \item \texttt{add\_node}: aggiunge un vertice al grafo;
+    \item \texttt{get\_weight}: restituisce il peso tra due vertici;
+    \item \texttt{calculateAdjMatrix}: calcola la matrice di adiacenza del grafo. Questo metodo viene chiamato una sola volta, appena sono stati caricati tutti i metodi;
+    \item \texttt{delete\_node}: elimina un nodo dal grafo;
+    \item \texttt{get\_min\_node}: restituisce il nodo più vicino al nodo che viene dato in \textit{input}. Tale metodo è particolarmente utile per l'implementazione dell'algoritmo \texttt{nearest neighbor}, come specificato in seguito;
+    \item \texttt{printAdjMatrix}: funzione di utilià per la stampa della matrice di adiacenza. 
+\end{itemize}
 
 \subsection{Held e Karp}
 
@@ -126,7 +145,7 @@ L'algoritmo \textit{Nearest Neighbor} per il problema del Traveling Salesman Pro
 
 \subsubsection{Algoritmo}
 
-Come tutte le euristiche costruttive per il problema TSP, l'algoritmo \textit{nearest neighbor} può essere scomposto in tre passi: inizializzazione, selezione e inserimento. Viene qua anzitutto illustrato l'algoritmo in pseudocodice, e a seguire vengono analizzati nello specifico i tre passi.
+Come tutte le euristiche costruttive per il problema TSP, l'algoritmo \textit{nearest neighbor} può essere scomposto in tre passi: inizializzazione, selezione e inserimento. Viene anzitutto illustrato l'algoritmo in pseudocodice, e a seguire vengono analizzati nello specifico i tre passi.
 
 \begin{verbatim}
 
@@ -136,7 +155,8 @@ Come tutte le euristiche costruttive per il problema TSP, l'algoritmo \textit{ne
 
     # si itera finché tutti i nodi del grafo non sono stati inseriti nel path
     while path != V 
-        # si seleziona il nodo NON presente in path di distanza minima dall'ultimo nodo inserito nel path
+        # si seleziona il nodo NON presente in path di distanza minima dall'ultimo
+        # nodo inserito nel path
         nextNode <- MinAdj(path, path.lastV)
 
         # si inserisce il nodo successivo nel path
@@ -146,7 +166,6 @@ Come tutte le euristiche costruttive per il problema TSP, l'algoritmo \textit{ne
     path <- path + v1
 
     return path
-
 \end{verbatim}
 
 Le tre fasi, riconoscibili dalla struttura dell'algoritmo, sono:
@@ -156,21 +175,30 @@ Le tre fasi, riconoscibili dalla struttura dell'algoritmo, sono:
     \item \textbf{Inserimento}: viene inserito $v_{k+1}$ subito dopo $v_k$ nel cammino.
 \end{enumerate}
 
-I passi 2 e 3 vengono ripetuti finché tutti i vertici non sono nel cammino finale. Una volta verificata questa condizione è necessario eseguire un'ulteriore singola istruzione: aggiungere in coda al percorso finale il nodo iniziale. Questa operazione è necessaria ai fini del mantenimento della proprietà di percorso minimo del problema TSP.
+I passi 2 e 3 vengono ripetuti finché tutti i vertici non sono nel cammino finale. Una volta verificata questa condizione è necessario eseguire un'ulteriore singola istruzione: aggiungere in coda al percorso finale il nodo iniziale. Questa operazione è necessaria ai fini del mantenimento della proprietà di percorso minimo del problema TSP. \\
+Questo algoritmo, come le altre euristiche costruttive, ha complessità computazionale pari a $O(|V|^2)$.
 
 \subsubsection{Analisi dei fattori di approssimazione}
 
-Definita la disuguaglianza triangolare come $\forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)$, l'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare è rispettata.
+Definita la disuguaglianza triangolare come 
+\begin{equation}
+    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)    
+\end{equation}
+l'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare è rispettata.
 
 \subsubsection{Implementazione}
 
-La nostra implementazione ricalca l'implementazione standard dell'algoritmo Nearest Neighbor per il problema del TSP. Abbiamo però adottato alcuni accorgimenti pe
+La nostra implementazione ricalca l'implementazione standard dell'algoritmo Nearest Neighbor per il problema del TSP; essa segue infatti i tre passi sopracitati mantenendo intatta la logica dell'algoritmo di riferimento. \\
+Operativamente, il codice dell'algoritmo si divide in una classe, \texttt{NearestNeighbor}, e in alcuni metodi di utilità implementate per la classe \texttt{TSP} citata precedentemente. \\
+La classe \texttt{NearestNeighbor} presenta un solo metodo, chiamato \texttt{algorithm}, che si occupa di effettuare l'algoritmo in questione su un singolo grafo di classe \texttt{TSP}; esso riceve in \textit{input} il grafo e restituisce il peso totale del percorso hamiltoniano trovato. \\
+Il metodo \texttt{algorithm} chiama, al suo interno, i metodi \texttt{delete\_node} e \texttt{get\_min\_node} della classe \texttt{TSP}; questi sono di particolare importanza nella nostra implementazione, poiché permettono di mantenere la complessità al suo valore teorico, come viene illustrato nella sezione seguente.
 
 \subsubsection{Ottimizzazioni implementate}
 
-Le ottimizzazioni
-
-
+La principale ottimizzazione implementata risiede nel metodo con il quale viene selezionato il nodo successivo da inserire nel cammino finale. Un'implementazione \textit{naive} dell'algoritmo, infatti, potrebbe ricercare il nodo da inserire scorrendo linearmente l'intero grafo e controllando, per ogni nodo analizzato, che questi non sia già presente nel cammino finale e che sia a distanza minima dall'ultimo nodo inserito nel percorso finale. Questa implementazione, però, è stata giudicata inefficiente, poiché richiederebbe di analizzare ogni nodo anche se è già stato visitato in precedenza. \\
+Abbiamo quindi adottato un approccio "inverso": nella fase di inizializzazione dell'algoritmo viene infatti creata una copia (profonda) del grafo iniziale; da questa copia vengono poi, nella fase di selezione, eliminati i nodi già considerati. Questa ottimizzazione permette di effettuare la ricerca esclusivamente sui nodi non ancora considerati, il cui numero diminuisce costantemente durante l'iterazione della fase di selezione. \\
+A questa ottimizzazione si aggiunge l'utilizzo di una semplice lista, chiamata \textit{visited}, che permette di mantenere l'integrità dell'algoritmo nel momento in cui viene chiamata la funzione \texttt{get\_min\_node}: se un nodo è già stato visitato, il controllo sul peso dell'arco che lo unisce al nodo in analisi non viene neanche effettuato. \\
+Un'ultima ottimizzazione risiede nella funzione \texttt{get\_min\_node} di \texttt{TSP}, che fa uso delle liste di adiacenza per la ricerca del nodo di peso minimo; in questo modo, invece di calcolare a \textit{runtime} il peso tra un nodo e l'altro, è sufficiente uno scorrimento lineare della matrice di adiacenza sulla riga (o sulla colonna) relativa al nodo in esame.
 
 \subsection{2-approssimato}
 

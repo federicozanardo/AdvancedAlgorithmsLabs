@@ -74,7 +74,8 @@ class TSP:
         for i in range(1, self.dimension + 1):
             for j in range(1, self.dimension + 1):
                 if i == j:
-                    self.adjMatrix[i][j] = 0
+                    # self.adjMatrix[i][j] = 0
+                    self.adjMatrix[i][j] = math.inf
                 else:
                     self.adjMatrix[i][j] = self.adjMatrix[j][i] = self.get_weight(i, j)
 

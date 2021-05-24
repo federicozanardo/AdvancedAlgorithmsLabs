@@ -20,26 +20,14 @@ Per l'esecuzione del programma è necessario spostarsi nella cartella di progett
     \item \textbf{type:} rappresenta il tipo di algoritmo o di serie di esecuzioni che si vuole avviare, nello specifico uno tra i seguenti: 
     \begin{itemize}
         \item \textit{all} (esegue e salva su file le misurazioni singole);
-        \item \textit{all-quartet} (esegue e salva su file le misurazioni a quartetto);        \item \textit{prim} (esegue le misurazioni con Prim);
-        \item \textit{kruskal} (esegue le misurazioni con Kruskal Naive);
-        \item \textit{kruskal-opt} (esegue le misurazioni con Kruskal Union Find).   
+        \item \textit{hk} (esegue le misurazioni con Held-Karp);
+        \item \textit{nn} (esegue le misurazioni con Nearest Neighbor);
+        \item \textit{2ap} (esegue le misurazioni con 2-approximation).
     \end{itemize} 
     \item \textbf{dataset:} rappresenta una cartella contenente i file dei dataset formattati come da consegna o singolo file di dataset in input. 
     \item \textbf{--version:} è opzionale e mostra la versione del programma in esecuzione. 
     \item \textbf{-h:} è opzionale e mostra un aiuto per i comandi da utilizzare. 
 \end{itemize}
-
-\noindent Un esempio di esecuzione di tutte le misurazioni singole e di un singolo file con kruskal naive è il seguente: \\
-\texttt{python3 main.py all dataset/} \\
-\texttt{python3 main.py kruskal dataset/input\_random\_69\_200000.txt}
-
-\subsubsection{Considerazioni rilevanti sul programma}
-
-Inizialmente, data la mole di dati da dover analizzare, si è pensato di implementare in modalità \textit{multiprocessing} il programma, così da favorire l'uso di tutti i thread a disposizione nei moderni processori per computer. Per questo motivo, le misurazioni sono state realizzate con l'idea di poter eseguire un \textit{pool} di thread dove ciascun thread rappresentava l'avvio di un algoritmo. 
-
-Nel corso delle misurazioni si è notato però che l'esecuzione rallentava notevolmente, dal momento che monitorando l'uso della CPU solo un core veniva usato costantemente al 100\%. Successivamente siamo venuti a conoscenza del fatto che nel caso specifico di \textbf{Python} non è possibile occupare in modo quasi esclusivo più di un thread della CPU (oltre al \textit{main}), essendoci delle limitazioni interne dipendenti dal linguaggio.
-
-Il codice delle misurazioni pertanto è stato riadattato in modo poter essere eseguito sequenzialmente, lasciando comunque la possibilità a un veloce riadattamento per l'esecuzione in \textit{multiprocessing}. Alcuni degli aspetti positivi di questa modalità possono riguardare sicuramente l'esecuzione parallela per il calcolo dei risultati degli algoritmi, la cui computazione risulterebbe sicuramente di minore tempistica specialmente nel caso di Kruskal Naive.   
 
 \subsubsection{Caratteristiche tecniche del computer per le misurazioni} 
 
@@ -52,21 +40,12 @@ L'esecuzione del programma e le relative misurazioni sono state effettuate sulla
 
 \noindent Tutte le misurazioni sono state eseguite \textbf{sequenzialmente} monitorando l'uso di un core dedicato della CPU al 100\% per tutta la durata dell'esecuzione.
 
-
 \subsection{Introduzione alle misurazioni} 
 
-Le misurazioni sono state effettuate attraverso l'implementazione di due moduli che eseguono rispettivamente due tipi di misurazione:
-
-\begin{itemize}
-    \item \textbf{Misurazione singola:} esecuzione dei tre algoritmi per ogni grafo del dataset con misurazione del tempo medio;
-    \item \textbf{Misurazione a quartetto:} esecuzione dei tre algoritmi per ogni quartetto di grafi con lo stesso numero di vertici.
-\end{itemize}
-
-In entrambi i casi le misurazioni vengono effettuate dopo aver recuperato e caricato l'intero dataset nella struttura dati \textsc{graph}, come menzionato precedentemente.
+Le misurazioni sono state effettuate eseguendo i tre algoritmi per ogni grafo del dataset, misurandone il tempo di esecuzione medio; dalla misura dei tempi è stato ovviamente escluso il tempo di caricamento dei dataset negli oggetti \textsc{tsps}.
 Prima di ogni esecuzione dei vari algoritmi è stato inoltre disabilitato temporaneamente il \textit{garbage collector} di Python, così da evitare rallentamenti anche minimi nel corso dell'esecuzione. Infine, ciascuno dei due moduli salva in tre file differenti - uno per ogni algoritmo - i risultati del programma.
 
-
-\subsection{Misurazione singola}
+\subsection{Misurazione}
 
 \subsubsection{Descrizione} 
 
@@ -88,44 +67,9 @@ La misurazione singola è organizzata sequenzialmente eseguendo in base al tipo 
 
 Il file di output viene salvato direttamente alla fine di ogni esecuzione dell'algoritmo mantenendo la seguente formattazione:
 \begin{itemize}
-    \item Numero del dataset;
-    \item Numero di vertici del grafo;
-    \item Numero di archi del grafo;
-    \item Tempo di esecuzione in nano secondi;
-    \item Tempo di esecuzione in secondi;
+    \item Nome del dataset;
     \item Peso finale calcolato;
-    \item Esecuzioni totali effettuate dell'algoritmo.
-\end{itemize}
-
-
-\subsection{Misurazione a quartetto}
-
-\subsubsection{Descrizione} 
-
-La misurazione a quartetto è organizzata sequenzialmente eseguendo in base al tipo di algoritmo l'intero dataset raggruppando a gruppi di 4 i grafi con lo stesso numero di vertici. Per questa particolare casistica applichiamo la premessa che il dataset in input abbia sempre 4 file adiacenti con lo stesso numero di vertici. Il metodo \textit{executeSingleQuartetMeasurement} applica l'algoritmo richiesto al quartetto di grafi e procede nella seguente maniera:
-
-\begin{enumerate}
-    \item Esegue una volta l'algoritmo applicato al quartetto di grafi, disabilitando il \textit{garbage collector} e salvando il tempo di esecuzione medio.
-    \item Verifica se il tempo di esecuzione è maggiore o meno a 1s.
-    \begin{itemize}
-        \item Se il tempo è minore a 1s, esegue nuovamente \(k\) volte l'algoritmo per ogni quartetto di grafi, disabilitando il \textit{garbage collector} e salvando il tempo di esecuzione medio sulle \(k\) esecuzioni, con \(k\) definito come segue:  \[ k = \left\lfloor\frac{10^9 \textrm{ ns}}{\textrm{tempo medio di esecuzione in ns}}\right\rfloor\]
-        ossia il numero di ripetizioni applicate all'algoritmo la cui somma arriva a 1s.
-        \item Altrimenti, viene mantenuto il tempo rilevato precedentemente, pari all'esecuzione media del quartetto di grafi.
-    \end{itemize}
-    \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
-\end{enumerate}
-
-
-\subsubsection{File di output}
-
-Il file di output viene salvato direttamente alla fine di ogni esecuzione del metodo mantenendo la seguente formattazione:
-\begin{itemize}
-    \item Numero dei vertici;
-    \item Numeri del dataset di interesse;
-    \item Numeri di archi dei grafi;
-    \item Numero medio di archi nei grafi;
-    \item Tempo di esecuzione in nano secondi;
+    \item Tempo di esecuzione in nanosecondi;
     \item Tempo di esecuzione in secondi;
-    \item Esecuzioni totali effettuate per il quartetto.
-    \item Esecuzioni effettuate per ogni grafo del quartetto.
+    \item Esecuzioni totali effettuate dell'algoritmo.
 \end{itemize}

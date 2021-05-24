@@ -1,49 +1,130 @@
 \section{Introduzione}
 
-\subsection{Abstract}
+\subsection{Descrizione del problema}
 
-In questa relazione illustreremo dei confronti tra tre algoritmi per il calcolo del
-\textbf{Minimum Spanning Tree}: l'algoritmo di \textit{Kruskal} nella versione naive,
-l'algoritmo di \textit{Kruskal} con \textit{Union-Find} e l'algoritmo di \textit{Prim}.
+In questa relazione illustreremo dei confronti tra tre algoritmi per risolvere un problema
+intrattabile, confrontando i tempi di calcolo e la \textit{qualità} delle soluzioni
+che si possono ottenere con \textbf{algoritmi esatti} e con \textbf{algoritmi di approssimazione}.
+Il problema in questione è il \textbf{Travelling Salesman Problem} (\textbf{TSP} o
+\textit{Problema del Commesso Viaggiatore}). Il nome di questo problema deriva dalla sua
+rappresentazione: data una rete di città, connesse tra loro tramite strade, si determini il
+percorso di minore distanza che un commesso viaggiatore deve fare per visitare tutte le città
+\textit{una ed una sola volta}.
 
-\subsection{Definizione di MST}
+Il TSP si può rappresentare con un grafo non orientato, pesato e
+\textit{completo} $G = (V,E)$, dove i vertici sono le città ed il peso del lato $(u,v)$
+è uguale alla distanza da $u$ a $v$. Risolvere il TSP significa trovare un
+\textbf{circuito Hamiltoniano}, ovvero, un ciclo di costo minimo che visita tutti
+i vertici \textit{esattamente una volta}.
 
-Sia $V$ l'insieme dei nodi che costituiscono il grafo pesato $G$ e sia $E$ la collezione dei lati di tale
-grafo. Ai fini delle analisi della complessità degli algoritmi, sia $|V| = n$ e $|E| = m$.
+\subsection{NP-completezza del problema}
 
-Un \textit{minimum spanning tree} è un
-sottoinsieme dei lati $E$ di un grafo $G$ non orientato connesso e pesato sui lati che
-collega tutti i vertici insieme, senza alcun ciclo e con il minimo peso totale del
-lato possibile. Cioè, è uno spanning tree la cui somma dei pesi dei bordi è la più
-piccola possibile.
+\subsubsection{Dimostrazione di NP-completezza}
 
-Un \textit{minimum spanning tree} $T = (V, E')$ è un albero, il cui insieme dei lati $E'$ è un
-sottoinsieme dei lati $E$ di un grafo $G = (V, E)$ non orientato, connesso e
-pesato, che collega tutti i vertici $V$, la cui somma dei pesi dei lati è la minima.
+Prima di tutto dimostriamo che TSP $\in \mathcal{NP}$. Data un’istanza del problema, usiamo
+come \textit{certificato} la sequenza degli $n$ vertici del ciclo di peso minimo.
+L’algoritmo di verifica del certificato deve controllare che la sequenza contenga ogni
+vertice di $G$ esattamente una volta, sommare il peso dei lati e controllare che il peso
+totale del ciclo sia inferiore a $k$. Questo controllo si può svolgere in tempo polinomiale
+($O(n)$).
 
-L'algoritmo generico per determinare un MST è:
-\begin{verbatim}
-    A = empty_set
-    while A doesn't form a spanning tree
-        find an edge (u,v) that is safe for A
-        A = A U {(u,v)}
-    return A
-\end{verbatim}
+Per poter stabilire con precisione la complessità del problema, è necessario prima
+“trasformare” tale problema in un \textit{problema di decisione}, aggiungendo un limite $k$
+per il peso del ciclo all’input del problema.
 
-Si forniscono alcune definizioni per gli MST:
-\begin{enumerate} 
-    \item un \textbf{taglio} $(S, V \setminus S)$ di un grafo $G = (V, E)$ è una partizione
-    di $V$;
-    \item un lato $(u, v) \in E$ \textbf{attraversa il taglio} $(S, V \setminus S)$ se
-    $u \in S$ e $v \in V \setminus S$ o viceversa;
-    \item un taglio \textbf{rispetta} un insieme $A$ di lati se nessun lato di $A$ attraversa
-    il taglio;
-    \item dato un taglio, il lato che lo attraversa di peso minimo si chiama \textbf{light edge}.
+\textbf{Definizione di TSP decisionale}: Dato un grafo non orientato, completo e pesato
+$G = (V,E)$ e un valore $k > 0$, esiste un ciclo in $G$ che attraversa tutti i vertici una
+sola volta di peso inferiore a $k$?
+
+\textbf{Teorema}: TSP è un problema $\mathcal{NP}$-completo.
+
+\textit{Dimostrazione}: è già stato dimostrato che TSP $\in \mathcal{NP}$, quindi si procede nel dimostrare
+che TSP è $\mathcal{NP}$-hard. Si mostri una riduzione del problema del circuito Hamiltoniano a TSP.
+Prendiamo un grafo non orientato $G = (V,E)$ e costruiamo un'istanza di TSP che ci permetta di risolvere
+il problema del circuito Hamiltoniano su $G$. Costruiamo un grafo non orientato e completo $G' = (V, E')$
+con gli stessi vertici di $G$ e $E' = \{(u, v) | u, v \in V\}$. Il peso degli archi di $G'$ viene assegnato
+come segue
+
+\[
+    w(u, v) = 0, \textnormal{ se } \{u, v\} \in E
+\]
+\[
+    w(u, v) = 1, \textnormal{ se } \{u, v\} \notin E
+\]
+
+È possibile notare che si può costruire il grafo $G'$ in tempo polinomiale rispetto al numero
+di vertici $|V|$ del grafo di partenza $G$. Il grafo $G$ contiene un circuito Hamiltoniano se e
+solo se $G'$ ha un ciclo di peso minore o uguale a 0. Supponiamo che $G$ contenga un circuito
+Hamiltoniano $h = v_1, \dots, v_n$. Ogni lato che compone $h$ è presente in $E$ e quindi ha peso 0 in $G'$.
+Di conseguenza, $h$ è un ciclo di $G'$ di peso uguale a 0. Viceversa, supponiamo che $G'$ contenga un ciclo
+semplice $t$ che attraversa tutti i vertici e di peso minore o uguale a 0. Poiché i pesi dei lati
+in $G'$ sono solo 0 oppure 1, tutti i lati che compongono $t$ devono avere costo 0. Quindi tutti i
+lati del ciclo sono presenti anche in $E$ e $t$ è un circuito Hamiltoniano per $G$.
+
+\subsubsection{Inapprossimabilità per fattori $\rho$ costanti di TSP}
+
+Il TSP è un problema simile al problema del MST: il MST è un cammino di peso minimo
+che collega tutti i vertici del grafo $G$, mentre il TSP è un ciclo di peso minimo
+che collega tutti i vertici del grafo $G$. Nonostante questa somiglianza tra questi
+due problemi, il TSP è un problema molto difficile anche solo da approssimare. Se
+esistesse un algoritmo di approssimazione con un $\rho$ costante, allora saprei
+risolvere in tempo polinomiale un problema \textit{$\mathcal{NP}$-hard}.
+
+\textbf{Teorema}: se $\mathcal{P} \ne \mathcal{NP}$, non può esistere alcun algoritmo
+(polinomiale) di $\rho$-approssimazione per TSP con $\rho = \mathcal{O}(1)$.
+
+\textit{Dimostrazione}: per assurdo, si supponga che esista un algoritmo $A_\rho$
+polinomiale di $\rho$-approssimazione per TSP. Si dimostri come costruire $A_{Hamilton}$
+che decide il problema del ciclo Hamiltoniano in tempo polinomiale. Sia $I = G =(V,E)$
+e $O = $ "$G$ contiene un ciclo Hamiltoniano?". Si effettui una \textit{riduzione}:
+\[
+    G \rightarrow G' = (V, E') \textnormal{ è completo, dove }
+\]
+\[
+    c(e \in E') = 1 \textnormal{ se } e \in E \textnormal{, altrimenti } c(e \in E') = \rho|V| + 1
+\]
+
+Possiamo quindi creare delle rappresentazioni di $G'$ e di $c$ a partire dalle rappresentazioni
+di $G$ in tempo polinomiale in $|V|$ ed $|E|$.
+
+Eseguo $A_\rho(G') \rightarrow C \textnormal{ (ciclo), } c(C) \textnormal{(funzione di costo di $C$, $c: V \times V \rightarrow \mathcal{N}$)}$ e si
+determina:
+\begin{enumerate}
+\item $G \in HAMILTON \Rightarrow c(C^*) = |V| \Rightarrow A_\rho$, ritorna un ciclo $C$
+con $c(C) \le \rho|V|$;
+\item $G \not\in HAMILTON \Rightarrow C$ contiene almeno un lato non in
+$G$ (più precisamente in $E$) $\Rightarrow c(C) \ge \rho|V| + 1$. Poichè i lati che non
+appartengono a $G$ sono costosi, c'è un \textit{gap} di almeno $\rho |V|$ tra il costo di un cammino
+che è Hamiltoniano in $G$ (di costo $|V|$) e il costo di qualsiasi altro cammino (di costo
+almeno $\rho |V| + |V|$). Pertanto, il costo di un cammino che non è un ciclo Hamiltoniano
+in $G$ è almeno un fattore $\rho + 1$ maggiore del costo di un cammino che è un ciclo
+Hamiltoniano in $G$.
 \end{enumerate}
 
-Per determinare se un lato è \textbf{safe}, si sfrutta il seguente teorema:
+È possibile notare che si può costruire il grafo $G'$ in tempo polinomiale rispetto al numero
+di vertici $|V|$ del grafo di partenza $G$. Il grafo $G$ contiene un circuito Hamiltoniano se e
+solo se $G'$ ha un ciclo di peso minore o uguale a 0. Supponiamo che $G$ contenga un circuito
+Hamiltoniano $h = v_1, ..., v_n$. Ogni lato che compone $h$ è presente in $E$ e quindi ha peso 0 in $G'$.
+Di conseguenza, $h$ è un ciclo di $G'$ di peso uguale a 0. Viceversa, supponiamo che $G'$ contenga un ciclo
+semplice $t$ che attraversa tutti i vertici e di peso minore o uguale a 0. Poiché i pesi dei lati
+in $G'$ sono solo 0 oppure 1, tutti i lati che compongono $t$ devono avere costo 0. Quindi tutti i
+lati del ciclo sono presenti anche in $E$ e $t$ è un circuito Hamiltoniano per $G$.
 
-\textbf{Teorema}: Sia $G = (V, E)$ un grafo non diretto, connesso e pesato. Sia $A$ un
-sottoinsieme di $E$ incluso in una qualche MST di $G$, sia $(S, V \setminus S)$ un
-taglio che rispetta $A$, e sia $(u, v)$ un \textit{light edge} per $(S, V \setminus S)$.
-Allora $(u, v)$ è \textit{safe} per $A$.
+\label{tsp_metrico}
+\subsection{TSP metrico}
+
+Istanza particolare TSP in cui l’input, in particolare la funzione di costo c, soddisfa la
+\textbf{disuguaglianza triangolare}:
+\[
+\forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v) \Rightarrow
+c(<u, v>) \le c(<u, w, v>)
+\]
+
+dove $c$ è la \textit{funzione di costo}. Secondo questa definizione, per ogni insieme di tre nodi
+possibili del grafo $G$, vale che il costo di un lato $(u, v)$ è al più il costo di un lato $(u, w)$
+più il costo di un lato $(w, v)$. Questo significa che il costo del cammino per andare da $u$ a $v$
+attraverso l'unico lato che li collega è più conveniente del cammino per andare da $u$ a $w$ e da
+$w$ a $v$. Chiamiamo questo problema \textbf{TRIANGLE\_TSP}. Questa restrizione del problema
+$\mathcal{NP}$-completo si trova in $\mathcal{P}$.
+
+\textbf{Teorema}: 

@@ -1,11 +1,12 @@
 from collections import defaultdict
 import sys
-sys.path.append('../')
-from data_structures.tsp import TSP
 from data_structures.heap import Heap, Node
+from data_structures.tsp import TSP
+
+sys.path.append('../')
+
 
 class Prim:
-
     """
     Algoritmo MST di Prim con Heap
 
@@ -28,8 +29,8 @@ class Prim:
         s = nodo di partenza per l´algoritmo
     Ritorna le mappe delle chiavi e dei parent
     """
-    def prim_mst(self, T, s):
 
+    def prim_mst(self, T: TSP, s):
         """
         key: defaultdict(list) = mappa delle chiavi. Un valore è in forma key[nodo] = peso_nodo
         parent: defaultdict(list) = mappa dei parent. Un valore è in forma parent[nodo] = nodo_di_provenienza
@@ -45,18 +46,11 @@ class Prim:
         * Per ogni nodo node di G, parent[node] = nil
         * Q <- V
         """
-        for i in range(len(T.nodes)+1):
-            key[i] = 0 if s==i else float('inf')
+        for i in range(1, len(T.adjMatrix[0])):
+            key[i] = 0 if s == i else float('inf')
             parent[i] = None
             Q.insert(Node(i, key[i]))
-            
-        print('dimensione di Q', len(Q.list))
 
-        # for node in T.nodes:
-        #     key[node] = 0 if s==node else float('inf')
-        #     parent[node] = None
-        #     Q.insert(Node(node, key[node]))
-        
         """
         Calcolo della mappa delle chiavi e dei parent
         Finché l´heap Q non è vuoto
@@ -67,23 +61,15 @@ class Prim:
                     key[v] = w
                     aggiorna Q con il nuovo nodo di index v e peso key[v]
         """
-        #print(len(T.adjMatrix[0]))
         while Q.currentSize != 0:
             u = (Q.extractMin()).toTuple()
-            print('U=',u)
             for j in range(1, len(T.adjMatrix[int(u[0])])):
                 if Q.search(j) and T.adjMatrix[int(u[0])][j] < key[j]:
-                    parent[j] = u
+                    (identifier, o) = u
+                    parent[j] = (identifier, o, T.adjMatrix[int(u[0])][j])
                     key[j] = T.adjMatrix[int(u[0])][j]
-                    print('J=',j)
                     Q.searchAndUpdateWeight(j, key[j])
 
-            # for (v,w) in G.graph[u[0]]:
-            #     if Q.search(v) and w < key[v]:
-            #         parent[v] = u
-            #         key[v] = w
-            #         Q.searchAndUpdateWeight(v, key[v])
-                    
         return key, parent
 
     """

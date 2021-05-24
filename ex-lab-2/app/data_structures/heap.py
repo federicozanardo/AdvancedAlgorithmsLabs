@@ -130,9 +130,9 @@ class Heap:
     Nel farlo aggiorna anche la mappa delle posizioni
     """
     def heapifyDown(self, index):
-        while (index * 2) <= self.currentSize :
+        while (index * 2) <= self.currentSize:
             minChild = self.minChild(index)
-            if self.list[index].weight > self.list[minChild].weight: 
+            if self.list[index].weight >= self.list[minChild].weight:
                 self.mapList[self.list[minChild].index] = index
                 self.mapList[self.list[index].index] = minChild
                 self.list[index], self.list[minChild] = self.list[minChild], self.list[index]
@@ -141,10 +141,10 @@ class Heap:
     """
     minChild(index: int) : int
         index = indice del nodo di cui restituire il figlio minore
-    Ritorna l´indice del nodo figlio del nodo di indice index di peso minore
+    Ritorna l'indice del nodo figlio del nodo di indice index di peso minore
     """
     def minChild(self, index):
-        if (index * 2)+1 > self.currentSize:
+        if (index * 2) + 1 > self.currentSize:
             return index * 2
         else:
             if self.list[index*2].weight < self.list[(index*2)+1].weight:
@@ -194,4 +194,3 @@ class Heap:
                 print(" RIGHT CHILD: " + str(self.list[2*i+1].index) + "(w." + str(self.list[2 * i + 1].weight) + ")")
             else:
                 print("")
-            

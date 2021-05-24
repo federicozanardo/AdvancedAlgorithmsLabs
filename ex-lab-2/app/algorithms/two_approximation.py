@@ -4,47 +4,56 @@ from data_structures.tsp import TSP
 
 class TwoApproximation:
     def algorithm(self, graph: TSP):
-        print('[TwoApproximation] AdjMatrix')
-        print(graph.adjMatrix)
-        
         starting_node = 1
         prim = Prim()
-        _, mst = prim.prim_mst(graph, starting_node)
-        print('[TwoApproximation] Result of Prim: ', mst)
-
-        tree = {}
+        key, mst = prim.prim_mst(graph, starting_node)
 
         # Convert the MST result to a tree-like structure
-        # Complexity: O(m)
+
+        # Prepare the tree-like structure
+        # Complexity: teta(n)
+        tree = {}
+        for i in range(1, len(graph.adjMatrix)):
+            tree[i] = []
+
+        # Complexity: O(n log(n))
         for index in mst:
             if mst[index] != None:
-                (parent, _) = mst[index]
-                #print('mst[index]: ', mst[index])
-                if parent not in tree:
-                    tree[parent] = []
-                tree[parent].append(index)
+                (parent, _, weight) = mst[index]
+                tree[parent].insert(self._insert(tree[parent], mst[index]), (index, weight))
 
-        print('[TwoApproximation] Tree: {}\n'.format(tree))
-
+        # Visit the MST in preorder
         preorder_result = []
-        sum = self.preorder(graph, tree, starting_node, preorder_result)
-        print('[TwoApproximation] Result of preorder: ', preorder_result)
-        
-        # Add the weight of the edge between the starting node and the last node of the MST to create a cycle
-        #sum += int(graph.get_weight(preorder_result[len(preorder_result) - 1], 1))
-        sum += int(graph.adjMatrix[preorder_result[len(preorder_result) - 1]][1])
-        
-        print('[TwoApproximation] Result: {}'.format(str(sum)))
+        self._preorder_visit(graph, tree, (starting_node, 0), preorder_result)
 
-        return sum
+        # Add the root to create a cycle
+        preorder_result.append(starting_node)
+
+        # Sum all the weights
+        summation = 0
+        for i in range(len(preorder_result) - 1):
+            summation += graph.adjMatrix[preorder_result[i]][preorder_result[i + 1]]
+
+        return int(summation)
 
     # Complexity: teta(n)
-    def preorder(self, graph: TSP, tree, v, result):
-        if v not in result:
-            result.append(v)
-        if v in tree:
-            for u in tree[v]:
-                #graph.get_weight(v, u))  # THE GRAPH MUST USE THE ADJACENCY MATRIX TO HAVE THIS TIME COMPLEXITY!
-                return self.preorder(graph, tree, u, result) + int(graph.adjMatrix[v][u])
-        else:
-            return 0
+    def _preorder_visit(self, graph: TSP, tree, v, path):
+        (identifier, weight) = v
+        path.append(identifier)
+        for (u, w) in tree[identifier]:
+            self._preorder_visit(graph, tree, (u, w), path)
+
+    # Complexity: O(log(n))
+    def _insert(self, array, x, low=0, high=None):
+        (p, _, w) = x
+
+        if high is None:
+            high = len(array)
+        while low < high:
+            mid = (low + high) // 2
+            (c_i, w_i) = array[mid]
+            if w < w_i:
+                high = mid
+            else:
+                low = mid + 1
+        return low

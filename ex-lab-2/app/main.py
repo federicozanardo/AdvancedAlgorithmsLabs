@@ -15,9 +15,10 @@ import argparse
 from random import randint
 import gc
 from time import perf_counter_ns
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from data_structures.heap import Heap, Node
 from data_structures.graph import Graph
+from data_structures.tsp import TSP
 from algorithms.utils import populateTSPFromFile as populate
 from algorithms.utils import loadFromFile
 from algorithms.utils import loadFromFolder
@@ -25,6 +26,8 @@ from algorithms.utils import bcolors as col
 from algorithms.prim import Prim
 from algorithms.hk import HeldKarp
 from algorithms.two_approximation import TwoApproximation
+from algorithms.nearestneighbor import NearestNeighbor
+from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexTSPs
 import sys
 from os import walk, path
 import time
@@ -34,9 +37,10 @@ import multiprocessing
 def main(args):
 
     start = time.time()  # Timer di partenza del programma
-    
-    # Recupero il path in input e salvo i grafi individuati
 
+    fileResultLock = multiprocessing.Lock() # Accesso condiviso per una eventuale implementazione con multithreading
+
+    # Recupero il path in input e salvo i grafi individuati
     dirpath = sys.argv[2]
 
     assert path.isfile(dirpath) or path.isdir(
@@ -48,37 +52,29 @@ def main(args):
         tsp = loadFromFile(dirpath)
         tsps = [tsp]
 
-    kek = TwoApproximation()
+    if sys.argv[1] == "all":
+        executeTheSuperFancyFunctionToCalculateMegaComplexTSPs(tsps, fileResultLock)
 
-    sum = kek.algorithm(tsps[0])
-    print(sum)
-    # Eseguo una delle opzioni seguenti
 
-    # if sys.argv[1] == "all":
-    #     executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, fileResultLock)
+    if sys.argv[1] == "2ap" or sys.argv[1] == "all-single":
+        print(col.HEADER + "TWO-APPROXIMATION" + col.ENDC)
+        for tsp in tsps:
+            final = TwoApproximation()
+            res = final.algorithm(tsp)
+            print('{:<15}{:^15}{:>15}'.format(tsp.name, '=>', res))
 
-    # if sys.argv[1] == "all-quartet":
-    #     executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
-    
-    # if sys.argv[1] == "prim" or sys.argv[1] == "all-single":
-    #     for graph in graphs:
-    #         prim = Prim()
-    #         mst = MST()
-    #         key,_ = prim.prim_mst(graph, 1)
-    #         print("Prim \t\t => \t", prim.get_weight(key))
-
-    # if sys.argv[1] == "kruskal-opt" or sys.argv[1] == "all-single":
-    #     for graph in graphs:
-    #         mst = MST()
-    #         final_graph = mst.kruskal_union_find(graph)
-    #         print("Kruskal UF \t => \t", mst.get_mst_weight(final_graph))
+    if sys.argv[1] == "nn" or sys.argv[1] == "all-single":
+        print(col.HEADER + "NEAREST NEIGHBORS" + col.ENDC)
+        for tsp in tsps:
+            res = NearestNeighbor().algorithm(tsp)
+            print('{:<15}{:^15}{:>15}'.format(tsp.name, '=>', res))
 
     if sys.argv[1] == "hk" or sys.argv[1] == "all-single":
-        for graph in graphs:
+        print(col.HEADER + "HELD AND KARP" + col.ENDC)
+        for tsp in tsps:
             hk = HeldKarp()
-            final = hk.hk_init(graphs[0]) # FIXME: with correct variables
-            res = hk.d
-            print("Held and Karp \t => \t", final, res)
+            res = hk.hk_init(tsp)
+            print('{:<15}{:^15}{:>15}'.format(tsp.name, '=>', res))
 
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
 

@@ -5,13 +5,6 @@ from data_structures.tsp import TSP
 from os import walk
 sys.path.append('../')
 
-from itertools import cycle
-from shutil import get_terminal_size
-from threading import Thread
-from time import sleep
-
-
-
 
 def populateTSPFromFile(filepath):
     file = open(filepath, 'r')
@@ -22,19 +15,18 @@ def populateTSPFromFile(filepath):
     for i in range(10):
         absolutelyUsefulVariableIndexBecausePregMatchBad += 1 # (i+1) past the NODE_COORD_SECTION
 
-        if formatted_file[i].split(':')[0] == "NAME":
-            tsp.name = formatted_file[i].split(':')[1]
+        if formatted_file[i].split(':')[0].strip() == "NAME":
+            tsp.name = formatted_file[i].split(':')[1].strip()
             
-        elif formatted_file[i].split(':')[0] == "EDGE_WEIGHT_TYPE":
+        elif formatted_file[i].split(':')[0].strip() == "EDGE_WEIGHT_TYPE":
             tsp.etype = formatted_file[i].split(':')[1].strip()
 
-        elif formatted_file[i].split(':')[0] == "DIMENSION":
-            tsp.dimension = int(formatted_file[i].split(':')[1])
+        elif formatted_file[i].split(':')[0].strip() == "DIMENSION":
+            tsp.dimension = int(formatted_file[i].split(':')[1].strip())
     
         elif formatted_file[i] == "NODE_COORD_SECTION":
             break
 
-    # How to lose time to fix datasets :))))
     if absolutelyUsefulVariableIndexBecausePregMatchBad == 10:
         print("where banana")
         exit()

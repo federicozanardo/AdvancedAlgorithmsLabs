@@ -328,7 +328,7 @@ l'istruzione
 
 è stata sostituita con l'istruzione
 
-\verb|parent[j] = (identifier, o, T.adjMatrix[int(u[0])][j])|. 
+\verb|parent[j] = (identifier, prim_weight, T.adjMatrix[int(u[0])][j])|. 
 
 Le motivazioni verranno esplicitate successivamente.
 
@@ -373,13 +373,15 @@ In conclusione, vengono sommate tutte le distanze nel seguente modo:
         sum = sum + G[preorder_result[i]][preorder_result[i + 1]]
 \end{verbatim}
 
-\subsubsection{Analisi della complessità}
+\subsubsection{Analisi della complessità computazionale}
 
 Si considerino i metodi e le porzioni di codice implementate implementati:
 \begin{enumerate}
     \item \verb|prim_mst|: l'algoritmo di Prim con le matrici di adiacenza ha una complessità 
     computazionale pari a $O(|V|^2)$;
-    \item \textit{ricostruzione del MST}: il MST ha una cardinalità pari a $O(|V|)$
+    \item \textit{ricostruzione del MST}: il MST ha una cardinalità pari a $|V|$. Il metodo 
+    \verb|_insert| ha una complessità pari a $O(log(|V|))$. Pertanto, questa porzione di 
+    codice ha una complessità pari a $O(|V| log(|V|))$;
     \item \verb|_preorder_visit|: la visita in preorder visita tutti i nodi del MST. Il MST 
     è un albero che connette tutti i vertici del grafo originario $G$. Quindi, la 
     complessità sarà pari a $\theta(|V|)$;
@@ -389,3 +391,10 @@ Si considerino i metodi e le porzioni di codice implementate implementati:
     il ciclo ha una lunghezza pari a $\theta(|V| + 1)$. Quindi la complessità computazionale 
     di questa porzione di codice è uguale a $\theta(|V|)$.
 \end{enumerate}
+
+In conclusione, la complessità computazionale dell'algoritmo 2-approssimato è di $O(|V|^2)$.
+
+\subsubsection{Osservazioni}
+
+Nello sviluppo dell'algoritmo e nella fase di adattamento dell'algoritmo di Prim alle matrici 
+di adiacenza.

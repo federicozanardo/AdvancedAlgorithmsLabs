@@ -21,16 +21,16 @@ i vertici \textit{esattamente una volta}.
 
 \subsubsection{Dimostrazione di NP-completezza}
 
-Prima di tutto dimostriamo che TSP $\in \mathcal{NP}$. Data un’istanza del problema, usiamo
+Prima di tutto dimostriamo che TSP $\in \mathcal{NP}$. Data un'istanza del problema, usiamo
 come \textit{certificato} la sequenza degli $n$ vertici del ciclo di peso minimo.
-L’algoritmo di verifica del certificato deve controllare che la sequenza contenga ogni
+L'algoritmo di verifica del certificato deve controllare che la sequenza contenga ogni
 vertice di $G$ esattamente una volta, sommare il peso dei lati e controllare che il peso
 totale del ciclo sia inferiore a $k$. Questo controllo si può svolgere in tempo polinomiale
 ($O(n)$).
 
 Per poter stabilire con precisione la complessità del problema, è necessario prima
 “trasformare” tale problema in un \textit{problema di decisione}, aggiungendo un limite $k$
-per il peso del ciclo all’input del problema.
+per il peso del ciclo all'input del problema.
 
 \textbf{Definizione di TSP decisionale}: Dato un grafo non orientato, completo e pesato
 $G = (V,E)$ e un valore $k > 0$, esiste un ciclo in $G$ che attraversa tutti i vertici una
@@ -93,7 +93,7 @@ determina:
 \item $G \in HAMILTON \Rightarrow c(C^*) = |V| \Rightarrow A_\rho$, ritorna un ciclo $C$
 con $c(C) \le \rho|V|$;
 \item $G \not\in HAMILTON \Rightarrow C$ contiene almeno un lato non in
-$G$ (più precisamente in $E$) $\Rightarrow c(C) \ge \rho|V| + 1$. Poichè i lati che non
+$G$ (più precisamente in $E$) $\Rightarrow c(C) \ge \rho|V| + 1$. Poiché i lati che non
 appartengono a $G$ sono costosi, c'è un \textit{gap} di almeno $\rho |V|$ tra il costo di un cammino
 che è Hamiltoniano in $G$ (di costo $|V|$) e il costo di qualsiasi altro cammino (di costo
 almeno $\rho |V| + |V|$). Pertanto, il costo di un cammino che non è un ciclo Hamiltoniano
@@ -113,7 +113,7 @@ lati del ciclo sono presenti anche in $E$ e $t$ è un circuito Hamiltoniano per 
 \label{tsp_metrico}
 \subsection{TSP metrico}
 
-Istanza particolare TSP in cui l’input, in particolare la funzione di costo c, soddisfa la
+Istanza particolare TSP in cui l'input, in particolare la funzione di costo c, soddisfa la
 \textbf{disuguaglianza triangolare}:
 \[
 \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v) \Rightarrow

@@ -33,7 +33,7 @@ La classe presenta inoltre i seguenti metodi:
     \item \texttt{calculateAdjMatrix}: calcola la matrice di adiacenza del grafo. Questo metodo viene chiamato una sola volta, appena sono stati caricati tutti i metodi;
     \item \texttt{delete\_node}: elimina un nodo dal grafo;
     \item \texttt{get\_min\_node}: restituisce il nodo più vicino al nodo che viene dato in \textit{input}. Tale metodo è particolarmente utile per l'implementazione dell'algoritmo \texttt{nearest neighbor}, come specificato in seguito;
-    \item \texttt{printAdjMatrix}: funzione di utilià per la stampa della matrice di adiacenza. 
+    \item \texttt{printAdjMatrix}: funzione di utilità per la stampa della matrice di adiacenza. 
 \end{itemize}
 
 \subsection{Held e Karp}
@@ -271,7 +271,7 @@ Si illustri lo pseudo-codice:
         root <- v1 in V         // scelgo un nodo di V come radice per Prim
         T <- Prim(G, c, root)
         H' <- preorder(root)    // visita in preorder
-        H <- H U {root}         // aggiungo il percorso che va dalll'ultimo nodo
+        H <- H U {root}         // aggiungo il percorso che va dall'ultimo nodo
                                 // della visita in preorder alla radice
         return H
 
@@ -295,7 +295,7 @@ Si illustri l'analisi del fattore di approssimazione dell'algoritmo:
     ottimo $H^{ottimo} = <v_{j1}, ..., v_{jn}, v_{j1}>$.
     Sia $H'^{ottimo} = <v_{j1}, ..., v_{jn}>$ un cammino
     (è uno spanning tree, non un ciclo) hamiltoniano. Quindi, $c(H') \ge c(T)$, dove $T$ è
-    il MST, e $c(H^{ottimo}) \ge c(H'^{ottimo})$ prechè i costi sono maggiori o uguali a zero.
+    il MST, e $c(H^{ottimo}) \ge c(H'^{ottimo})$ perché i costi sono maggiori o uguali a zero.
 
     \item \textit{Limite superiore al costo della soluzione restituita $H$}: dato un albero,
     una \textit{full preorder chain} è una lista con ripetizioni dei nodi dell'albero che
@@ -321,14 +321,14 @@ che forniva ci permetteva di riadattarlo per l'implementazione di \verb|2-approx
 È stato usufruito il codice implementato nello scorso laboratorio, riadattando 
 l'algoritmo di Prim in modo che vengano utilizzate le matrici di adiacenza. 
 \label{cambio_istruzione_prim}
-Inoltre, sempre ai fini dell'implementazione dell'algoritmo di approsimazione, 
+Inoltre, sempre ai fini dell'implementazione dell'algoritmo di approssimazione, 
 l'istruzione 
 
 \verb|parent[j] = u|
 
 è stata sostituita con l'istruzione
 
-\verb|parent[j] = (identifier, prim_weight, T.adjMatrix[int(u[0])][j])|. 
+\verb|parent[j] = (identifier, o, T.adjMatrix[int(u[0])][j])|. 
 
 Le motivazioni verranno esplicitate successivamente.
 
@@ -373,7 +373,7 @@ In conclusione, vengono sommate tutte le distanze nel seguente modo:
         sum = sum + G[preorder_result[i]][preorder_result[i + 1]]
 \end{verbatim}
 
-\subsubsection{Analisi della complessità computazionale}
+\subsubsection{Analisi della complessità}
 
 Si considerino i metodi e le porzioni di codice implementate implementati:
 \begin{enumerate}
@@ -385,7 +385,7 @@ Si considerino i metodi e le porzioni di codice implementate implementati:
     \item \verb|_preorder_visit|: la visita in preorder visita tutti i nodi del MST. Il MST 
     è un albero che connette tutti i vertici del grafo originario $G$. Quindi, la 
     complessità sarà pari a $\theta(|V|)$;
-    \item \textit{calcolo del peso del ciclo}: la \verb|_preorder_visit| resistuisce il 
+    \item \textit{calcolo del peso del ciclo}: la \verb|_preorder_visit| restituisce il 
     percorso nel MST, visitando tutti i suoi nodi in preordine. Inoltre, al termine di 
     tale metodo, a tale lista viene aggiunta la radice del MST. Quindi la lista contenente 
     il ciclo ha una lunghezza pari a $\theta(|V| + 1)$. Quindi la complessità computazionale 
@@ -397,4 +397,14 @@ In conclusione, la complessità computazionale dell'algoritmo 2-approssimato è 
 \subsubsection{Osservazioni}
 
 Nello sviluppo dell'algoritmo e nella fase di adattamento dell'algoritmo di Prim alle matrici 
-di adiacenza.
+di adiacenza, abbiamo notato che in alcuni grafi era possibile determinare 
+MST \textit{diversi}. In particolare, l'algoritmo di Prim, ad un certo tempo di $t$, può trovare 
+\textit{almeno} due lati che hanno lo stesso peso. A seconda dell'implementazione 
+dell'algoritmo, si potrebbe scegliere un lato piuttosto che un altro. Questo significa che 
+ci possono essere più alberi di copertura di peso minimo. Tuttavia, nell'implementazione 
+dell'algoritmo 2-approssimato questa situazione può condurre a dei differenti risultati, 
+a seconda dell'implementazione dell'algoritmo di Prim. Infatti, la scelta di esaminare un 
+vertice piuttosto che un altro, a parità di peso rispetto al vertice corrente, può 
+influire in quanto si verrebbero a determinare delle visite preorder diverse. Conseguenza 
+di ciò, nel momento in cui si effettua la somma dei pesi del ciclo, è possibile ottenere 
+dei risultati differenti.

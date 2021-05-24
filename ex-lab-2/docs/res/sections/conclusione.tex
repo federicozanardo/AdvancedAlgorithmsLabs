@@ -1,15 +1,15 @@
 \section{Conclusione}
 
 Alla fine di questo progetto possiamo affermare che i risultati ottenuti sono stati più che soddisfacenti considerando le analisi dei dataset che erano stati richiesti. In generale, abbiamo riscontrato minore difficoltà nell'implementazione degli algoritmi sfruttando il linguaggio Python. Tuttavia, alcuni problemi iniziali sono emersi con il \textit{parsing} dei file di dataset, che non presentavano una regolarità nella formattazione, ma che siamo riusciti comunque a \textit{deserializzare} correttamente. \\ % f l e x
-Per quanto riguarda lo sviluppo, anche questa volta ci siamo affidati al versionamento tramite strumento Git adottando un approccio incrementale nell'implementazione della nostra applicazione. Inoltre, abbiamo evitato l'uso di Google Colab, non essendo state necessarie particolari indagini per mezzo di questo strumento. \\
+Per quanto riguarda lo sviluppo, anche questa volta ci siamo affidati al versionamento tramite lo strumento Git, adottando un approccio incrementale nell'implementazione della nostra applicazione. Inoltre, non abbiamo fatto uso di Google Colab, dato che non sono state state necessarie particolari indagini per mezzo di questo strumento. \\
 Per quanto concerne le misurazioni e i risultati da noi ottenuti, anche in questa occasione abbiamo voluto eseguire delle rilevazioni che fossero ripetute \textit{ad hoc} e dinamicamente sulla base di ogni singolo dataset e per ogni singolo algoritmo, purché il tempo di esecuzione superasse la soglia minima da noi impostata di un secondo (o di un valore relativamente vicino per via dell'approssimazione effettuata da Python).
 Le ottimizzazioni inserite per quanto concerne Held and Karp a livello di codice sono state particolarmente utili considerando la complessità del suddetto algoritmo (\(O(n^2\cdot2^n)\)), e ciò ci ha permesso di ridurre il tempo aggiuntivo delle costanti causate dalle strutture dati del linguaggio, sfruttando l'uso di una chiave formata da sole stringhe piuttosto che usare un'intera mappa. 
 
 \noindent Per concludere, i risultati che abbiamo ottenuto sono in linea con quanto ci aspettavamo, difatti:
 \begin{itemize}
-  \item Held-Karp risulta il più preciso, restituendo per definizione la soluzione ottima. Questo però è osservabile solo per dataset di piccole dimensioni, poiché la computazione per grafi di dimensioni modeste e grandi è impensabile per limiti di tempo e memoria a disposizione;
+  \item Held-Karp risulta il più preciso, restituendo per definizione la soluzione esatta. Questo però è osservabile solo per dataset di piccole dimensioni, poiché la computazione per grafi di dimensioni modeste e grandi è impensabile per limiti di tempo e memoria a disposizione;
   \item Gli algoritmi nearest neighbor e di 2-approssimazione sono ugualmente efficienti, a meno di costanti che rendono l'algoritmo di 2-approssimazione leggermente più lento.
 \end{itemize}
 
 Per quanto riguarda la precisione dei dati ottenuti, sebbene dai dati sperimentali emerga che l'algoritmo nearest neighbor è mediamente più preciso dell'algoritmo 2-approximation, trovare una norma generale rimane difficile, poiché non si riesce a individuare una regolarità nei risultati. \\
-In generale però, considerando i casi con minor errore di approssimazione e il minor tempo di esecuzione, l'algoritmo più efficiente risulta essere Nearest Neighbor, sebbene la differenza non sia così marcata. 
+In generale però, considerando i casi con minor errore di approssimazione e il minor tempo di esecuzione, l'algoritmo più efficiente risulta essere nearest neighbor, sebbene la differenza non sia così marcata. 

@@ -269,7 +269,7 @@ lato tra ogni coppia di vertici.
         root <- v1 in V         // scelgo un nodo di V come radice per Prim
         T <- Prim(G, c, root)
         H' <- preorder(root)    // visita in preorder
-        H <- H U {root}           // aggiungo il percorso che va dalll'ultimo nodo
+        H <- H U {root}         // aggiungo il percorso che va dalll'ultimo nodo
                                 // della visita in preorder alla radice
         return H
 

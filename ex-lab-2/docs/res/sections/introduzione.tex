@@ -12,41 +12,93 @@ percorso di minore distanza che un commesso viaggiatore deve fare per visitare t
 \textit{una ed una sola volta}.
 
 Il TSP si può rappresentare con un grafo non orientato, pesato e
-\textit{completo} $G = (V,E)$, dove i vertici sono le città ed il peso del lato ${u,v}$
+\textit{completo} $G = (V,E)$, dove i vertici sono le città ed il peso del lato $(u,v)$
 è uguale alla distanza da $u$ a $v$. Risolvere il TSP significa trovare un
 \textbf{circuito Hamiltoniano}, ovvero, un ciclo di costo minimo che visita tutti
 i vertici \textit{esattamente una volta}.
 
 \subsection{NP-completezza del problema}
 
-Precedentemente è stato detto che il fatto di risolvere il TSP corrisponde a risolvere
-il problema della ricerca di un circuito Hamiltoniano. Quest'ultimo problema è noto
-essere un problema \textit{NP-completo}, pertanto anche TSP sarà NP-completo.
-Il fatto di stabilire che TSP è un problema NP-completo, indica che molto probabilmente
-non esiste una soluzione polinomiale al problema.
+\subsubsection{Dimostrazione di NP-completezza}
 
-Per poter stabilire con precisione la sua complessità dobbiamo prima
-“trasformarlo” in un problema di decisione, aggiungendo un limite k per il peso del ciclo
-all’input del problema.
+Prima di tutto dimostriamo che TSP $\in \mathcal{NP}$. Data un’istanza del problema, usiamo
+come \textit{certificato} la sequenza degli $n$ vertici del ciclo di peso minimo.
+L’algoritmo di verifica del certificato deve controllare che la sequenza contenga ogni
+vertice di $G$ esattamente una volta, sommare il peso dei lati e controllare che il peso
+totale del ciclo sia inferiore a $k$. Questo controllo si può svolgere in tempo polinomiale
+($O(n)$).
+
+Per poter stabilire con precisione la complessità del problema, è necessario prima
+“trasformare” tale problema in un \textit{problema di decisione}, aggiungendo un limite $k$
+per il peso del ciclo all’input del problema.
+
+\textbf{Definizione di TSP decisionale}: Dato un grafo non orientato, completo e pesato
+$G = (V,E)$ e un valore $k > 0$, esiste un ciclo in $G$ che attraversa tutti i vertici una
+sola volta di peso inferiore a $k$?
+
+\textbf{Teorema}: TSP è un problema $\mathcal{NP}$-completo.
+
+\textit{Dimostrazione}: è già stato dimostrato che TSP $\in \mathcal{NP}$, quindi si procede nel dimostrare
+che TSP è $\mathcal{NP}$-hard. Si mostri una riduzione del problema del circuito Hamiltoniano a TSP.
+Prendiamo un grafo non orientato $G = (V,E)$ e costruiamo un'istanza di TSP che ci permetta di risolvere
+il problema del circuito Hamiltoniano su $G$. Costruiamo un grafo non orientato e completo $G' = (V, E')$
+con gli stessi vertici di $G$ e $E' = \{(u, v) | u, v \in V\}$. Il peso degli archi di $G'$ viene assegnato
+come segue
+
+\[
+    w(u, v) = 0, \textnormal{ se } \{u, v\} \in E
+\]
+\[
+    w(u, v) = 1, \textnormal{ se } \{u, v\} \notin E
+\]
+
+È possibile notare che si può costruire il grafo $G'$ in tempo polinomiale rispetto al numero
+di vertici $|V|$ del grafo di partenza $G$. Il grafo $G$ contiene un circuito Hamiltoniano se e
+solo se $G'$ ha un ciclo di peso minore o uguale a 0. Supponiamo che $G$ contenga un circuito
+Hamiltoniano $h = v_1, \dots, v_n$. Ogni lato che compone $h$ è presente in $E$ e quindi ha peso 0 in $G'$.
+Di conseguenza, $h$ è un ciclo di $G'$ di peso uguale a 0. Viceversa, supponiamo che $G'$ contenga un ciclo
+semplice $t$ che attraversa tutti i vertici e di peso minore o uguale a 0. Poiché i pesi dei lati
+in $G'$ sono solo 0 oppure 1, tutti i lati che compongono $t$ devono avere costo 0. Quindi tutti i
+lati del ciclo sono presenti anche in $E$ e $t$ è un circuito Hamiltoniano per $G$.
+
+\subsubsection{Inapprossimabilità per fattori $\rho$ costanti di TSP}
+
+Il TSP è un problema simile al problema del MST: il MST è un cammino di peso minimo
+che collega tutti i vertici del grafo $G$, mentre il TSP è un ciclo di peso minimo
+che collega tutti i vertici del grafo $G$. Nonostante questa somiglianza tra questi
+due problemi, il TSP è un problema molto difficile anche solo da approssimare. Se
+esistesse un algoritmo di approssimazione con un $\rho$ costante, allora saprei
+risolvere in tempo polinomiale un problema \textit{$\mathcal{NP}$-hard}.
 
 \textbf{Teorema}: se $\mathcal{P} \ne \mathcal{NP}$, non può esistere alcun algoritmo
-di $\rho$-approssimazione per TSP con $\rho = \mathcal{O}(1)$.
+(polinomiale) di $\rho$-approssimazione per TSP con $\rho = \mathcal{O}(1)$.
 
-\textit{Dimostrazione}: se per assurdo si supponga che $\exists$ un algoritmo $A_\rho$
-polinomiale di $\rho$-approssimazione per TSP, dimostro come costruire $A_{Hamilton}$
+\textit{Dimostrazione}: per assurdo, si supponga che esista un algoritmo $A_\rho$
+polinomiale di $\rho$-approssimazione per TSP. Si dimostri come costruire $A_{Hamilton}$
 che decide il problema del ciclo Hamiltoniano in tempo polinomiale. Sia $I = G =(V,E)$
-e $O = G$ contiene un ciclo Hamiltoniano? Si effettui una \textit{riduzione}:
+e $O = $ "$G$ contiene un ciclo Hamiltoniano?". Si effettui una \textit{riduzione}:
 \[
-    G \rightarrow G' = (V, E') \textnormal{ completo}
-    c(e \in E') = 1 \textnormal{ se } e \in E \textnormal{, } \rho|V| + 1 \textnormal{ altrimenti.}
+    G \rightarrow G' = (V, E') \textnormal{ è completo, dove }
 \]
-Eseguo $A_\rho(G') \rightarrow C \textnormal{ (ciclo), } c(C) \textnormal{(costo di $C$)}$ e si
+\[
+    c(e \in E') = 1 \textnormal{ se } e \in E \textnormal{, altrimenti } c(e \in E') = \rho|V| + 1
+\]
+
+Possiamo quindi creare delle rappresentazioni di $G'$ e di $c$ a partire dalle rappresentazioni
+di $G$ in tempo polinomiale in $|V|$ ed $|E|$.
+
+Eseguo $A_\rho(G') \rightarrow C \textnormal{ (ciclo), } c(C) \textnormal{(funzione di costo di $C$, $c: V \times V \rightarrow \mathcal{N}$)}$ e si
 determina:
 \begin{enumerate}
 \item $G \in HAMILTON \Rightarrow c(C^*) = |V| \Rightarrow A_\rho$, ritorna un ciclo $C$
 con $c(C) \le \rho|V|$;
 \item $G \not\in HAMILTON \Rightarrow C$ contiene almeno un lato non in
-$G \Rightarrow c(C) \ge \rho|V| + 1$.
+$G$ (più precisamente in $E$) $\Rightarrow c(C) \ge \rho|V| + 1$. Poichè i lati che non
+appartengono a $G$ sono costosi, c'è un \textit{gap} di almeno $\rho |V|$ tra il costo di un cammino
+che è Hamiltoniano in $G$ (di costo $|V|$) e il costo di qualsiasi altro cammino (di costo
+almeno $\rho |V| + |V|$). Pertanto, il costo di un cammino che non è un ciclo Hamiltoniano
+in $G$ è almeno un fattore $\rho + 1$ maggiore del costo di un cammino che è un ciclo
+Hamiltoniano in $G$.
 \end{enumerate}
 
 È possibile notare che si può costruire il grafo $G'$ in tempo polinomiale rispetto al numero
@@ -69,3 +121,12 @@ dove $c$ è la \textit{funzione di costo}. Questo implica che il cammino con un 
 minore o uguale al costo del cammino con due lati $c(u, w, v)$. \\
 
 Questa definizione è necessaria alla definizione delle proprietà degli algoritmi \textit{nearest neighbor} e di 2-approssimazione.
+=======
+Si applichi l'algoritmo di approssimazione $A_{\rho}$ a TSP. Poichè $A_{\rho}$ è garantito
+che restituisca un cammino di costo superiore a $\rho$ volte il costo di un cammino ottimale,
+se $G$ contiene un ciclo Hamiltoniano, $A_{\rho}$ deve resituirlo. Se $G$ non ha un ciclo
+Hamiltoniano, $A_{\rho}$ resistuisce un ciclo di costo maggiore di $\rho |V|$.
+Pertanto, possiamo usare $A_{\rho}$ per risolvere il problema del ciclo Hamiltoniano in
+tempo polinomiale. Quindi sarei in grado di risolvere un problema $\mathcal{NP}$-completo
+con un algoritmo polinomiale. Assumendo che $\mathcal{P} \ne \mathcal{NP}$, questo non è
+possibile. Di conseguenza, non può esistere un algoritmo che $\rho$-approssima TSP.

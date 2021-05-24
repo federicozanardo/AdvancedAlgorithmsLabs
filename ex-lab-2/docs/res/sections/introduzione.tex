@@ -57,3 +57,57 @@ Di conseguenza, $h$ è un ciclo di $G'$ di peso uguale a 0. Viceversa, supponiam
 semplice $t$ che attraversa tutti i vertici e di peso minore o uguale a 0. Poiché i pesi dei lati
 in $G'$ sono solo 0 oppure 1, tutti i lati che compongono $t$ devono avere costo 0. Quindi tutti i
 lati del ciclo sono presenti anche in $E$ e $t$ è un circuito Hamiltoniano per $G$.
+
+\subsection{Definizione di MST}
+
+Sia $V$ l'insieme dei nodi che costituiscono il grafo pesato $G$ e sia $E$ la collezione dei lati di tale
+grafo. Ai fini delle analisi della complessità degli algoritmi, sia $|V| = n$ e $|E| = m$.
+
+Un \textit{minimum spanning tree} è un
+sottoinsieme dei lati $E$ di un grafo $G$ non orientato connesso e pesato sui lati che
+collega tutti i vertici insieme, senza alcun ciclo e con il minimo peso totale del
+lato possibile. Cioè, è uno spanning tree la cui somma dei pesi dei bordi è la più
+piccola possibile.
+
+Un \textit{minimum spanning tree} $T = (V, E')$ è un albero, il cui insieme dei lati $E'$ è un
+sottoinsieme dei lati $E$ di un grafo $G = (V, E)$ non orientato, connesso e
+pesato, che collega tutti i vertici $V$, la cui somma dei pesi dei lati è la minima.
+
+L'algoritmo generico per determinare un MST è:
+\begin{verbatim}
+    A = empty_set
+    while A doesn't form a spanning tree
+        find an edge (u,v) that is safe for A
+        A = A U {(u,v)}
+    return A
+\end{verbatim}
+
+Si forniscono alcune definizioni per gli MST:
+\begin{enumerate}
+    \item un \textbf{taglio} $(S, V \setminus S)$ di un grafo $G = (V, E)$ è una partizione
+    di $V$;
+    \item un lato $(u, v) \in E$ \textbf{attraversa il taglio} $(S, V \setminus S)$ se
+    $u \in S$ e $v \in V \setminus S$ o viceversa;
+    \item un taglio \textbf{rispetta} un insieme $A$ di lati se nessun lato di $A$ attraversa
+    il taglio;
+    \item dato un taglio, il lato che lo attraversa di peso minimo si chiama \textbf{light edge}.
+\end{enumerate}
+
+Per determinare se un lato è \textbf{safe}, si sfrutta il seguente teorema:
+
+\textbf{Teorema}: Sia $G = (V, E)$ un grafo non diretto, connesso e pesato. Sia $A$ un
+sottoinsieme di $E$ incluso in una qualche MST di $G$, sia $(S, V \setminus S)$ un
+taglio che rispetta $A$, e sia $(u, v)$ un \textit{light edge} per $(S, V \setminus S)$.
+Allora $(u, v)$ è \textit{safe} per $A$.
+
+\subsection{Definizione di disuguaglianza triangolare}
+
+La disuguaglianza triangolare è definita come
+\begin{equation}
+    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)
+\end{equation}
+
+dove $c$ è la \textit{funzione di costo}. Questo implica che il cammino con un lato $c(u, v)$ ha un costo
+minore o uguale al costo del cammino con due lati $c(u, w, v)$. \\
+
+Questa definizione è necessaria alla definizione delle proprietà degli algoritmi \textit{nearest neighbor} e di 2-approssimazione.

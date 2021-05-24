@@ -180,11 +180,11 @@ Questo algoritmo, come le altre euristiche costruttive, ha complessità computaz
 
 \subsubsection{Analisi dei fattori di approssimazione}
 
-Definita la disuguaglianza triangolare come 
+Definita la disuguaglianza triangolare come
 \begin{equation}
-    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)    
+    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)
 \end{equation}
-l'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare è rispettata.
+l'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare (si veda \ref{tsp_metrico}) è rispettata.
 
 \subsubsection{Implementazione}
 
@@ -205,13 +205,7 @@ Un'ultima ottimizzazione risiede nella funzione \texttt{get\_min\_node} di \text
 \subsubsection{Introduzione}
 
 L'algoritmo 2-approssimato è in grado di determinare un'approssimazione del TSP sotto la condizione che le
-distanze rispettino la \textit{disuguaglianza triangolare}, ovvero:
-\begin{equation}
-    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)
-\end{equation}
-
-dove $c$ è la \textit{funzione di costo}. Questo implica che il cammino con un lato $c(u, v)$ ha un costo
-minore o uguale al costo del cammino con due lati $c(u, w, v)$. Il nome di questo problema è \textbf{TRIANGLE\_TSP}.
+distanze rispettino la \textit{disuguaglianza triangolare} (si veda \ref{tsp_metrico}).
 
 \subsubsection{Definizione di MST}
 

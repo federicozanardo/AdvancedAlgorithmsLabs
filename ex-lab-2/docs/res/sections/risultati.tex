@@ -33,7 +33,7 @@ Abbiamo implementato il codice in Python per l'esecuzione dei tre algoritmi su t
   \label{tab:opt-results}
   \end{table}
 
-\subsubsection{Risultati e risultati temporali}
+\subsubsection{Risultati e tempistiche}
 
 
 I risultati sperimentali degli algoritmi da noi implementati sono riportati nella tabella alla pagina che segue.
@@ -134,7 +134,24 @@ Di seguito vengono illustrati alcuni grafici che mostrano gli errori effettivi d
 \end{figure}
 
 Come si può evincere da questi grafici (fig. \ref{fig:errors-hk-effettivo}, \ref{fig:errors-approx-effettivo}, \ref{fig:errors-all}, \ref{fig:errors-approx}), l'algoritmo nearest neighbor sembra essere, \textit{in media}, più efficiente; ciò non è vero, però, per grafi più piccoli come \textit{burma14}, \textit{ulysses16} e \textit{ulysses22}, in cui l'algoritmo di 2-approssimazione si avvicina decisamente meglio alla soluzione ottima. 
-Una possibile ipotesi che abbiamo avanzato nel corso dell'analisi di questi risultati potrebbe ricondursi alla natura \textit{greedy} dell'algoritmo nearest neighbor che procede con la scelta ottima per ogni vertice incontrato. Pertanto, la potenzialità di questo algoritmo si riflette meglio con grafi di maggior dimensione proprio perché il numero di scelte da effettuare è maggiore e quindi il possibile tasso di errore si riduce in proporzione. Chiaramente questa ipotesi è puramente un'osservazione basata su nostre congetture e priva di prove empriche, che sarebbe interessante approfondire. 
+Una possibile ipotesi che abbiamo avanzato nel corso dell'analisi di questi risultati potrebbe ricondursi alla natura \textit{greedy} dell'algoritmo nearest neighbor che procede con la scelta ottima per ogni vertice incontrato. Pertanto, la potenzialità di questo algoritmo si riflette meglio con grafi di maggior dimensione proprio perché il numero di scelte da effettuare è maggiore e quindi il possibile tasso di errore si riduce in proporzione. Chiaramente questa ipotesi è puramente un'osservazione basata su nostre congetture e priva di prove empiriche, che sarebbe interessante approfondire. 
 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{res/images/time/time-nn-2ap.png}
+	\caption{Tempi effettivi ottenuti con Nearest Neighbor e 2-approssimazione.}
+	\label{fig:time-nn-2ap}
+\end{figure}
 
+Per quanto riguarda le tempistiche, si può notare dal grafico \ref{fig:time-nn-2ap} che i tempi di esecuzione dei due algoritmi anche ripetuti più e più volte denotano un minore tempo di computazione effettivo per l'algoritmo di Nearest Neighbor, specialmente nei grafici più grandi. 
+Analogamente, anche nei grafici di minore dimensione (fig. \ref{fig:time-detail-nn-2ap}) è possibile notare che questo algoritmo è quello che ci impiega meno tempo a livello computazionale, confermandosi quindi il più veloce dei tre. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{res/images/time/time-detail-nn-2ap.png}
+	\caption{Dettaglio dei tempi effettivi ottenuti con Nearest Neighbor e 2-approssimazione nei dataset più piccoli.}
+	\label{fig:time-detail-nn-2ap}
+\end{figure}
+
+Per quanto concerne le tempistiche di Held and Karp, solo due dataset hanno computato il risultato entro tre minuti, mentre uno di questi, \textit{ulysses22.tsp}, ci è andato vicino con un errore del 1,31\% (fig. \ref{fig:errors-hk-effettivo}). Altri dataset, come \textit{Burma14} e \textit{Ulysses16.tsp}, hanno completato la computazione e hanno ottenuto in un tempo relativamente basso i risultati, rispettivamente in circa 0.35 e 1.96 secondi.

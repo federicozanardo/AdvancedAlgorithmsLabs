@@ -35,7 +35,6 @@ Abbiamo implementato il codice in Python per l'esecuzione dei tre algoritmi su t
 
 \subsubsection{Risultati e tempistiche}
 
-
 I risultati sperimentali degli algoritmi da noi implementati sono riportati nella tabella alla pagina che segue.
 
 \begin{landscape}
@@ -71,7 +70,7 @@ I risultati sperimentali degli algoritmi da noi implementati sono riportati nell
 
 % ==================================================================================================
 
-Riteniamo utile, inoltre, riportare nel dettaglio i tempi di esecuzione degli algoritmi e il numero di ripetizioni effettuate da ogni ogni algoritmo su ogni dataset.
+Riteniamo utile, inoltre, riportare nel dettaglio i tempi di esecuzione degli algoritmi e il numero di ripetizioni effettuate da ogni algoritmo su ogni dataset.
 
 \begin{table}[H]
   \centering
@@ -101,7 +100,9 @@ Riteniamo utile, inoltre, riportare nel dettaglio i tempi di esecuzione degli al
 C'è un algoritmo che riesce sempre a fare meglio degli altri rispetto all'errore di approssimazione? Quale dei tre
 algoritmi che avete implementato è più efficiente?}
 
-Analizzando i tre algoritmi abbiamo appurato che non esiste una regola generale per quanto riguarda l'accuratezza del risultato. Il più preciso dei tre è, naturalmente, l'algoritmo Held-Karp, in quanto per definizione calcola la soluzione ottima esatta; nonstante questo, avendo una complessità di gran lunga maggiore rispetto agli altri, nei tre minuti che abbiamo imposto come limite alla computazione su un singolo dataset molto spesso si trova molto più lontano dalla soluzione rispetto agli algoritmi di approssimazione. Questo è particolarmente evidente nei grafi con un elevato numero di vertici; in \textit{dsj1000}, infatti, la soluzione trovata ha un errore di addirittura due ordini di grandezza in più rispetto alla soluzione ottima. \\
+Analizzando i tre algoritmi abbiamo appurato che non esiste una regola generale per quanto riguarda l'accuratezza del risultato. Il più preciso dei tre è, naturalmente, l'algoritmo Held-Karp, in quanto per definizione calcola la soluzione ottima esatta. 
+Nonostante questo, avendo una complessità di gran lunga maggiore rispetto agli altri, abbiamo dovuto limitarne il tempo di esecuzione su un singolo dataset a 180 secondi. Di conseguenza, molto spesso il risultato ottenuto si trova molto più lontano dalla soluzione rispetto agli algoritmi di approssimazione.
+Questo è particolarmente evidente nei grafi con un elevato numero di vertici; in \textit{dsj1000}, infatti, la soluzione trovata ha un errore di addirittura due ordini di grandezza in più rispetto alla soluzione ottima. \\
 Anche per quanto riguarda gli algoritmi di approssimazione non è possibile tracciare una linea precisa su quale sia più preciso o meno: dai risultati ottenuti possiamo evincere solamente che l'algoritmo di 2-approssimazione tende a essere più preciso su grafi di piccole dimensioni, mentre l'euristica nearest neighbor tende a trovare una soluzione più vicina all'ottimo per grafi di grandi dimensioni. \\
 Di seguito vengono illustrati alcuni grafici che mostrano gli errori effettivi dei risultati e gli errori in proporzione tra loro, al fine di meglio visualizzare quanto affermato.
 
@@ -134,7 +135,7 @@ Di seguito vengono illustrati alcuni grafici che mostrano gli errori effettivi d
 \end{figure}
 
 Come si può evincere da questi grafici (fig. \ref{fig:errors-hk-effettivo}, \ref{fig:errors-approx-effettivo}, \ref{fig:errors-all}, \ref{fig:errors-approx}), l'algoritmo nearest neighbor sembra essere, \textit{in media}, più efficiente; ciò non è vero, però, per grafi più piccoli come \textit{burma14}, \textit{ulysses16} e \textit{ulysses22}, in cui l'algoritmo di 2-approssimazione si avvicina decisamente meglio alla soluzione ottima. 
-Una possibile ipotesi che abbiamo avanzato nel corso dell'analisi di questi risultati potrebbe ricondursi alla natura \textit{greedy} dell'algoritmo nearest neighbor che procede con la scelta ottima per ogni vertice incontrato. Pertanto, la potenzialità di questo algoritmo si riflette meglio con grafi di maggior dimensione proprio perché il numero di scelte da effettuare è maggiore e quindi il possibile tasso di errore si riduce in proporzione. Chiaramente questa ipotesi è puramente un'osservazione basata su nostre congetture e priva di prove empiriche, che sarebbe interessante approfondire. 
+Una possibile ipotesi che abbiamo avanzato nel corso dell'analisi di questi risultati potrebbe ricondursi alla natura \textit{greedy} dell'algoritmo nearest neighbor, che procede con la scelta ottima per ogni vertice incontrato. Pertanto, la potenzialità di questo algoritmo si riflette meglio con grafi di maggior dimensione proprio perché il numero di scelte da effettuare è maggiore e quindi il possibile tasso di errore si riduce in proporzione. Chiaramente questa ipotesi è puramente un'osservazione basata su nostre congetture che sarebbe interessante approfondire. 
 
 
 \begin{figure}[H]
@@ -144,8 +145,8 @@ Una possibile ipotesi che abbiamo avanzato nel corso dell'analisi di questi risu
 	\label{fig:time-nn-2ap}
 \end{figure}
 
-Per quanto riguarda le tempistiche, si può notare dal grafico \ref{fig:time-nn-2ap} che i tempi di esecuzione dei due algoritmi anche ripetuti più e più volte denotano un minore tempo di computazione effettivo per l'algoritmo di Nearest Neighbor, specialmente nei grafici più grandi. 
-Analogamente, anche nei grafici di minore dimensione (fig. \ref{fig:time-detail-nn-2ap}) è possibile notare che questo algoritmo è quello che ci impiega meno tempo a livello computazionale, confermandosi quindi il più veloce dei tre. 
+Per quanto riguarda le tempistiche degli algoritmi di approssimazione, si può notare dal grafico \ref{fig:time-nn-2ap} che i tempi di esecuzione dei due algoritmi, anche ripetuti più e più volte, denotano un minore tempo di computazione effettivo per l'algoritmo di Nearest Neighbor, specialmente nei grafi più grandi. 
+Analogamente, anche nei grafi di minore dimensione (fig. \ref{fig:time-detail-nn-2ap}) è possibile notare che questo algoritmo è quello che ci impiega meno tempo a livello computazionale, confermandosi quindi il più veloce dei tre. 
 
 \begin{figure}[H]
 	\centering
@@ -154,4 +155,4 @@ Analogamente, anche nei grafici di minore dimensione (fig. \ref{fig:time-detail-
 	\label{fig:time-detail-nn-2ap}
 \end{figure}
 
-Per quanto concerne le tempistiche di Held and Karp, solo due dataset hanno computato il risultato entro tre minuti, mentre uno di questi, \textit{ulysses22.tsp}, ci è andato vicino con un errore del 1,31\% (fig. \ref{fig:errors-hk-effettivo}). Altri dataset, come \textit{Burma14} e \textit{Ulysses16.tsp}, hanno completato la computazione e hanno ottenuto in un tempo relativamente basso i risultati, rispettivamente in circa 0.35 e 1.96 secondi.
+Per quanto concerne le tempistiche di Held and Karp, solo due dataset hanno computato il risultato entro tre minuti, mentre uno di questi, \textit{ulysses22}, ci è andato vicino con un errore del 1,31\% (fig. \ref{fig:errors-hk-effettivo}). Altri dataset, come \textit{burma14} e \textit{ulysses16}, hanno completato la computazione e hanno ottenuto in un tempo relativamente basso i risultati, rispettivamente in circa 0.35 e 1.96 secondi.

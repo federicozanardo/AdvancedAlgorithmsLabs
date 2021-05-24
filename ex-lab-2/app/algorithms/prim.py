@@ -65,8 +65,8 @@ class Prim:
             u = (Q.extractMin()).toTuple()
             for j in range(1, len(T.adjMatrix[int(u[0])])):
                 if Q.search(j) and T.adjMatrix[int(u[0])][j] < key[j]:
-                    (identifier, o) = u
-                    parent[j] = (identifier, o, T.adjMatrix[int(u[0])][j])
+                    (identifier, prim_weight) = u
+                    parent[j] = (identifier, prim_weight, T.adjMatrix[int(u[0])][j])
                     key[j] = T.adjMatrix[int(u[0])][j]
                     Q.searchAndUpdateWeight(j, key[j])
 

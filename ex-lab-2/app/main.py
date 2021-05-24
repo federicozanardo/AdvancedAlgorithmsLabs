@@ -8,7 +8,7 @@
 """
 
 __author__ = "E. Buratto, M. Sciacco, F. Zanardo"
-__version__ = "0.0.1"
+__version__ = "1.0.0"
 __license__ = "Unlicense"
 
 import argparse
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Required positional arguments
-    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-single>")
+    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-single/2ap/nn/hk>")
     parser.add_argument("<dataset path>", help="Posizione del singolo file o della cartella con i dataset")
 
     parser.add_argument(

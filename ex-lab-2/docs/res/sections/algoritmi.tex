@@ -4,7 +4,7 @@
 
 \subsubsection{Introduzione}
 
-Il TSP prende in input un grafo \textit{completo}, ovvero, un grafo in cui:
+Il TSP prende in input un grafo \textit{completo}, ovvero un grafo in cui:
 \[
     \forall u, v \in V \textnormal{ } \exists (u, v) \in E
 \]
@@ -23,17 +23,20 @@ La struttura dati per il grafo è rappresentata dalla classe \texttt{TSP}; quest
         \item \texttt{GEO} nel caso in cui le coordinate siano rappresentate da latitudine e longitudine;
     \end{itemize}
     \item \texttt{nodes}: struttura dati di tipo \texttt{defaultdict(list)}, ossia lista a dizionario. Questo campo dati contiene i vertici del grafo, indicizzati per indice riportato nel dataset;
-    \item \texttt{adjMatrix}: matrice di adiacenza dei nodi. La matrice è di dimensione $|V|*|V|$, e conserva la seguente proprietà: \textit{Detti i,j gli indici di due nodi, adjMatrix[i][j] = adjMatrix[j][i] = w(i,j)}.
+    \item \texttt{adjMatrix}: matrice di adiacenza dei nodi. La matrice è di dimensione $|V|*|V|$, e conserva la seguente proprietà: 
+    \begin{center}
+        \textit{Detti i,j gli indici di due nodi, adjMatrix[i][j] = adjMatrix[j][i] = w(i,j)}.
+    \end{center}
 \end{itemize}
 
 La classe presenta inoltre i seguenti metodi:
 \begin{itemize}
     \item \texttt{add\_node}: aggiunge un vertice al grafo;
     \item \texttt{get\_weight}: restituisce il peso tra due vertici;
-    \item \texttt{calculateAdjMatrix}: calcola la matrice di adiacenza del grafo. Questo metodo viene chiamato una sola volta, appena sono stati caricati tutti i metodi;
+    \item \texttt{calculateAdjMatrix}: calcola la matrice di adiacenza del grafo. Questo metodo viene chiamato una sola volta, appena sono stati caricati tutti i nodi del dataset;
     \item \texttt{delete\_node}: elimina un nodo dal grafo;
     \item \texttt{get\_min\_node}: restituisce il nodo più vicino al nodo che viene dato in \textit{input}. Tale metodo è particolarmente utile per l'implementazione dell'algoritmo \texttt{nearest neighbor}, come specificato in seguito;
-    \item \texttt{printAdjMatrix}: funzione di utilià per la stampa della matrice di adiacenza. 
+    \item \texttt{printAdjMatrix}: funzione di utilità per la stampa della matrice di adiacenza. 
 \end{itemize}
 
 \subsection{Held e Karp}
@@ -42,7 +45,7 @@ La classe presenta inoltre i seguenti metodi:
 
 L'algoritmo di Held and Karp è un algoritmo di programmazione dinamica che permette di determinare in modo esatto il risultato di TSP sfruttando la scomposizione del problema in sotto-problemi e in sotto-sotto-problemi che vengono ricorsivamente risolti. Per ciascun sotto-problema viene generato un risultato che viene salvato all'interno di una tabella contenente tutte le soluzioni che portano poi alla determinazione del cammino minimo di TSP.
 
-L'algoritmo si basa sulla proprietà secondo la quale ogni sottocammino di un cammino minimo è a sua volta un cammino minimo, e ciò ci permette di calcolare i sottoproblemi ricorsivamente nel seguente modo: 
+L'algoritmo si basa sulla proprietà secondo la quale ogni sotto-cammino di un cammino minimo è a sua volta un cammino minimo, e ciò ci permette di calcolare i sotto-problemi ricorsivamente nel seguente modo: 
 
 \begin{itemize}
     \item  pongo \(1 \dots n\) città (i.e. nodi) da visitare;
@@ -56,7 +59,7 @@ L'esecuzione dell'algoritmo a partire dalla città \(1\) visitando tutti i nodi 
 
 \subsubsection{Algoritmo}
 
-Il seguente psuedocodice mostra la funzione HK-INIT utilizzata per l'inizializzazione dei vettori e del tempo iniziale. 
+Il seguente pseudocodice mostra la funzione \texttt{HK-INIT} utilizzata per l'inizializzazione dei vettori e del tempo iniziale. 
 \begin{verbatim}
 HK-INIT(G)
     (V,E) = G
@@ -66,7 +69,7 @@ HK-INIT(G)
     return HK-VISIT(0,V)
 \end{verbatim}    
 
-Lo pseudocodice della funzione HK-VISIT mostra esattamente i casi base e i casi ricorsivi per la risoluzione del problema in modo ricorsivo sfruttando l'algoritmo di Held and Karp.
+Lo pseudocodice della funzione \texttt{HK-VISIT} mostra esattamente i casi base e i casi ricorsivi per la risoluzione del problema in modo ricorsivo sfruttando l'algoritmo di Held and Karp.
 \begin{verbatim}
 HK-VISIT(v,S)
     // Caso base 1: ritorno il peso dell'arco {v,0}
@@ -107,41 +110,38 @@ Al fine di realizzare i vettori \(d\) e \(\pi\) si è deciso di utilizzare la st
 
 dove \(v\) rappresenta il nodo corrente, mentre \(p\) e \(q\) indicano rispettivamente il nodo iniziale e finale visitato in \(S\), tale per cui \(p \in S\) e \(q \in S\).
 
-Per quanto concerne la complessità, si può affermare che, sebbene l'approccio originale dell'algoritmo porta a concludere la risoluzione dell'intero problema seguendo un approccio "\textit{brute force}", il caso peggiore è certamente inferiore rispetto \(O(n!)\). 
+Per quanto concerne la complessità si può affermare che, sebbene l'approccio originale dell'algoritmo porta a concludere la risoluzione dell'intero problema seguendo un approccio "\textit{brute force}", il caso peggiore è certamente inferiore rispetto a \(O(n!)\). 
 Nello specifico, analizzando i singoli valori:
 
 \begin{itemize}
     \item \(O(n)\) relativo alle \(n-1\) iterazioni richieste per il ciclo che itera tutti i vertici in \(S \ {v}\);
-    \item \(O(n\cdot2^n)\) relativo alle coppie usate per l'indicizzazione con \(v\) e \(S\) che sono rispettivamente al più \(n\) e \(2^n\) nel vettore \(d\).
+    \item \(O(n\cdot2^n)\) relativo alle coppie usate per l'indicizzazione con \(v\) e \(S\), che sono rispettivamente al più \(n\) e \(2^n\) nel vettore \(d\).
 \end{itemize}
 Pertanto in totale la complessità può essere riassunta come \(O(n) \cdot O(n\cdot2^n)\), ossia \(O(n^2\cdot2^n)\).
 
 \subsubsection{Analisi della qualità della soluzione}
 
-La soluzione riportata risulta essere esatta dal momento che questo tipo di algoritmo utilizza la programmazione dinamica con un approccio \textit{brute force} per calcolarsi tutte le possibili soluzioni. Per evitare un grande utilizzo di memoria dovuto alle ricorsioni, l'algoritmo è stato bloccato allo scadere di 3 minuti di computazione così da evitare una ricerca troppo lunga.
+La soluzione riportata risulta essere \textbf{esatta} dal momento che questo tipo di algoritmo utilizza la programmazione dinamica con un approccio \textit{brute force} per calcolarsi tutte le possibili soluzioni. Per evitare un grande utilizzo di memoria dovuto alle ricorsioni, l'algoritmo è stato bloccato allo scadere di 3 minuti di computazione così da evitare una ricerca troppo lunga.
 Inoltre, si è dovuto estendere il limite di ricorsione fino a 5000 chiamate ricorsive di profondità per limitazioni dovute al linguaggio di programmazione Python.
 
-\subsubsection{Analisi dei fattori di approssimazione}
-
-Nell'algoritmo non ci sono state particolari approssimazioni se non nei risultati dei dataset che non hanno completato per intero la risoluzione dei sottoproblemi. Infatti, allo scadere dei 3 minuti i risultati ottenuti in output sono pari alle soluzioni dei cammini minimi fino ad allora trovate. Una giusta approssimazione pertanto non può essere determinata, se non mettendo in relazione l'effettiva soluzione ottima con la soluzione attualmente presa in carico, determinando manualmente e in modo dinamico il tempo richiesto per il raggiungimento dell'effettiva soluzione. 
-
+Nell'algoritmo non ci sono "approssimazioni" calcolate, se non nei risultati dei dataset che non hanno completato per intero la risoluzione dei sottoproblemi. Infatti, allo scadere dei 3 minuti i risultati ottenuti in output sono pari alle soluzioni dei cammini minimi fino ad allora trovate. Una migliore vicinanza alla soluzione pertanto può essere determinata lasciando procedere la computazione che, come ben noto, potrebbe richiedere molto tempo e uno spazio di risorse molto alto, specie in termini di memoria RAM (ad esempio, come esperimento puramente goliardico abbiamo provato ad eseguire \textit{dsj1000} con un limite di 10 minuti e abbiamo rilevato che l'uso di RAM era superiore a 8GB). 
 
 \subsubsection{Ottimizzazioni implementate}
 
-Nell'algoritmo ci sono state piccole ottimizzazioni a livello di codice di programmazione che hanno permesso di evitare delle operazioni computazionalmente semplici ma che con la complessità analizzata aumentavano di molto il tempo necessario alla computazione. Per prima cosa, l'uso di variabili temporanee ha permesso il riutilizzo di valori precedentemente trovati evitando di doverne ri-eseguire il ricalcolo, come nel caso della generazione della chiave. Nello specifico, la chiave viene generata all'inizio dell'algoritmo a partire dalla conversione in stringa del nodo \(v\) corrente concatenato alla lista \(S\), a sua volta convertita in stringa.
+Nell'algoritmo sono presenti piccole ottimizzazioni a livello di codice di programmazione che hanno permesso di evitare delle operazioni computazionalmente semplici ma che con la complessità analizzata aumentavano di molto il tempo necessario alla computazione. Per prima cosa, l'uso di variabili temporanee ha permesso il riutilizzo di valori precedentemente trovati evitando di doverne ri-eseguire il ricalcolo, come nel caso della generazione della chiave. Nello specifico, la chiave viene generata all'inizio dell'algoritmo a partire dalla conversione in stringa del nodo \(v\) corrente concatenato alla lista \(S\), a sua volta convertita in stringa.
 Ci si è accorti che l'uso di una funzione che potesse generare questo tipo di stringa avrebbe aumentato di molto il tempo richiesto per la risoluzione del problema, mentre l'uso di una variabile iniziale ha ridotto di molto il tempo per ricavare il valore della chiave.
-Altre soluzioni al posto della chiave interpretata come stringa potevano richiedere l'uso di array per \(S\) che fosse immutabile se usato come chiave, ma si è preferito non indagare ulteriormente visto e considerato che ai fini dell'esercizio una stringa ci è risultata più semplice da indicizzare rispetto a un'intera struttura dati. 
+Altre soluzioni al posto della chiave interpretata come stringa avrebbero richiesto l'uso di array per \(S\) che fosse immutabile se usato come chiave, ma si è preferito non indagare ulteriormente, visto e considerato che ai fini dell'esercizio una stringa ci è risultata più semplice da indicizzare rispetto a un'intera struttura dati, la quale sarebbe stata più complessa da manipolare per gli accessi e gli aggiornamenti da eseguire. 
 
 % TODO: ricontrollare che non ci sia scritto una baggianata nei calcoli della complessità
-Secondariamente, una seconda ottimizzazione è stata fatta prima di arrivare alla guardia del primo ciclo dove è necessario ricavare un vettore \(S - {v}\) che richiede inevitabilmente la copia profonda e la rimozione di \(v\) con complessità \(O(n) + O(n-1) = O(n)\). Al fine di evitare l'uso della libreria di copia profonda, si è pensato trivialmente di eseguire un ciclo di cui copiare i valori di \(S\) evitando \(v\) e ottenendo pertanto una complessità di \(O(n-1) = O(n)\). 
-Contrariamente a quanto si possa pensare, sebbene sulla teoria la complessità è la medesima, il valore ricavato ottimizza di molto le istruzioni effettive necessarie per attuare una copia di questo tipo. A titolo esemplificativo e puramente informale si è rilevato nel caso del dataset \textit{burma14} un decremento del 35\% del tempo impiegato per l'esecuzione sfruttando un ciclo di copia con un \textit{if statement} al posto della copia profonda e della successiva rimozione. 
+Secondariamente, un'ulteriore ottimizzazione è stata fatta prima di arrivare alla guardia del primo ciclo dove è necessario ricavare un vettore \(S - {v}\), cosa che richiede inevitabilmente la copia profonda e la rimozione di \(v\) con complessità \(O(n) + O(n-1) = O(n)\). Al fine di evitare l'uso della libreria di copia profonda, si è pensato più banalmente di eseguire un ciclo in cui copiare i valori di \(S\), evitando \(v\), e ottenendo pertanto una complessità di \(O(n-1) = O(n)\). 
+Contrariamente a quanto si possa pensare, sebbene sulla teoria la complessità sia la medesima, il valore ricavato ottimizza di molto le istruzioni effettive necessarie per attuare una copia di questo tipo. A titolo esemplificativo e puramente informale si è rilevato nel caso del dataset \textit{burma14} un decremento del 35\% del tempo impiegato per l'esecuzione sfruttando un ciclo di copia con un \textit{if statement} al posto della copia profonda e della successiva rimozione. 
 
 
 \subsection{Nearest Neighbor}
 
 \subsubsection{Introduzione}
 
-L'algoritmo \textit{Nearest Neighbor} per il problema del Traveling Salesman Problem rientra nelle cosidette \textit{euristiche costruttive}; queste sono una famiglia di algoritmi che, a partire da un vertice iniziale, procedono aggiungendo un vertice alla volta al sottoinsieme corrispondente alla soluzione parziale. Questa aggiunta viene eseguita secondo regole prefissate, fino all'individuazione di una soluzione approssimata.
+L'algoritmo \textit{Nearest Neighbor} per il problema del Traveling Salesman Problem rientra nella classe delle cosiddette \textit{euristiche costruttive}; queste sono una famiglia di algoritmi che, a partire da un vertice iniziale, procedono aggiungendo un vertice alla volta al sottoinsieme corrispondente alla soluzione parziale. Questa aggiunta viene eseguita secondo regole prefissate, fino all'individuazione di una soluzione approssimata.
 
 \subsubsection{Algoritmo}
 
@@ -150,55 +150,61 @@ Come tutte le euristiche costruttive per il problema TSP, l'algoritmo \textit{ne
 \begin{verbatim}
 
     NearestNeighbor(G=(V,E))
-    # il cammino iniziale è composto unicamente dal primo nodo del grafo
+    // il cammino iniziale è composto unicamente dal primo nodo del grafo
     path <- v1 in V
 
-    # si itera finché tutti i nodi del grafo non sono stati inseriti nel path
+    // si itera finché tutti i nodi del grafo non sono stati inseriti nel path
     while path != V 
-        # si seleziona il nodo NON presente in path di distanza minima dall'ultimo
-        # nodo inserito nel path
+        // si seleziona il nodo NON presente in path di distanza minima dall'ultimo
+        // nodo inserito nel path
         nextNode <- MinAdj(path, path.lastV)
 
-        # si inserisce il nodo successivo nel path
+        // si inserisce il nodo successivo nel path
         path <- nextNode
     
-    # si aggiunge infine il nodo di partenza per chiudere il ciclo
+    // si aggiunge infine il nodo di partenza per chiudere il ciclo
     path <- path + v1
 
     return path
 \end{verbatim}
 
-Le tre fasi, riconoscibili dalla struttura dell'algoritmo, sono:
+Le tre fasi, riconoscibili anche dalla struttura dell'algoritmo, sono:
 \begin{enumerate}
-    \item \textbf{Inizializzazione}: si parte con il cammino composto unicamente dal primo vertice $v_0$;
-    \item \textbf{Selezione}: sia $(v_0,...,v_k)$ il cammino corrente; il vertice successivo è il vertice $v_{k+1}$, non presente nel cammino, a distanza minima da $v_k$;
+    \item \textbf{Inizializzazione}: si parte con il cammino composto unicamente dal primo vertice $v_1$;
+    \item \textbf{Selezione}: sia $(v_1,...,v_k)$ il cammino corrente; il vertice successivo è il vertice $v_{k+1}$, non presente nel cammino, a distanza minima da $v_k$;
     \item \textbf{Inserimento}: viene inserito $v_{k+1}$ subito dopo $v_k$ nel cammino.
 \end{enumerate}
 
-I passi 2 e 3 vengono ripetuti finché tutti i vertici non sono nel cammino finale. Una volta verificata questa condizione è necessario eseguire un'ulteriore singola istruzione: aggiungere in coda al percorso finale il nodo iniziale. Questa operazione è necessaria ai fini del mantenimento della proprietà di percorso minimo del problema TSP. \\
-Questo algoritmo, come le altre euristiche costruttive, ha complessità computazionale pari a $O(|V|^2)$.
+I passi 2 e 3 vengono ripetuti finché tutti i vertici non sono nel cammino finale. Una volta verificata questa condizione è necessario eseguire un'ulteriore singola istruzione: aggiungere in coda al percorso finale il nodo iniziale. Questa operazione è necessaria ai fini del mantenimento della proprietà di percorso Hamiltoniano. \\
 
-\subsubsection{Analisi dei fattori di approssimazione}
+\subsubsection{Analisi dell'approssimazione}
 
-Definita la disuguaglianza triangolare come
-\begin{equation}
-    \forall u, v, w \in V, \textnormal{ vale che } c(u, v) \le c(u, w) + c(w, v)
-\end{equation}
-l'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare (si veda \ref{tsp_metrico}) è rispettata.
+L'algoritmo \textit{nearest neighbor} permette di trovare una soluzione $log(n)$-approssimata a TSP quando la disuguaglianza triangolare (si veda \ref{tsp_metrico}) è rispettata.
 
 \subsubsection{Implementazione}
 
-La nostra implementazione ricalca l'implementazione standard dell'algoritmo Nearest Neighbor per il problema del TSP; essa segue infatti i tre passi sopracitati mantenendo intatta la logica dell'algoritmo di riferimento. \\
-Operativamente, il codice dell'algoritmo si divide in una classe, \texttt{NearestNeighbor}, e in alcuni metodi di utilità implementate per la classe \texttt{TSP} citata precedentemente. \\
+L'implementazione ricalca abbastanza fedelmente l'implementazione standard dell'algoritmo Nearest Neighbor per il problema del TSP; essa segue infatti i tre passi sopracitati mantenendo intatta la logica dell'algoritmo di riferimento. \\
+Operativamente, il codice dell'algoritmo si divide in una classe, \texttt{NearestNeighbor}, e in alcuni metodi di utilità implementati per la classe \texttt{TSP} citata precedentemente. \\
 La classe \texttt{NearestNeighbor} presenta un solo metodo, chiamato \texttt{algorithm}, che si occupa di effettuare l'algoritmo in questione su un singolo grafo di classe \texttt{TSP}; esso riceve in \textit{input} il grafo e restituisce il peso totale del percorso hamiltoniano trovato. \\
 Il metodo \texttt{algorithm} chiama, al suo interno, i metodi \texttt{delete\_node} e \texttt{get\_min\_node} della classe \texttt{TSP}; questi sono di particolare importanza nella nostra implementazione, poiché permettono di mantenere la complessità al suo valore teorico, come viene illustrato nella sezione seguente.
 
 \subsubsection{Ottimizzazioni implementate}
 
-La principale ottimizzazione implementata risiede nel metodo con il quale viene selezionato il nodo successivo da inserire nel cammino finale. Un'implementazione \textit{naive} dell'algoritmo, infatti, potrebbe ricercare il nodo da inserire scorrendo linearmente l'intero grafo e controllando, per ogni nodo analizzato, che questi non sia già presente nel cammino finale e che sia a distanza minima dall'ultimo nodo inserito nel percorso finale. Questa implementazione, però, è stata giudicata inefficiente, poiché richiederebbe di analizzare ogni nodo anche se è già stato visitato in precedenza. \\
-Abbiamo quindi adottato un approccio "inverso": nella fase di inizializzazione dell'algoritmo viene infatti creata una copia (profonda) del grafo iniziale; da questa copia vengono poi, nella fase di selezione, eliminati i nodi già considerati. Questa ottimizzazione permette di effettuare la ricerca esclusivamente sui nodi non ancora considerati, il cui numero diminuisce costantemente durante l'iterazione della fase di selezione. \\
+La principale ottimizzazione implementata risiede nel metodo con il quale viene selezionato il nodo successivo da inserire nel cammino finale. Un'implementazione \textit{naive} dell'algoritmo, infatti, potrebbe ricercare il nodo da inserire scorrendo linearmente l'intero grafo e controllando, per ogni nodo analizzato, che questi non sia già presente nel cammino finale parziale e che sia a distanza minima dall'ultimo nodo inserito in tale percorso. Questa implementazione, però, è stata giudicata inefficiente, poiché richiederebbe di analizzare ogni nodo anche se è già stato visitato in precedenza. \\
+È stato quindi adottato un approccio "inverso": nella fase di inizializzazione dell'algoritmo viene infatti creata una copia (profonda) del grafo iniziale; da questa copia vengono poi, nella fase di selezione, eliminati i nodi già considerati. Questa ottimizzazione permette di effettuare la ricerca esclusivamente sui nodi non ancora considerati, il cui numero diminuisce costantemente durante l'iterazione della fase di selezione. \\
 A questa ottimizzazione si aggiunge l'utilizzo di una semplice lista, chiamata \textit{visited}, che permette di mantenere l'integrità dell'algoritmo nel momento in cui viene chiamata la funzione \texttt{get\_min\_node}: se un nodo è già stato visitato, il controllo sul peso dell'arco che lo unisce al nodo in analisi non viene neanche effettuato. \\
 Un'ultima ottimizzazione risiede nella funzione \texttt{get\_min\_node} di \texttt{TSP}, che fa uso delle liste di adiacenza per la ricerca del nodo di peso minimo; in questo modo, invece di calcolare a \textit{runtime} il peso tra un nodo e l'altro, è sufficiente uno scorrimento lineare della matrice di adiacenza sulla riga (o sulla colonna) relativa al nodo in esame.
+
+\subsubsection{Analisi della complessità}
+
+Questo algoritmo, come le altre euristiche costruttive, ha complessità computazionale pari a $O(|V|^2)$. Nello specifico, questa complessità è calcolata a partire dalle seguenti considerazioni:
+\begin{itemize}
+    \item Per ogni punto deve essere trovato il nodo più vicino: questa procedura può essere eseguita in tempo lineare, quindi $O(|V|)$;
+    \item Il calcolo della distanza tra due punti può essere eseguito in tempo $O(1)$. Nel caso della nostra implementazione questo è a maggior ragione vero, poiché usiamo la matrice di adiacenza che permette di accedere al peso tra due nodi con una singola istruzione di complessità costante;
+    \item La precedente istruzione deve essere eseguita per tutti i nodi adiacenti al nodo in analisi. Questo, nel caso peggiore, può essere eseguito in tempo $O(|V|)$.
+\end{itemize}
+
+Poiché a ogni iterazione della fase di selezione deve essere eseguita l'ultima procedura in elenco, è triviale dedurne che la complessità finale è $O(|V|^2)$.
 
 \subsection{2-approssimato}
 
@@ -213,12 +219,12 @@ Sia $V$ l'insieme dei nodi che costituiscono il grafo pesato $G$ e sia $E$ la co
 grafo. Ai fini delle analisi della complessità degli algoritmi, sia $|V| = n$ e $|E| = m$.
 
 Un \textit{minimum spanning tree} è un
-sottoinsieme dei lati $E$ di un grafo $G$ non orientato connesso e pesato sui lati che
+sottoinsieme dei lati $E$ di un grafo $G$ non orientato, connesso e pesato sui lati che
 collega tutti i vertici insieme, senza alcun ciclo e con il minimo peso totale del
-lato possibile. Cioè, è uno spanning tree la cui somma dei pesi dei bordi è la più
+lato possibile. Esso è cioè uno spanning tree la cui somma dei pesi dei bordi è la più
 piccola possibile.
 
-Un \textit{minimum spanning tree} $T = (V, E')$ è un albero, il cui insieme dei lati $E'$ è un
+Un \textit{minimum spanning tree} $T = (V, E')$ è un albero il cui insieme dei lati $E'$ è un
 sottoinsieme dei lati $E$ di un grafo $G = (V, E)$ non orientato, connesso e
 pesato, che collega tutti i vertici $V$, la cui somma dei pesi dei lati è la minima.
 
@@ -253,17 +259,18 @@ Allora $(u, v)$ è \textit{safe} per $A$.
 
 L'idea che sta dietro a questo algoritmo consiste nell'utilizzare un algoritmo per il calcolo
 del MST. Tuttavia, il MST è un albero e quello che vogliamo ottenere invece è un
-ciclo hamiltoniano. Per fare ciò, eseguiamo una visita in \textit{preorder} del MST
+ciclo Hamiltoniano. Per fare ciò, eseguiamo una visita in \textit{preorder} del MST
 e aggiungiamo la radice di tale MST alla lista della determinata dalla preorder. Questo è un ciclo
-hamiltoniano del grafo originale, in quanto quest'ultimo è completo. Pertanto, esiste sempre un
+Hamiltoniano del grafo originale, in quanto quest'ultimo è completo. Pertanto, esiste sempre un
 lato tra ogni coppia di vertici.
 
+Si illustra lo pseudo-codice:
 \begin{verbatim}
     2-APPROXIMATION(G=(V,E), c)
         root <- v1 in V         // scelgo un nodo di V come radice per Prim
         T <- Prim(G, c, root)
         H' <- preorder(root)    // visita in preorder
-        H <- H U {root}         // aggiungo il percorso che va dalll'ultimo nodo
+        H <- H U {root}         // aggiungo il percorso che va dall'ultimo nodo
                                 // della visita in preorder alla radice
         return H
 
@@ -271,23 +278,23 @@ lato tra ogni coppia di vertici.
 
 \subsubsection{Analisi della qualità della soluzione}
 
-Si illustri l'analisi della qualità della soluzione ritornata dall'algoritmo:
+Si illustra l'analisi della qualità della soluzione ritornata dall'algoritmo:
 \begin{enumerate}
     \item Il costo di $H'$ è basso per la definizione di MST;
-    \item supponiamo che presi due vertici $a$ e $b$ non siano collegati da un lato (anche se
+    \item Supponiamo che presi due vertici $a$ e $b$ non siano collegati da un lato (anche se
     sappiamo che il grafo è completo), L'idea è che il costo di $(a, b)$ è minore rispetto
     al costo di fare un giro più largo, in quanto vale la \textit{disuguaglianza triangolare}.
     Quindi in questo caso $(a, b)$ è un \textit{shortcut}.
 \end{enumerate}
 
 \subsubsection{Analisi del fattore di approssimazione}
-Si illustri l'analisi del fattore di approssimazione dell'algoritmo:
+Si illustra l'analisi del fattore di approssimazione dell'algoritmo:
 \begin{enumerate}
     \item \textit{Limite inferiore al costo della soluzione ottima $H$}: sia $H$ il ciclo
     ottimo $H^{ottimo} = <v_{j1}, ..., v_{jn}, v_{j1}>$.
     Sia $H'^{ottimo} = <v_{j1}, ..., v_{jn}>$ un cammino
-    (è uno spanning tree, non un ciclo) hamiltoniano. Quindi, $c(H') \ge c(T)$, dove $T$ è
-    il MST, e $c(H^{ottimo}) \ge c(H'^{ottimo})$ prechè i costi sono maggiori o uguali a zero.
+    (è uno spanning tree, non un ciclo) Hamiltoniano. Quindi, $c(H') \ge c(T)$, dove $T$ è
+    il MST, e $c(H^{ottimo}) \ge c(H'^{ottimo})$ perché i costi sono maggiori o uguali a zero.
 
     \item \textit{Limite superiore al costo della soluzione restituita $H$}: dato un albero,
     una \textit{full preorder chain} è una lista con ripetizioni dei nodi dell'albero che
@@ -307,5 +314,96 @@ Si illustri l'analisi del fattore di approssimazione dell'algoritmo:
 
 \subsubsection{Implementazione}
 
-\subsubsection{Ottimizzazioni implementate}
+L'implementazione di questo algoritmo richiede che venga utilizzato un algoritmo per il 
+calcolo del MST. Si è scelto di utilizzare l'algoritmo di Prim in quanto il risultato 
+che forniva ci permetteva di riadattarlo per l'implementazione di \verb|2-approximation|.
+È stato usufruito il codice implementato nello scorso laboratorio, riadattando 
+l'algoritmo di Prim in modo che vengano utilizzate le matrici di adiacenza. 
+\label{cambio_istruzione_prim}
+Inoltre, sempre ai fini dell'implementazione dell'algoritmo di approssimazione, 
+l'istruzione 
 
+\verb|parent[j] = u|
+
+è stata sostituita con l'istruzione
+
+\verb|parent[j] = (identifier, o, T.adjMatrix[int(u[0])][j])|. 
+
+Le motivazioni verranno esplicitate successivamente.
+
+Si procede con l'esecuzione dell'algoritmo di Prim, a partire dal vertice 1, in modo da 
+determinare il MST. L'albero di copertura minimo è rappresentato dalla mappa 
+\verb|parent|. Il primo valore della tripla di ogni elemento della mappa rappresenta 
+il \verb|parent| del nodo indicato dall'indice della mappa. Ad esempio, 
+\verb|2: (1, 5, 2)| significa che il \verb|parent| del nodo 2 è 1. Tuttavia, 
+questa struttura non è adatta per continuare lo svolgimento dell'algoritmo. 
+Pertanto si è proceduti a \textit{ricostruire} il risultato fornito da Prim in una nuova 
+struttura dati che \textit{assomiglia} di più ad una struttura dati ad albero. La 
+struttura dati in esame è \verb|tree| ed è una mappa. Il contenuto di ogni cella della 
+mappa contiene una lista, i cui elementi rappresentano i nodi \textit{figli} del nodo 
+indicato dall'indice corrente della mappa. In particolare, ogni elemento di queste 
+liste, contengono anche il peso del lato tra il nodo padre ed il nodo figlio. Tale peso 
+è disponibile grazie all'istruzione illustrata precedentemente (si veda 
+\ref{cambio_istruzione_prim}), in particolare il peso tra il nodo padre ed il nodo figlio 
+è rappresentato dalla terza componente della tripla.
+
+Il motivo per cui viene salvato anche il peso tra due vertici $u$ e $v$ è dovuto al fatto che è 
+necessario memorizzare l'ordine in cui sono stati visitati i vertici dall'algoritmo di Prim. 
+Le liste di ogni cella della mappa vengono mantenute ordinate a mano a mano che si va 
+a scandire il risultato fornito da Prim. L'inserimento di ogni elemento nella lista è 
+effettuato tramite il metodo \verb|_insert|. Questo metodo implementa l'algoritmo per la 
+\textit{ricerca binaria} di un elemento. Tuttavia, al posto di ritornare un risultato 
+booleano che indica la presenza o meno di un valore $x$ all'interno di una lista, 
+questo metodo ritorna l'indice in cui inserire un certo elemento $x$ all'interno della lista. 
+Il criterio per cui mantenere ordinata la lista è il peso che c'è tra il nodo padre 
+e gli altri nodi figli. Così facendo, si rispetterebbe l'ordine in cui l'algoritmo di Prim 
+ha estratto i vertici dallo heap.
+
+Una volta ricostruito il MST, si effettua la visita in \textit{preorder} di tale albero. 
+Questa operazione viene svolta dal metodo \verb|_preorder_visit|, il quale tramite 
+delle chiamate ricorsive, visita tutti i nodi dell'albero e aggiunge in coda i nodi 
+visitati in una lista. Al termine della visita in preorder, viene aggiunto in coda 
+il nodo radice dell'albero alla lista prodotta dalla \verb|_preorder_visit|, in modo da 
+costruire un \textit{ciclo}. Questo ciclo rappresenta l'approssimazione del TSP. 
+In conclusione, vengono sommate tutte le distanze nel seguente modo:
+\begin{verbatim}
+    sum = 0
+    for i in range(1, len(preorder_result) - 1):
+        sum = sum + G[preorder_result[i]][preorder_result[i + 1]]
+\end{verbatim}
+
+\subsubsection{Analisi della complessità}
+
+Si considerano i metodi e le porzioni di codice implementati:
+\begin{enumerate}
+    \item \verb|prim_mst|: l'algoritmo di Prim con le matrici di adiacenza ha una complessità 
+    computazionale pari a $O(|V|^2)$;
+    \item \textbf{Ricostruzione del MST}: il MST ha una cardinalità pari a $|V|$. Il metodo 
+    \verb|_insert| ha una complessità pari a $O(log(|V|))$. Pertanto, questa porzione di 
+    codice ha una complessità pari a $O(|V| log(|V|))$;
+    \item \verb|_preorder_visit|: la visita in preorder visita tutti i nodi del MST. Il MST 
+    è un albero che connette tutti i vertici del grafo originario $G$. Quindi, la 
+    complessità sarà pari a $\theta(|V|)$;
+    \item \textbf{Calcolo del peso del ciclo}: la \verb|_preorder_visit| restituisce il 
+    percorso nel MST, visitando tutti i suoi nodi in preordine. Inoltre, al termine di 
+    tale metodo, a tale lista viene aggiunta la radice del MST. Quindi la lista contenente 
+    il ciclo ha una lunghezza pari a $\theta(|V| + 1)$, e pertanto la complessità computazionale 
+    di questa porzione di codice è uguale a $\theta(|V|)$.
+\end{enumerate}
+
+In conclusione, la complessità computazionale dell'algoritmo 2-approssimato è di $O(|V|^2)$.
+
+\subsubsection{Osservazioni}
+
+Nello sviluppo dell'algoritmo e nella fase di adattamento dell'algoritmo di Prim alle matrici 
+di adiacenza, abbiamo notato che in alcuni grafi era possibile determinare 
+MST \textit{diversi}. In particolare, l'algoritmo di Prim, ad un certo tempo di $t$, può trovare 
+\textit{almeno} due lati che hanno lo stesso peso. A seconda dell'implementazione 
+dell'algoritmo, si potrebbe scegliere un lato piuttosto che un altro. Questo significa che 
+ci possono essere più alberi di copertura di peso minimo. Tuttavia, nell'implementazione 
+dell'algoritmo 2-approssimato questa situazione può condurre a dei differenti risultati, 
+a seconda dell'implementazione dell'algoritmo di Prim. Infatti, la scelta di esaminare un 
+vertice piuttosto che un altro, a parità di peso rispetto al vertice corrente, può 
+influire in quanto si verrebbero a determinare delle visite preorder diverse. A conseguenza 
+di ciò, nel momento in cui si effettua la somma dei pesi del ciclo, è possibile ottenere 
+dei risultati differenti.

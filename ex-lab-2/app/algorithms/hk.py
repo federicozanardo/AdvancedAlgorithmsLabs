@@ -78,11 +78,3 @@ class HeldKarp:
             self.d[currentKey] = mindist
             self.p[currentKey] = minprec
             return mindist
-
-# burma14.tsp 3323
-# ulysses16.tsp 6859
-# ulysses22.tsp 7188
-# eil51.tsp 1050
-# berlin52.tsp 17917
-# kroD100.tsp 148525
-# kroA100.tsp 167464

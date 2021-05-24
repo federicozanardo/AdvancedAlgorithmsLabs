@@ -27,7 +27,6 @@ def populateTSPFromFile(filepath):
         elif formatted_file[i] == "NODE_COORD_SECTION":
             break
 
-    # How to lose time to fix datasets :))))
     if absolutelyUsefulVariableIndexBecausePregMatchBad == 10:
         print("where banana")
         exit()

@@ -3,6 +3,7 @@ import sys
 import time
 sys.path.append('../')
 from data_structures.tsp import TSP
+sys.setrecursionlimit(5000)
 
 
 class HeldKarp:

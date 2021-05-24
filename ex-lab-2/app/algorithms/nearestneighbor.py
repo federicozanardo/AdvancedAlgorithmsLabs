@@ -1,4 +1,3 @@
-from typing import final
 from data_structures.tsp import TSP
 import copy as cp
 

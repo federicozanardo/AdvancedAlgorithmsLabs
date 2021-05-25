@@ -376,8 +376,11 @@ In conclusione, vengono sommate tutte le distanze nel seguente modo:
 
 Si considerano i metodi e le porzioni di codice implementati:
 \begin{enumerate}
-    \item \verb|prim_mst|: l'algoritmo di Prim con le matrici di adiacenza ha una complessità 
-    computazionale pari a $O(|V|^2)$;
+    \item \verb|prim_mst|: l'algoritmo di Prim con l'utilizzo della \textit{min-heap} ha 
+    una complessità computazionale pari a $O(|E|log(|V|))$. In questo caso però i grafi 
+    sono densi (più precisamente i grafi sono completi), pertanto la quantità di lati 
+    presenti in ogni grafo $G$ è pari a $|E| = |V|^2$. Quindi, la complessità finale 
+    dell'algoritmo è $O(|V|^2 log(|V|))$;
     \item \textbf{Ricostruzione del MST}: il MST ha una cardinalità pari a $|V|$. Il metodo 
     \verb|_insert| ha una complessità pari a $O(log(|V|))$. Pertanto, questa porzione di 
     codice ha una complessità pari a $O(|V| log(|V|))$;

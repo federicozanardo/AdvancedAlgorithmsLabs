@@ -1,0 +1,42 @@
+\section{Conclusione}
+
+% ottimizzazioni su naive molto utili --> risparmio di diverse chiamate a dfs / primi grafi molto veloci quasi quanto UF e prim
+
+Alla fine del lavoro svolto possiamo dire che le ottimizzazioni che sono state implementate per la versione naive dell'algoritmo di Kruskal si sono 
+rivelate utili per l'esecuzione dei primi grafi. Infatti,
+\begin{enumerate}
+    \item Il controllo dei \textit{self-loop} e della presenza o meno dei nodi dell'arco $(u, v)$ hanno permesso di risparmiare diverse chiamate a DFS per il 
+    controllo della ciclicità del grafo $G$;
+    \item La versione modificata di DFS permette di evitare la visita di tutto il grafo quando non è necessario. È sufficiente controllare che esista un cammino 
+    da $u$ a $v$ nella componente connessa di $u$. Se tale cammino non esiste, allora il lato $(u, v)$ farà parte del MST $T$ finale.
+\end{enumerate}
+Queste ottimizzazioni hanno permesso di ottenere delle performance migliori nel momento in cui l'algoritmo inizia ad analizzare il grafo ricevuto in 
+input. È possibile notare che i tempi per Kruskal Naive sono paragonabili ai tempi degli altri due algoritmi per grafi con un piccolo numero di vertici (cfr. \S{4.3}).
+
+
+% ottimizzazione dello heap per Prim --> risparmio sulla ricerca lineare
+
+In secondo luogo, per quanto riguarda l'implementazione della struttura dati Heap utilizzata per l'algoritmo di Prim abbiamo potuto constatare che l'ottimizzazione integrata attraverso una mappa che permettesse di salvare l'indice di posizione corrente nella lista ausiliaria ha ridotto di gran lunga la durata media dell'algoritmo di Prim, tendendo a essere più simile al tempo medio ottenuto da Kruskal Union Find. Questa miglioria ha permesso di accedere quindi in tempo costante ai singoli elementi della lista rimuovendo la complessità lineare, che precedentemente avrebbe reso computazionalmente più lento di un valore polinomiale l'algoritmo di Prim.
+
+
+% misurazione più accurate 
+
+Per quanto concerne le misurazioni effettuate abbiamo voluto rendere ciascuna misurazione il più preciso possibile così da ottenere risultati sui tempi medi di esecuzione più attendibili. Difatti, ripetendo l'esecuzione di ciascun grafo con tempo di esecuzione minore al secondo di un fattore \(k\), che rappresenta il numero di ripetizioni da eseguire per rientrare entro il secondo sulla base del tempo per una esecuzione, siamo riusciti ad avere un risultato più comparabile che ci ha permesso di fare dei confronti più interessanti (vedasi i risultati della sezione \S{4). 
+
+
+% approccio di lavoro incrementale, ossia creo algoritmo, verifico efficacia (3 risultati uguali = risultati corretti), lo ottimizzo
+Per quanto concerne il \textit{workflow} adottato all'interno del gruppo, avendo lavorato con un sistema di versionamento siamo riusciti ad organizzarci per realizzare e sviluppare attraverso un approccio incrementale ciascun algoritmo. Inizialmente infatti abbiamo iniziato con lo studiare bene il funzionamento di ogni algoritmo e poi, gradualmente, lo abbiamo implementato partendo dalle strutture dati richieste. Una volta controllato che in tutti e 3 i casi gli algoritmi ottenevano risultati identici sul peso finale degli archi, abbiamo ottimizzato ciascuno di essi limando sulle parti di codice superflue ed applicando delle migliorie in base a quanto il linguaggio Python ha da offrire. Infine, abbiamo voluto anche rendere facilmente utilizzabile l'applicazione finale, così da poter provare diversi dataset in diverse modalità. Per la realizzazione dei grafi, tuttavia, abbiamo preferito raccogliere i risultati e generare i grafici sfruttando Google Colab, la cui logica è stata riportata per completezza all'interno di una cartella del progetto (\textit{graph-generation}).
+
+
+% tiriamo le somme sui risultati 
+
+In linea di massima siamo stati contenti dei risultati ottenuti sebbene l'uso del linguaggio Python, pur se relativamente semplice, ci è risultato abbastanza disordinato per la mancanza di \textit{strong typing}, cosa che ci ha causato inizialmente diversi rallentamenti nello sviluppo degli algoritmi.
+Per concludere, quanto ci è risultato per gli algoritmi è in linea con quanto ci aspettavamo, difatti: 
+\begin{itemize}
+    \item Kruskal Naive risulta il più lento tra i tre algoritmi e il meno efficiente in termini di tempo medio di esecuzione per grafi con molti nodi;
+    \item Kruskal Union Find risulta il più veloce e il più efficiente tra i tre algoritmi, specialmente con grafi di grandi dimensioni;
+    \item Prim si può classificare in secondo posto rispetto a Kruskal Union Find, avendo un tempo di esecuzione sufficientemente buono anche per grafi di grandi dimensioni. 
+\end{itemize}
+
+
+

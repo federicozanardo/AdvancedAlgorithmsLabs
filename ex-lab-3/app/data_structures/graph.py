@@ -7,6 +7,8 @@ sys.path.append('../')
 class Graph:
     def __init__(self):
         self.graph = defaultdict(list)  # Lista di adiacenza
+        self.totalVertex = 0
+        self.totalEdges = 0
         self.V = set()
         self.E = []
 

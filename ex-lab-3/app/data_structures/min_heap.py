@@ -26,13 +26,13 @@ class Node :
 
 
 """
-Classe Heap
-heap: Heap = (list: Node[], mapList: defaultdict(list), currentSize: int)
+Classe MinHeap
+minheap: MinHeap = (list: Node[], mapList: defaultdict(list), currentSize: int)
     list = lista di nodi del grafo
     mapList = mappa che associa indice del vertice alla sua posizione in list
     currentSize = dimensione dello Heap
 """
-class Heap:
+class MinHeap:
 
     def __init__(self):
         self.list = [Node(0, float('-inf'))] # nodo fittizio per avere array che partono da 1

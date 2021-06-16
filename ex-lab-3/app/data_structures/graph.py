@@ -1,4 +1,5 @@
 from collections import defaultdict
+import math
 
 import sys
 sys.path.append('../')
@@ -26,6 +27,15 @@ class Graph:
         self.E.remove((u, v, w))
         self.graph[u].remove((v, w))
         self.graph[v].remove((u, w))
+
+
+    def fully_remove_node(self, v: int):
+        # for (u,w) in self.graph[v]:
+        #     self.E.remove((v,u,w))
+        if (v in self.graph.keys()):
+            self.graph.pop(v)
+        if (v in self.V):
+            self.V.remove(v)
 
     def weightBetween(self, firstNode, secondNode):
         minWeight = float('inf')

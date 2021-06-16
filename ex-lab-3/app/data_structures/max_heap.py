@@ -105,11 +105,15 @@ class MaxHeap:
     esegue heapifyDown per garantire la proprietà dello heap
     """
     def searchAndUpdateWeight(self, index, newWeight):
+        # i = self.mapList[index]
+        # self.list[i].weight = float('inf')
+        # self.heapifyUp(i)
+        # self.list[i].weight = newWeight
+        # self.heapifyDown(1)
+
         i = self.mapList[index]
-        self.list[i].weight = float('-inf')
+        self.list[i].weight = newWeight
         self.heapifyUp(i)
-        self.list[1].weight = newWeight
-        self.heapifyDown(1)
             
     """
     insert(node: Node) : void

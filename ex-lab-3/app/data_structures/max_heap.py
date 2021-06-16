@@ -105,15 +105,26 @@ class MaxHeap:
     esegue heapifyDown per garantire la proprietà dello heap
     """
     def searchAndUpdateWeight(self, index, newWeight):
-        # i = self.mapList[index]
-        # self.list[i].weight = float('inf')
-        # self.heapifyUp(i)
-        # self.list[i].weight = newWeight
-        # self.heapifyDown(1)
-
         i = self.mapList[index]
-        self.list[i].weight = newWeight
+        self.list[i].weight = float('inf')
         self.heapifyUp(i)
+        self.list[1].weight = newWeight
+        self.heapifyDown(1)
+
+        # i = self.mapList[index]
+        # if newWeight < self.list[i].weight:
+        #     print('dovrebbe essere impossibile')
+        #     return False
+
+        # self.list[i].weight = newWeight
+
+        # while i > 1 and self.list[self.parent(i).index].weight < self.list[i].weight:
+        #     self.list[i], self.list[self.parent(i).index] = self.list[self.parent(i).index], self.list[i]
+        #     i = self.parent(i).index
+
+        # i = self.mapList[index]
+        # self.list[i].weight = newWeight
+        # self.heapifyUp(i)
             
     """
     insert(node: Node) : void
@@ -184,6 +195,13 @@ class MaxHeap:
         self.currentSize -= 1
         self.heapifyDown(1)
         return maxEl
+
+
+    def extractChecker(self, extracted):
+        for a in self.list:
+            if(extracted < a.weight):
+                return False
+        return True
 
     """
     print() : void

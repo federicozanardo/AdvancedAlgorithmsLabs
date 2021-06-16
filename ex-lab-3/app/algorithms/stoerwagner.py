@@ -22,6 +22,8 @@ class StoerWagner:
     s = None
     t = None
 
+    # print(len(V))
+
     while Q.currentSize != 0:
       u = (Q.extractMax()).toTuple()
       s = t
@@ -62,7 +64,7 @@ class StoerWagner:
       # # C1 = sommatoria(C1)
       # # C2 = sommatoria(C1 - sommatoria({s, t}))
 
-      print(self.niceSummatoryBecauseItIsClearHowItWorks(C1) <= self.niceSummatoryBecauseItIsClearHowItWorks(C2))
+      #print(self.niceSummatoryBecauseItIsClearHowItWorks(C1) <= self.niceSummatoryBecauseItIsClearHowItWorks(C2))
 
       if self.niceSummatoryBecauseItIsClearHowItWorks(C1) <= self.niceSummatoryBecauseItIsClearHowItWorks(C2):
         return C1
@@ -74,5 +76,6 @@ class StoerWagner:
     sum = 0
     for v in V:
       for (u,w) in self.G.graph[v]:
-        sum += w
+        if u in V:
+          sum += w
     return sum

@@ -19,18 +19,16 @@ class StoerWagner:
       key[node] = 0
       Q.insert(Node(node, key[node]))
 
-    s = None
-    t = None
-
-    # print(len(V))
-
+    s = t = None
     while Q.currentSize != 0:
       u = (Q.extractMax()).toTuple()
+      
       s = t
       t = u
+
       for (v, w) in self.G.graph[u[0]]:
-        if Q.search(v):
-          key[v] += w
+        if Q.search(v):         
+          key[v] = key[v] + w
           Q.searchAndUpdateWeight(v, key[v])
 
     V_diff = []
@@ -43,36 +41,25 @@ class StoerWagner:
 
   def globalMinCut(self, V: list):
     if len(V) == 2:
-      return V[0], V[1]
+      return V
     else:
       (C1, s, t) = self.stMinCut(V)
 
       V2 = []
       for x in V:
-        if(x != s and x != t):
-          V2.append(x)
-
-      #print(len(V2))
+        if(x != s):
+          if(x != t):
+            V2.append(x)
 
       C2 = self.globalMinCut(V2)
 
-      # print(len(V2))
-      # print(len(C2))
-      # print(C2[0], C2[1])
-
-  	  # # sommatoria = somma peso archi a partire da V nodi
-      # # C1 = sommatoria(C1)
-      # # C2 = sommatoria(C1 - sommatoria({s, t}))
-
-      #print(self.niceSummatoryBecauseItIsClearHowItWorks(C1) <= self.niceSummatoryBecauseItIsClearHowItWorks(C2))
-
-      if self.niceSummatoryBecauseItIsClearHowItWorks(C1) <= self.niceSummatoryBecauseItIsClearHowItWorks(C2):
+      if self.sumSubgraph(C1)<= self.sumSubgraph(C2):
         return C1
       else:
         return C2
 
 
-  def niceSummatoryBecauseItIsClearHowItWorks(self, V: list):
+  def sumSubgraph(self, V: list):
     sum = 0
     for v in V:
       for (u,w) in self.G.graph[v]:

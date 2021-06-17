@@ -16,7 +16,7 @@ from random import randint
 import gc
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
-from data_structures.max_heap import MaxHeap, Node
+# from data_structures.max_heap import MaxHeap, Node, testHeap
 from data_structures.graph import Graph
 from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder
@@ -56,6 +56,9 @@ def main(args):
             final = StoerWagner()
             res=final.algorithm(graph)
             print(res)
+
+    # if sys.argv[1] == "th":
+    #     testHeap()
 
 
     # Eseguo una delle opzioni seguenti

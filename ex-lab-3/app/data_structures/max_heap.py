@@ -163,7 +163,7 @@ class MaxHeap:
             return index * 2
         else:
             if self.list[index*2].weight > self.list[(index*2)+1].weight:
-                return index * 2
+                return index * 2 
             else:
                 return (index * 2) + 1
  
@@ -216,4 +216,29 @@ class MaxHeap:
                 print(" RIGHT CHILD: " + str(self.list[2*i+1].index) + "(w." + str(self.list[2 * i + 1].weight) + ")")
             else:
                 print("")
-            
+    
+# def testHeap():
+#     Q = MaxHeap()
+   
+#     Q.insert(Node(3, 3))
+#     Q.insert(Node(4, 4))
+#     Q.insert(Node(7, 7))
+#     Q.insert(Node(8, 8))
+#     Q.insert(Node(1, 1))
+#     Q.insert(Node(2, 2))
+#     Q.insert(Node(9, 9))
+#     Q.insert(Node(10, 10))
+#     Q.insert(Node(5, 5))
+#     Q.insert(Node(6, 6))
+
+#     e1 = Q.extractMax()
+#     e2 = Q.extractMax()
+#     e3 = Q.extractMax()
+#     e4 = Q.extractMax()
+#     e5 = Q.extractMax()
+#     e6 = Q.extractMax()
+#     e7 = Q.extractMax()
+#     e8 = Q.extractMax()
+#     e9 = Q.extractMax()
+#     e10 = Q.extractMax()
+#     e11 = Q.extractMax()

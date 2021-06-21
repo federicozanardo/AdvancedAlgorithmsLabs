@@ -24,9 +24,18 @@ class Graph:
         self.graph[v].append((u, w))
 
     def remove_edge(self, u: int, v: int, w: int):
-        self.E.remove((u, v, w))
+        if (u,v,w) in self.E:
+            self.E.remove((u, v, w))
         self.graph[u].remove((v, w))
         self.graph[v].remove((u, w))
+    
+    def remove_node(self, v: int): #FIX
+        if (v in self.graph.keys()):
+            self.graph.pop(v)
+        if (v in self.V):
+            self.V.remove(v)
+        
+
 
 
     def fully_remove_node(self, v: int):

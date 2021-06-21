@@ -6,63 +6,75 @@ from copy import deepcopy
 class StoerWagner:
 
   def algorithm(self, G: Graph):
-    self.G = G
-    V = deepcopy(G.V)
-    return self.globalMinCut(V)
+    self.backupG = deepcopy(G)
+    res = self.globalMinCut(G)
+    return self.weightMinCut(res)
+    
+  def stMinCut(self, G: Graph):
 
-
-  def stMinCut(self, V: list):
     Q = MaxHeap()
     key = defaultdict(list)
 
-    for node in V:
+    for node in G.V:
       key[node] = 0
       Q.insert(Node(node, key[node]))
 
     s = t = None
+
     while Q.currentSize != 0:
       u = (Q.extractMax()).toTuple()
-      
       s = t
       t = u
-
-      for (v, w) in self.G.graph[u[0]]:
+      for (v, w) in G.graph[u[0]]:
         if Q.search(v):         
           key[v] = key[v] + w
           Q.searchAndUpdateWeight(v, key[v])
 
     V_diff = []
-    for x in V:
+    for x in G.V:
         if(x != t[0]):
           V_diff.append(x)
 
-    return V_diff, s[0], t[0]
+    return (V_diff, [t]), s[0], t[0]
 
 
-  def globalMinCut(self, V: list):
-    if len(V) == 2:
-      return V
+  def globalMinCut(self, G: Graph):
+    if len(G.V) == 2:
+      v1 = G.V.pop()
+      v2 = G.V.pop()
+      G.V.add(v1)
+      G.V.add(v2)
+      return ([v1], [v2])
+    
     else:
-      (C1, s, t) = self.stMinCut(V)
+      (C1, s, t) = self.stMinCut(G)
 
-      V2 = []
-      for x in V:
-        if(x != s):
-          if(x != t):
-            V2.append(x)
+      print('s=', s, 't=', t)
 
-      C2 = self.globalMinCut(V2)
+      contractedG = self.contractGraph(G, s, t)
 
-      if self.sumSubgraph(C1)<= self.sumSubgraph(C2):
+      C2 = self.globalMinCut(contractedG)
+      if self.weightMinCut(C1) <= self.weightMinCut(C2):
         return C1
       else:
         return C2
 
 
-  def sumSubgraph(self, V: list):
+  def weightMinCut(self, C: any): #TOFIX
+    V, t = C
     sum = 0
     for v in V:
-      for (u,w) in self.G.graph[v]:
-        if u in V:
+      for (u,w) in self.backupG.graph[v]:
+        if u == t:
           sum += w
     return sum
+
+  def contractGraph(self, G: Graph, s, t):
+    for (u,w) in G.graph[t]:
+      if u == s:
+        G.remove_edge(t, u, w)
+      else:
+        G.add_edge(s, u, w)
+    G.remove_node(t)
+
+    return G

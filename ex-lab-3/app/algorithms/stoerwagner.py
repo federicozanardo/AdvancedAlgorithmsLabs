@@ -35,6 +35,8 @@ class StoerWagner:
     for x in G.V:
         if(x != t[0]):
           V_diff.append(x)
+
+   # print((V_diff, [t]), s[0], t[0])
     return (V_diff, [t]), s[0], t[0]
 
 
@@ -44,8 +46,8 @@ class StoerWagner:
       v2 = G.V.pop()
       G.V.add(v2)
       G.V.add(v1)
-      print('base case=', v1, v2)
-      return ([v1], [v2])
+      #print('base case=', v1, v2)
+      return ([v1], [(v2, G.weightBetween(v1, v2))])
     
     else:
       (C1, s, t) = self.stMinCut(G)
@@ -56,22 +58,32 @@ class StoerWagner:
 
 
       C2 = self.globalMinCut(contractedG)
-      print(C2)
-      #print(self.weightMinCut(C1), self.weightMinCut(C2))
-      if self.weightMinCut(C1) <= self.weightMinCut(C2):
-        return C1
-      else:
-        return C2
+      # print(self.weightMinCut(C1), self.weightMinCut(C2))
+     # if type(C2[1][0]) is int:
+        #exit(C2)
+      if type(C2[1][0]) is tuple:
+        if self.weightMinCut(C1) <= self.weightMinCut(C2):
+          return C1
+        else:
+          return C2
+      else: # sono nel caso base
+        v1 = G.V.pop()
+        v2 = G.V.pop()
+        G.V.add(v2)
+        G.V.add(v1)
+        nuovo = ([v1], [(v2, self.backupG.graph[v1][0][1])])
+        return nuovo
 
 
   def weightMinCut(self, C: any):
     V, t = C
+    #print("t=", t)
     sum = 0
     t = t[0]
-    if type(t) is tuple:
-      return t[1]
-    else:
-      return float('inf')
+    # if type(t) is tuple:
+    return t[1]
+    # else:
+    #   return float('inf')
 
     # for (u, w) in self.backupG.graph[t]:
     #   sum+=w
@@ -85,22 +97,15 @@ class StoerWagner:
     return sum
 
   def contractGraph(self, G: Graph, s, t):
-
-    newValues = defaultdict(lambda: 0)
-
     for (u,w) in G.graph[t]:
       if u == s:
         G.remove_edge(t, u, w)
-
     for (u, w) in G.graph[t]:
       if u != s:
         G.add_edge(s, u, w)
         # newValues[u] = newValues[u] + w
-        # G.remove_edge(t, u, w)
-
     # for u in newValues.keys():
     #   G.add_edge(s, u, newValues[u])
-
     G.remove_node(t)
 
     return G

@@ -28,14 +28,13 @@ class StoerWagner:
       for (v, w) in G.graph[u[0]]:
         if Q.search(v):         
           key[v] = key[v] + w
-          print("v=", v, " w=", w, " key[v]=", key[v])
+          #print("v=", v, " w=", w, " key[v]=", key[v])
           Q.searchAndUpdateWeight(v, key[v])
 
     V_diff = []
     for x in G.V:
         if(x != t[0]):
           V_diff.append(x)
-
     return (V_diff, [t]), s[0], t[0]
 
 
@@ -43,20 +42,22 @@ class StoerWagner:
     if len(G.V) == 2:
       v1 = G.V.pop()
       v2 = G.V.pop()
-      G.V.add(v1)
       G.V.add(v2)
+      G.V.add(v1)
       print('base case=', v1, v2)
       return ([v1], [v2])
     
     else:
       (C1, s, t) = self.stMinCut(G)
 
-      print('C1=', C1[1], 's=', s, 't=', t)
+      #print('C1=', C1[1], 's=', s, 't=', t)
 
       contractedG = self.contractGraph(G, s, t)
 
+
       C2 = self.globalMinCut(contractedG)
-      
+      print(C2)
+      #print(self.weightMinCut(C1), self.weightMinCut(C2))
       if self.weightMinCut(C1) <= self.weightMinCut(C2):
         return C1
       else:
@@ -66,6 +67,16 @@ class StoerWagner:
   def weightMinCut(self, C: any):
     V, t = C
     sum = 0
+    t = t[0]
+    if type(t) is tuple:
+      return t[1]
+    else:
+      return float('inf')
+
+    # for (u, w) in self.backupG.graph[t]:
+    #   sum+=w
+
+    # return sum
 
     for v in self.backupG.V:
       for (u,w) in self.backupG.graph[v]:
@@ -75,7 +86,7 @@ class StoerWagner:
 
   def contractGraph(self, G: Graph, s, t):
 
-    newValues = defaultdict(list)
+    newValues = defaultdict(lambda: 0)
 
     for (u,w) in G.graph[t]:
       if u == s:
@@ -83,7 +94,12 @@ class StoerWagner:
 
     for (u, w) in G.graph[t]:
       if u != s:
-        G.add_edge(s,u,w)
+        G.add_edge(s, u, w)
+        # newValues[u] = newValues[u] + w
+        # G.remove_edge(t, u, w)
+
+    # for u in newValues.keys():
+    #   G.add_edge(s, u, newValues[u])
 
     G.remove_node(t)
 

@@ -26,9 +26,8 @@ class StoerWagner:
       s = t
       t = u
       for (v, w) in G.graph[u[0]]:
-        if Q.search(v):         
+        if Q.search(v):
           key[v] = key[v] + w
-          #print("v=", v, " w=", w, " key[v]=", key[v])
           Q.searchAndUpdateWeight(v, key[v])
 
     V_diff = []
@@ -36,9 +35,7 @@ class StoerWagner:
         if(x != t[0]):
           V_diff.append(x)
 
-   # print((V_diff, [t]), s[0], t[0])
     return (V_diff, [t]), s[0], t[0]
-
 
   def globalMinCut(self, G: Graph):
     if len(G.V) == 2:
@@ -46,10 +43,10 @@ class StoerWagner:
       v2 = G.V.pop()
       G.V.add(v2)
       G.V.add(v1)
-      #print('base case=', v1, v2)
-      return ([v1], [(v2, G.weightBetween(v1, v2))])
+      return ([v1], [(v2, G.maxWeightBtwn())])
     
     else:
+
       (C1, s, t) = self.stMinCut(G)
 
       #print('C1=', C1[1], 's=', s, 't=', t)
@@ -61,51 +58,39 @@ class StoerWagner:
       # print(self.weightMinCut(C1), self.weightMinCut(C2))
      # if type(C2[1][0]) is int:
         #exit(C2)
-      if type(C2[1][0]) is tuple:
-        if self.weightMinCut(C1) <= self.weightMinCut(C2):
-          return C1
-        else:
-          return C2
-      else: # sono nel caso base
-        v1 = G.V.pop()
-        v2 = G.V.pop()
-        G.V.add(v2)
-        G.V.add(v1)
-        nuovo = ([v1], [(v2, self.backupG.graph[v1][0][1])])
-        return nuovo
+      # if type(C2[1][0]) is tuple:
+      if self.weightMinCut(C1) <= self.weightMinCut(C2):
+        return C1
+      else:
+        return C2
+      # else: # sono nel caso base
+      #   v1 = G.V.pop()
+      #   v2 = G.V.pop()
+      #   G.V.add(v2)
+      #   G.V.add(v1)
+      #   nuovo = ([v1], [(v2, self.backupG.graph[v1][0][1])])
+      #   return nuovo
 
 
   def weightMinCut(self, C: any):
     V, t = C
-    #print("t=", t)
-    sum = 0
-    t = t[0]
-    # if type(t) is tuple:
-    return t[1]
-    # else:
-    #   return float('inf')
-
-    # for (u, w) in self.backupG.graph[t]:
-    #   sum+=w
-
-    # return sum
-
-    for v in self.backupG.V:
-      for (u,w) in self.backupG.graph[v]:
-        if u == t:
-          sum += w
-    return sum
+    return t[0][1]
 
   def contractGraph(self, G: Graph, s, t):
+
+    newValues = defaultdict(lambda: 0)
+
     for (u,w) in G.graph[t]:
       if u == s:
         G.remove_edge(t, u, w)
     for (u, w) in G.graph[t]:
       if u != s:
         G.add_edge(s, u, w)
-        # newValues[u] = newValues[u] + w
+        #newValues[u] = newValues[u] + w
+
     # for u in newValues.keys():
     #   G.add_edge(s, u, newValues[u])
+
     G.remove_node(t)
 
     return G

@@ -48,3 +48,24 @@ class Graph:
                 minWeight = self.E[index][2]
                 break
         return minWeight
+
+    def maxWeightBtwn(self):
+        maxWeight = 0
+
+        for v in self.graph.keys():
+            for (u, w) in self.graph[v]:
+                if maxWeight < w:
+                    maxWeight = w
+
+        # for v in self.graph.keys():
+        #     if v == firstNode:
+        #         for (u,w) in self.graph[v]:
+        #             if u == secondNode:
+        #                 if maxWeight < w:
+        #                     maxWeight = w
+        #     if v == secondNode:
+        #         for (u, w) in self.graph[v]:
+        #             if u == firstNode:
+        #                 if maxWeight < w:
+        #                     maxWeight = w
+        return maxWeight

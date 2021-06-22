@@ -30,19 +30,13 @@ class Graph:
         self.graph[v].remove((u, w))
     
     def remove_node(self, v: int): #FIX
-        if (v in self.graph.keys()):
-            self.graph.pop(v)
-        if (v in self.V):
-            self.V.remove(v)
-        
+        for t in self.graph:
+            for (u, w) in self.graph[t]:
+                if u == v:
+                    self.graph[t].remove((u,w))
+        if v in self.graph.keys():
+            del self.graph[v]
 
-
-
-    def fully_remove_node(self, v: int):
-        # for (u,w) in self.graph[v]:
-        #     self.E.remove((v,u,w))
-        if (v in self.graph.keys()):
-            self.graph.pop(v)
         if (v in self.V):
             self.V.remove(v)
 

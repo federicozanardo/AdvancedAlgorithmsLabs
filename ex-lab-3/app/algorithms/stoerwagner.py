@@ -47,13 +47,13 @@ class StoerWagner:
       #print('base case', v1, v2)
       G.V.add(v2)
       G.V.add(v1)
-      return ([v1], [(v2, G.weightBetween(v1, v2))])
+      return ([v1], [(v2, G.totalWeightCost(v1, v2))])
     
     else:
 
       (C1, s, t) = self.stMinCut(G)
 
-      #print('C1=', C1[1], 's=', s, 't=', t)
+      #print('C1=', C1, 's=', s, 't=', t)
       contractedG = self.contractGraph(G, s, t)
 
       C2 = self.globalMinCut(contractedG)

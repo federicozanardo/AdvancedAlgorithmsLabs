@@ -62,6 +62,15 @@ class Graph:
                 if maxWeight < w:
                     maxWeight = w
 
+
+    def totalWeightCost(self, firstNode, secondNode):
+        minWeight = 0
+
+        for index in range(0, len(self.E)):
+            if (self.E[index][0] == firstNode and self.E[index][1] == secondNode) or (self.E[index][1] == firstNode and self.E[index][0] == secondNode):
+                minWeight += self.E[index][2]
+        return minWeight
+
         # for v in self.graph.keys():
         #     if v == firstNode:
         #         for (u,w) in self.graph[v]:

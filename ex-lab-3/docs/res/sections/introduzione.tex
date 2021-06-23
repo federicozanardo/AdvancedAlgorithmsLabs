@@ -1,49 +1,26 @@
 \section{Introduzione}
 
-\subsection{Abstract}
+\subsection{Descrizione del problema}
+In questa relazione illustreremo dei confronti tra due algoritmi per risolvere il problema del \textit{Minimum Cut}, confrontando i tempi di calcolo e la correttezza delle soluzioni trovate. \\
+Quello del \textit{Minimum Cut} è un problema di ottimizzazione che può essere definito come segue:
+\begin{center}
+    \centering
+    \textit{
+        Dato un multigrafo $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, trovare un insieme $\mathcal{E}{}'\subseteq \mathcal{E}$ tale che $\mathcal{E}{}'$ sia minimo,\\ ossia contenga il minor numero di archi.
+    }
+\end{center}
+Nel caso specifico di questo laboratorio, il problema è stato esteso a grafi pesati; il problema diventa pertanto trovare l'insieme di lati da rimuovere dall'insieme di lati di un grafo in modo tale che la somma dei pesi di questi sia minima. \\
+Per risolvere questo problema abbiamo implementato due algoritmi: l'algoritmo di \textit{Stoer e Wagner} e l'algoritmo di \textit{Karger e Stein}. Nello specifico, il primo è un algoritmo deterministico, mentre il secondo è un algoritmo randomizzato.
 
-In questa relazione illustreremo dei confronti tra tre algoritmi per il calcolo del
-\textbf{Minimum Spanning Tree}: l'algoritmo di \textit{Kruskal} nella versione naive,
-l'algoritmo di \textit{Kruskal} con \textit{Union-Find} e l'algoritmo di \textit{Prim}.
+\subsection{Nozioni utili}
 
-\subsection{Definizione di MST}
 
-Sia $V$ l'insieme dei nodi che costituiscono il grafo pesato $G$ e sia $E$ la collezione dei lati di tale
-grafo. Ai fini delle analisi della complessità degli algoritmi, sia $|V| = n$ e $|E| = m$.
+\subsubsection*{Multigrafo non orientato}
 
-Un \textit{minimum spanning tree} è un
-sottoinsieme dei lati $E$ di un grafo $G$ non orientato connesso e pesato sui lati che
-collega tutti i vertici insieme, senza alcun ciclo e con il minimo peso totale del
-lato possibile. Cioè, è uno spanning tree la cui somma dei pesi dei bordi è la più
-piccola possibile.
+\subsubsection*{Cammino in un multigrafo}
 
-Un \textit{minimum spanning tree} $T = (V, E')$ è un albero, il cui insieme dei lati $E'$ è un
-sottoinsieme dei lati $E$ di un grafo $G = (V, E)$ non orientato, connesso e
-pesato, che collega tutti i vertici $V$, la cui somma dei pesi dei lati è la minima.
+\subsubsection*{Connettività di un multigrafo}
 
-L'algoritmo generico per determinare un MST è:
-\begin{verbatim}
-    A = empty_set
-    while A doesn't form a spanning tree
-        find an edge (u,v) that is safe for A
-        A = A U {(u,v)}
-    return A
-\end{verbatim}
+\subsubsection*{Taglio}
 
-Si forniscono alcune definizioni per gli MST:
-\begin{enumerate} 
-    \item un \textbf{taglio} $(S, V \setminus S)$ di un grafo $G = (V, E)$ è una partizione
-    di $V$;
-    \item un lato $(u, v) \in E$ \textbf{attraversa il taglio} $(S, V \setminus S)$ se
-    $u \in S$ e $v \in V \setminus S$ o viceversa;
-    \item un taglio \textbf{rispetta} un insieme $A$ di lati se nessun lato di $A$ attraversa
-    il taglio;
-    \item dato un taglio, il lato che lo attraversa di peso minimo si chiama \textbf{light edge}.
-\end{enumerate}
-
-Per determinare se un lato è \textbf{safe}, si sfrutta il seguente teorema:
-
-\textbf{Teorema}: Sia $G = (V, E)$ un grafo non diretto, connesso e pesato. Sia $A$ un
-sottoinsieme di $E$ incluso in una qualche MST di $G$, sia $(S, V \setminus S)$ un
-taglio che rispetta $A$, e sia $(u, v)$ un \textit{light edge} per $(S, V \setminus S)$.
-Allora $(u, v)$ è \textit{safe} per $A$.
+\subsubsection*{Contrazione di un multigrafo rispetto ad \textit{e}}

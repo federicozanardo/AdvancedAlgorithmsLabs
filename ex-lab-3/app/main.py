@@ -13,21 +13,15 @@ __license__ = "Unlicense"
 
 import argparse
 from random import randint
-import gc
 from time import perf_counter_ns
-from data_structures.graph import Graph
-from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
-from algorithms.mst import MST
-from measurements.single import executeSingleGraphCalculus,executeTheSuperFancyFunctionToCalculateMegaComplexGraphs
-# from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets
+from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexGraphs
 from algorithms.stoerwagner import StoerWagner
 import sys
 from os import walk, path
 import time
-import concurrent.futures
 import multiprocessing
 
 def main(args):
@@ -71,13 +65,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Required positional arguments
-    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-quartet/all-single/prim/kruskal/kruskal-opt>")
+    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-single/sw/ks>")
     parser.add_argument("<dataset path>", help="Posizione del singolo file o della cartella con i dataset")
 
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s MSTCalculator (version {version}) by {authors}".format(version=__version__,authors=__author__))
+        version="%(prog)s MinCutCalculator (version {version}) by {authors}".format(version=__version__,authors=__author__))
 
     args = parser.parse_args()
     main(args)

@@ -5,24 +5,18 @@ Modulo di misurazione dei dataset con output del tempo di esecuzione dei singoli
 
 """
 
-import argparse
 from random import randint
 import gc
-import matplotlib.pyplot as plt
 from data_structures.max_heap import MaxHeap, Node
 from data_structures.graph import Graph
 from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
-from algorithms.mst import MST
 from algorithms.stoerwagner import StoerWagner
 import sys
 from os import walk, path
 import time
-import concurrent.futures
-import multiprocessing
-
 
 """
 Esecuzione degli algoritmi in tutti i dataset

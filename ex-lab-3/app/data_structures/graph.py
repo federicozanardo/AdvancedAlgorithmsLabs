@@ -30,7 +30,7 @@ class Graph:
         self.graph[u].remove((v, w))
         self.graph[v].remove((u, w))
     
-    def remove_node(self, v: int): #FIX
+    def remove_node(self, v: int): 
         for t in self.graph:
             for (u, w) in self.graph[t]:
                 if u == v:
@@ -54,15 +54,6 @@ class Graph:
                 break
         return minWeight
 
-    def maxWeightBtwn(self):
-        maxWeight = 0
-
-        for v in self.graph.keys():
-            for (u, w) in self.graph[v]:
-                if maxWeight < w:
-                    maxWeight = w
-
-
     def totalWeightCost(self, firstNode, secondNode):
         minWeight = 0
 
@@ -70,16 +61,3 @@ class Graph:
             if (self.E[index][0] == firstNode and self.E[index][1] == secondNode) or (self.E[index][1] == firstNode and self.E[index][0] == secondNode):
                 minWeight += self.E[index][2]
         return minWeight
-
-        # for v in self.graph.keys():
-        #     if v == firstNode:
-        #         for (u,w) in self.graph[v]:
-        #             if u == secondNode:
-        #                 if maxWeight < w:
-        #                     maxWeight = w
-        #     if v == secondNode:
-        #         for (u, w) in self.graph[v]:
-        #             if u == firstNode:
-        #                 if maxWeight < w:
-        #                     maxWeight = w
-        return maxWeight

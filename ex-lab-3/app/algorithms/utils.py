@@ -4,6 +4,7 @@ import sys
 from data_structures.graph import Graph
 from os import walk
 sys.path.append('../')
+import os
 
 from itertools import cycle
 from shutil import get_terminal_size
@@ -16,6 +17,7 @@ def populateGraphFromFile(filepath):
     n_vertices, n_edges = int(formatted_file[0].split(
         ' ')[0]), int(formatted_file[0].split(' ')[1])
     g.totalVertex, g.totalEdges = n_vertices, n_edges
+    g.datasetName = os.path.basename(file.name)
 
     for i in range(n_edges):
         row = formatted_file[i+1].split(' ')

@@ -12,6 +12,7 @@ class Graph:
         self.totalEdges = 0
         self.V = set()
         self.E = []
+        self.datasetName = ""
 
     def add_vertex(self, value: int):
         self.V.add(value)

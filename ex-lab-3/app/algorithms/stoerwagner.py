@@ -23,13 +23,13 @@ class StoerWagner:
 
     while Q.currentSize != 0:
       u = (Q.extractMax()).toTuple()
-      print(u)
+      #print(u)
       s = t
       t = u
-      print('s',s,'t',t)
+      #print('s',s,'t',t)
       for (v, w) in G.graph[u[0]]:
         if Q.search(v):
-          print('v', v,'w',w)
+          #print('v', v,'w',w)
           key[v] = key[v] + w
           Q.searchAndUpdateWeight(v, key[v])
 
@@ -44,7 +44,7 @@ class StoerWagner:
     if len(G.V) == 2:
       v1 = G.V.pop()
       v2 = G.V.pop()
-      print('base case', v1, v2)
+      #print('base case', v1, v2)
       G.V.add(v2)
       G.V.add(v1)
       return ([v1], [(v2, G.weightBetween(v1, v2))])

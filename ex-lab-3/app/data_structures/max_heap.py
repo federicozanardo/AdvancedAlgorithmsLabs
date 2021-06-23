@@ -99,14 +99,14 @@ class MaxHeap:
 
     Il funzionamento è il seguente:
     estrapola la posizione in list del Node con indice index
-    aggiorna il peso di tale nodo a -inf
+    aggiorna il peso di tale nodo a inf
     esegue heapifyUp dal nodo cercato per farlo andare in cima allo heap
     aggiorna il peso del nodo (ora) in cima allo heap
     esegue heapifyDown per garantire la proprietà dello heap
     """
     def searchAndUpdateWeight(self, index, newWeight):
         i = self.mapList[index]
-        self.list[i].weight = float('-inf')
+        self.list[i].weight = float('inf')
         self.heapifyUp(i)
         self.list[1].weight = newWeight
         self.heapifyDown(1)
@@ -148,25 +148,13 @@ class MaxHeap:
             return index * 2
         else:
             if self.list[index*2].weight > self.list[(index*2)+1].weight:
-                return index * 2
+                return index * 2 
             else:
                 return (index * 2) + 1
  
     """
     extractMax() : Node
     Ritorna il nodo di peso massimo dello heap che, poiché questo è un maxHeap, coincide con il primo elemento
-
-    Il funzionamento è il seguente:
-    Se la lista di nodi dello heap ha lunghezza 1
-        La lista è vuota per definizione della classe e quindi non ritorna niente
-    Altrimenti
-        memorizza il nodo di peso maggiore, ossia il primo nodo dello heap
-        sposta l´ultimo elemento dello heap in testa
-        elimina l´ultimo elemento dello heap
-        diminuisci la dimensione dello heap
-        esegui heapifyDown per garantire la proprietà dello heap
-        ritorna il nodo di peso maggiore precedentemente salvato
-    Inoltre, nel fare ciò aggiorna anche la mappa delle posizioni
     """
     def extractMax(self):
         if len(self.list) == 1:
@@ -182,6 +170,16 @@ class MaxHeap:
         return maxEl
 
     """
+    extractChecker(extracted: int) : boolean
+    Funzione di utilità per il testing dell'estrazione del massimo elemento dall'heap
+    """
+    def extractChecker(self, extracted):
+        for a in self.list:
+            if(extracted < a.weight):
+                return False
+        return True
+
+    """
     print() : void
     Funzione di utilità per stampare lo heap
     """
@@ -194,4 +192,3 @@ class MaxHeap:
                 print(" RIGHT CHILD: " + str(self.list[2*i+1].index) + "(w." + str(self.list[2 * i + 1].weight) + ")")
             else:
                 print("")
-            

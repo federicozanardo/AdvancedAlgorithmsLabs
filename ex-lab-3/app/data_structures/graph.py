@@ -39,6 +39,10 @@ class Graph:
 
         if (v in self.V):
             self.V.remove(v)
+        
+        for a,b,c in self.E:
+            if a == v or b == v:
+                self.E.remove((a,b,c))
 
     def weightBetween(self, firstNode, secondNode):
         minWeight = float('inf')

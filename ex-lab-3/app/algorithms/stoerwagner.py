@@ -23,10 +23,13 @@ class StoerWagner:
 
     while Q.currentSize != 0:
       u = (Q.extractMax()).toTuple()
+      print(u)
       s = t
       t = u
+      print('s',s,'t',t)
       for (v, w) in G.graph[u[0]]:
         if Q.search(v):
+          print('v', v,'w',w)
           key[v] = key[v] + w
           Q.searchAndUpdateWeight(v, key[v])
 
@@ -41,36 +44,25 @@ class StoerWagner:
     if len(G.V) == 2:
       v1 = G.V.pop()
       v2 = G.V.pop()
+      print('base case', v1, v2)
       G.V.add(v2)
       G.V.add(v1)
-      return ([v1], [(v2, G.maxWeightBtwn())])
+      return ([v1], [(v2, G.weightBetween(v1, v2))])
     
     else:
 
       (C1, s, t) = self.stMinCut(G)
 
       #print('C1=', C1[1], 's=', s, 't=', t)
-
       contractedG = self.contractGraph(G, s, t)
 
-
       C2 = self.globalMinCut(contractedG)
-      # print(self.weightMinCut(C1), self.weightMinCut(C2))
-     # if type(C2[1][0]) is int:
-        #exit(C2)
-      # if type(C2[1][0]) is tuple:
+
+
       if self.weightMinCut(C1) <= self.weightMinCut(C2):
         return C1
       else:
         return C2
-      # else: # sono nel caso base
-      #   v1 = G.V.pop()
-      #   v2 = G.V.pop()
-      #   G.V.add(v2)
-      #   G.V.add(v1)
-      #   nuovo = ([v1], [(v2, self.backupG.graph[v1][0][1])])
-      #   return nuovo
-
 
   def weightMinCut(self, C: any):
     V, t = C
@@ -78,8 +70,8 @@ class StoerWagner:
 
   def contractGraph(self, G: Graph, s, t):
 
-    newValues = defaultdict(lambda: 0)
-
+    # newValues = defaultdict(lambda: 0)
+    
     for (u,w) in G.graph[t]:
       if u == s:
         G.remove_edge(t, u, w)

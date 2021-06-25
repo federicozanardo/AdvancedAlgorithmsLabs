@@ -4,6 +4,19 @@
 \textit{Misurate i tempi di calcolo dell'algoritmo deterministico di Stoer e Wagner sui grafi del dataset. Mostrate i risultati con un grafico che mostri la variazione dei tempi di calcolo al variare del numero di vertici nel grafo. Confrontate i tempi misurati con la complessità asintotica dell'algoritmo. \\
 Nelle istanze più grandi, il tempo di calcolo necessario per completare l'esecuzione potrebbe risultare eccessivo. In questo caso utilizzate un timeout, riportando nei risultati che l'algoritmo non riesce ad ottenere un risultato in tempo utile.}
 
+Abbiamo implementato il codice in Python per l'esecuzione dell'algoritmo di Stoer-Wagner su tutto il dataset fornito. I risultati, che sono stati riportati in modo dettagliato con i relativi pesi anche nella sezione appnedice, sono riportati di seguito.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{res/images/single/stoerwagner}
+	\caption{Complessità di Stoer-Wagner con \textit{k} esecuzioni ripetute per ogni quartetto di grafi con uguale numero di nodi.}
+	\label{fig:stoerwagner}
+\end{figure}
+
+Nel grafico appena illustrato (fig. \ref{fig:stoerwagner}) è riportata la complessità computazionale attesa (in giallo) ed effettiva (in blu) per l'algoritmo di Stoer e Wagner con più esecuzioni dell'algoritmo. \\
+Come si può evincere dall'immagine, la curva della complessità effettiva rimane al di sopra di quella della complessità teorica. Il motivo di ciò è da ricercare nelle particolarità del linguaggio Python: non ci è stato infatti possibile ridurre le tempistiche di esecuzione per l'algoritmo a causa della necessità di effettuare un \textit{deepcopy} per ogni grafo ad ogni esecuzione, poiché il linguaggio non permette il passaggio di parametri per valore. Sebbene il \textit{deepcopy} sia una procedura che viene eseguita in tempo lineare sulla dimensione dell'oggetto \texttt{graph} (ed ha quindi complessità $O(|V|+|E|)$), essendo l'algoritmo molto veloce questo fattore influisce negativamente sul tempo di esecuzione. \\
+Un ulteriore fattore che aumenta la complessità risiede nella rimozione di un nodo dal grafo: essendo l'insieme di vertici un \textit{set}, la rimozione di un elemento da esso ha, nel peggiore dei casi, complessità lineare.
+
 \subsection{Domanda 2}
 \textit{Misurate i tempi di calcolo dell'algoritmo di Karger e Stein sui grafi del dataset, usando un numero di ripetizioni che garantisca una probabilità minore o uguale a $1/n$ di sbagliare. Mostrate i risultati con un grafico che mostri la variazione dei tempi di calcolo al variare del numero di vertici nel grafo. Confrontate i tempi misurati con la complessità asintotica dell'algoritmo. \\
 Nelle istanze più grandi, il tempo di calcolo necessario a completare tutte le iterazioni potrebbe risultare eccessivo. In questo caso utilizzate un timeout oppure abbassate il numero di ripetizioni per ottenere tempi di esecuzione ragionevoli.}

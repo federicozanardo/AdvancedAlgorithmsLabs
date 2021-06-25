@@ -5,24 +5,18 @@ Modulo di misurazione dei dataset con output del tempo di esecuzione dei singoli
 
 """
 
-import argparse
 from random import randint
 import gc
-import matplotlib.pyplot as plt
-from data_structures.heap import Heap, Node
+from data_structures.max_heap import MaxHeap, Node
 from data_structures.graph import Graph
 from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
-from algorithms.utils import Loader
-from algorithms.mst import MST
+from algorithms.stoerwagner import StoerWagner
 import sys
 from os import walk, path
 import time
-import concurrent.futures
-import multiprocessing
-
 
 """
 Esecuzione degli algoritmi in tutti i dataset
@@ -35,39 +29,23 @@ def executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, lock):
 
     outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
 
-    # ======= PRIM ========
-    # executorPrim = concurrent.futures.ThreadPoolExecutor(max_workers=24)
-    # loaderPrim = Loader("Executing Prim...", "Executing Prim... COMPLETED!", 0.05).start()
-    print("Executing Prim...")
+    # ======= Stoer-Wagner ========
+    print("Executing StoerWagner...")
     datasetNumber = 1
-    output = "./output_prim_" + outputfilePostfix
+    output = "./output_stoerwagner_" + outputfilePostfix
 
     for graph in graphs:
-        # executorPrim.submit(executeSingleThreadCalculus, output, "prim", graph, datasetNumber, lock)
-        executeSingleGraphCalculus(output, "prim", graph, datasetNumber, lock)
-        datasetNumber += 1    
-    # executorPrim.shutdown(wait=True)
-    # loaderPrim.stop()
-
-    # ======= KRUSKAL UNION FIND ========
-    print("Executing Kruskal Union Find...")
-    datasetNumber = 1
-    output = "./output_kruskal_uf_" + outputfilePostfix
-
-    for graph in graphs:
-        executeSingleGraphCalculus(output, "kruskal-opt", graph, datasetNumber, lock)
+        executeSingleGraphCalculus(output, "sw", graph, datasetNumber, lock)
         datasetNumber += 1    
 
-    # ======= KRUSKAL NAIVE ========
-    print("Executing Kruskal...")
+    # ======= Karger-Stein ========
+    print("Executing Karger-Stein...")
     datasetNumber = 1
-    output = "./output_kruskal_" + outputfilePostfix
+    output = "./output_kargerstein_" + outputfilePostfix
 
     for graph in graphs:
-        executeSingleGraphCalculus(output, "kruskal", graph, datasetNumber, lock)
-        datasetNumber += 1 
-
-
+        executeSingleGraphCalculus(output, "ks", graph, datasetNumber, lock)
+        datasetNumber += 1    
 
 
 """
@@ -84,58 +62,34 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
 
     executionTimes = 1
 
-    # Eseguo la prima volta il quartetto e ricavo il tempo di esecuzione
-
     localStartTime = time.perf_counter_ns()
     gc.disable()
 
-    # if algoname == "prim":
-    #     prim = Prim()
-    #     final_graph,_ = prim.prim_mst(graph, 1)
-    #     kw = prim.get_weight(final_graph)
-
-    # elif algoname == "kruskal":
-    #     mst = MST()
-    #     final_graph = mst.kruskal_naive(graph)
-    #     kw = mst.get_mst_weight(final_graph.E)
-
-    # elif algoname == "kruskal-opt":
-    #     mst = MST()
-    #     final_graph = mst.kruskal_union_find(graph)
-    #     kw = mst.get_mst_weight(final_graph)
-    # else:
-    #     pass
+    if algoname == "sw":
+        res = StoerWagner().algorithm(graph)
+    
+    elif algoname == "ks": #TODO
+        pass
 
     gc.enable()
     localEndTime = time.perf_counter_ns()-localStartTime
-
 
     # Se il tempo di esecuzione è minore di 1 secondo, lo eseguo n volte
     # tale da avvicinarmi a 1 secondo
     # e ne faccio la media
 
     if localEndTime <= 1000000000: 
-
         numCalls = 1000000000//localEndTime
-
         loopStartTime = time.perf_counter_ns()
         gc.disable()
+
         for i in range(0, numCalls):
-            print(i)
-            # if algoname == "prim":
-            #     prim = Prim()
-            #     final_graph,_ = prim.prim_mst(graph, 1)
-            #     kw = prim.get_weight(final_graph)
 
-            # elif algoname == "kruskal":
-            #     mst = MST()
-            #     final_graph = mst.kruskal_naive(graph)
-            #     kw = mst.get_mst_weight(final_graph.E)
-
-            # elif algoname == "kruskal-opt":
-            #     mst = MST()
-            #     final_graph = mst.kruskal_union_find(graph)
-            #     kw = mst.get_mst_weight(final_graph)
+            if algoname == "sw":
+                res = StoerWagner().algorithm(graph)
+    
+            elif algoname == "ks": #TODO
+                pass
             
         gc.enable()
         loopEndTime = time.perf_counter_ns() - loopStartTime
@@ -149,11 +103,28 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     # con la seguente struttura:
     
     # ======================================================================
-    # dataset number | n vertex | n edges | nano seconds time | seconds time | weight | exe times
+    # dataset number | n vertex | n edges | nano seconds time | seconds time | result | exe times
     # ======================================================================
   
-    with fileResultLock: 
-        file_object = open(outputfile, 'a')
-        file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" + str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(kw) + "\t" + str(executionTimes) + "\n")
-        file_object.close()
-    
+    if algoname == "sw":
+        with fileResultLock: 
+            file_object = open(outputfile, 'a')
+            file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" +   str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".  format(rightTime/1000000000) + "\t" + str(res) + "\t" + str    (executionTimes) + "\n")
+            file_object.close()
+
+
+    # ======================================================================
+    # dataset number | n vertex | n edges | nano seconds time | seconds time | result | error | rep times
+    # ======================================================================
+
+    # NOTA BENE:
+    # - errore relativo (soluzionetrovata-soluzioneottima)/soluzioneottima
+    # - repetition times (per rendere l'algoritmo in h.p.)
+
+    elif algoname == "ks": #TODO
+        pass
+        with fileResultLock: 
+            file_object = open(outputfile, 'a')
+            file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" +   str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".  format(rightTime/1000000000) + "\t" + str(kw) + "\t" + str    (executionTimes) + "\n")
+            file_object.close()
+

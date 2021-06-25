@@ -7,11 +7,11 @@ class StoerWagner:
   def algorithm(self, G: Graph):
 
     """
-    self.backupG: Graph = copia profonda del grafo di partenza per il calcolo dei pesi degli archi
+    backupG: Graph = copia profonda del grafo di partenza per il calcolo dei pesi degli archi
     res: tuple = tupla contenente i risultati dell'esecuzione dell'algoritmo
     """
-    self.backupG = deepcopy(G)
-    res = self.globalMinCut(G)
+    backupG = deepcopy(G)
+    res = self.globalMinCut(backupG)
     return res[1][0][1]
     
 

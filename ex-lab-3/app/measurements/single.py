@@ -78,6 +78,8 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     # tale da avvicinarmi a 1 secondo
     # e ne faccio la media
 
+    res = []
+
     if localEndTime <= 1000000000: 
         numCalls = 1000000000//localEndTime
         loopStartTime = time.perf_counter_ns()
@@ -87,7 +89,7 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
 
             if algoname == "sw":
                 res = StoerWagner().algorithm(graph)
-    
+
             elif algoname == "ks": #TODO
                 pass
             
@@ -97,7 +99,6 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
         executionTimes = numCalls
     else:
         rightTime = localEndTime
-    
 
     # Una volta concluso, inserisco in append su un file i risultati
     # con la seguente struttura:

@@ -18,6 +18,7 @@ from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
 from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexGraphs
+from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets
 from algorithms.stoerwagner import StoerWagner
 import sys
 from os import walk, path
@@ -44,6 +45,9 @@ def main(args):
 
     if sys.argv[1] == "all":
         executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, fileResultLock)
+
+    if sys.argv[1] == "all-quartet":
+        executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
 
     if sys.argv[1] == "sw" or sys.argv[1] == "all-single":
         print(col.HEADER + "STOER-WAGNER" + col.ENDC)

@@ -78,8 +78,6 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     # tale da avvicinarmi a 1 secondo
     # e ne faccio la media
 
-    res = []
-
     if localEndTime <= 1000000000: 
         numCalls = 1000000000//localEndTime
         loopStartTime = time.perf_counter_ns()

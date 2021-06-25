@@ -110,7 +110,25 @@ class MaxHeap:
         self.heapifyUp(i)
         self.list[1].weight = newWeight
         self.heapifyDown(1)
-            
+    
+
+    """
+    increaseKey(index: int, newWeight: int) : void
+        index = indice del nodo da aggiornare
+        newWeight = nuovo peso del nodo
+    Aggiorna lo heap con il nuovo valore del nodo
+
+    Il funzionamento è il seguente:
+    estrapola la posizione in list del Node con indice index
+    aggiorna il peso di tale nodo a inf
+    esegue heapifyUp dal nodo cercato per aggiornare il peso in cima allo heap
+    """
+    def increaseKey(self, index, newWeight):
+        i = self.mapList[index]
+        if(self.list[i].weight < newWeight):
+            self.list[i].weight = newWeight
+            self.heapifyUp(i)
+
     """
     insert(node: Node) : void
         node = nodo da inserire

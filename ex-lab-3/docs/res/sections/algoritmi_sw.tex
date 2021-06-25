@@ -2,6 +2,31 @@
 
 \subsection{Struttura dati per il grafo}
 
+Per comodità nell'implementazione abbiamo realizzato due diverse strutture dati per rappresentare un multigrafo; queste sono simili tra loro ma presentano alcune differenze. \\
+Per quanto riguarda la struttura dati per l'esecuzione dell'algoritmo Stoer-Wagner, un oggetto \texttt{graph} è rappresentato nel seguente modo:
+
+\begin{enumerate}
+    \item \verb|V| è un insieme di nodi;
+    \item \verb|E| è una lista di lati;
+    \item \verb|graph| rappresenta la \textit{lista di adiacenza}.
+    Gli indici per accedere alla mappa sono rappresentati dai vertici.
+    Ogni cella della mappa punta ad una lista di coppie di valori
+    (il vertice a cui è collegato e il peso del lato che li
+    congiunge);
+    \item \verb|totalVertex| rappresenta il numero di vertici;
+    \item \verb|totalEdges| rappresenta il numero di archi;
+    \item \verb|datasetName| rappresenta il nome del grafo.
+\end{enumerate}
+Essendo l'oggetto in questione un multigrafo, la lista di adiacenza e la lista di lati possono contenere più archi tra due nodi aventi pesi diversi.
+
+\noindent I metodi implementati sono:
+\begin{enumerate}
+    \item \verb|add_vertex|: aggiunge un vertice al grafo;
+    \item \verb|add_edge|: aggiunge un lato al grafo;
+    \item \verb|remove_edge|: rimuove un lato dal grafo;
+    \item \verb|remove_node|: rimuove completamente un vertice dal grafo, ossia rimuove il vertice dalla relativa lista e tutti gli archi a esso collegati;
+    \item \verb|totalWeightCost|: restituisce la somma di tutti i lati tra due vertici.
+\end{enumerate}
 
 \subsection{Stoer e Wagner}
 

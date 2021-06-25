@@ -35,11 +35,10 @@ class Graph:
             for (u, w) in self.graph[t]:
                 if u == v:
                     self.graph[t].remove((u,w))
-        if v in self.graph.keys():
-            del self.graph[v]
 
-        if (v in self.V):
-            self.V.remove(v)
+        del self.graph[v]
+
+        self.V.remove(v)
         
         for a,b,c in self.E:
             if a == v or b == v:

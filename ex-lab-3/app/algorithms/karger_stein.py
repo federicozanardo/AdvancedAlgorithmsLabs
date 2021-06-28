@@ -10,6 +10,8 @@ sys.path.append('../')
 
 
 class KargerStein:
+    def __init__(self, G: KargerGraph):
+        self.G = G
 
     def random_select(self, C):
         random = rnd.uniform(low=0, high=C[len(C) - 1], size=(1,))
@@ -32,77 +34,88 @@ class KargerStein:
 
         return mid
 
-    def edge_select(self, G: KargerGraph):
+    def edge_select(self, D, W):
         C_D = []
-        for i in range(1, len(G.D) + 1):
+        for i in range(1, len(D) + 1):
             acc = 0
             for j in range(1, i):
-                acc += G.D[j]
+                acc += D[j]
             C_D.append(acc)
 
         u = self.random_select(C_D)
 
         C_W = []
-        for i in range(1, len(G.D) + 1):
+        for i in range(1, len(D) + 1):
             acc = 0
             for j in range(1, i):
-                acc += G.W[u][j]
+                acc += W[u][j]
             C_W.append(acc)
 
         v = self.random_select(C_W)
 
         return (u, v)
 
-    def contract_edge(self, G: KargerGraph, u, v):
-        G.D[u] = G.D[u] + G.D[v] - 2 * G.W[u][v]
-        G.D[v] = 0
-        G.n_vertices = G.n_vertices - 1
-        G.W[u][v] = G.W[v][u] = 0
+    def contract_edge(self, D, W, u, v, n: int):
+        D[u] = D[u] + D[v] - 2 * W[u][v]
+        D[v] = 0
+        n = n - 1
+        W[u][v] = W[v][u] = 0
 
-        for w in range(1, G.n_vertices_input + 1):
+        for w in range(1, self.G.n_vertices + 1):
             if w != u and w != v:
-                G.W[u][w] += G.W[v][w]
-                G.W[w][u] += G.W[w][v]
-                G.W[v][w] = G.W[w][v] = 0
+                W[u][w] += W[v][w]
+                W[w][u] += W[w][v]
+                W[v][w] = W[w][v] = 0
 
-    def contract(self, G: KargerGraph, k: int):
-        for i in range(0, G.n_vertices - k):
-            (u, v) = self.edge_select(G)
-            self.contract_edge(G, u, v)
-        return G
+        return n
 
-    def recursive_contract(self, G: KargerGraph):
-        if G.n_vertices <= 6:
-            G_prime = self.contract(G, 2)
+    def contract(self, D, W, k: int):
+        n = 0
+        for d in D:
+            if d != 0:
+                n += 1
+
+        n_i = 0
+        for i in range(0, n - k):
+            (u, v) = self.edge_select(D, W)
+            n_i = self.contract_edge(D, W, u, v, n)
+        return D, W, n_i
+
+    def recursive_contract(self, D, W, n: int):
+        if n <= 6:
+            D_prime, W_prime, _ = self.contract(D, W, 2)
 
             u, v = 0, 0
-            for i in range(len(G_prime.D)):
-                if u == 0 and G_prime.D[i] != 0:
+            for i in range(len(D_prime)):
+                if u == 0 and D_prime[i] != 0:
                     u = i
-                elif u != 0 and v == 0 and G_prime.D[i] != 0:
+                elif u != 0 and v == 0 and D_prime[i] != 0:
                     v = i
 
             # Ritorna il peso dell\'unico arco (u, v) in G_prime
-            return G_prime.W[u][v]
+            return W_prime[u][v]
 
-        t = math.ceil(G.n_vertices / math.sqrt(2) + 1)
+        t = math.ceil(n / math.sqrt(2) + 1)
 
         w = []
         for i in range(1, 3):
-            G_i = self.contract(G, t)
-            w.append(self.recursive_contract(G_i))
+            D_i, W_i, n_i = self.contract(D, W, t)
+            w.append(self.recursive_contract(D_i, W_i, n_i))
 
         return min(w[0], w[1])
 
-    def algorithm(self, G: KargerGraph, threshold_in_seconds=math.inf):
+    def algorithm(self, threshold_in_seconds=math.inf):
         # Calcola il vettore D
-        G.calculate_weighted_degrees_vertices()
+        self.G.calculate_weighted_degrees_vertices()
+
+        W = self.G.W
+        D = self.G.D
 
         is_threshold_activated = False
         discovery_time = 0
         minimum = math.inf
         k_min = 0
-        k = round((math.log(G.n_vertices, 2)) ** 2)
+        k = round((math.log(self.G.n_vertices, 2)) ** 2)
 
         starting_total_time = starting_discovery_time = time.perf_counter_ns()
         gc.disable()
@@ -111,7 +124,7 @@ class KargerStein:
                 is_threshold_activated = True
                 break
 
-            t = self.recursive_contract(deepcopy(G))
+            t = self.recursive_contract(deepcopy(D), deepcopy(W), deepcopy(self.G.n_vertices))
 
             if t < minimum:
                 discovery_time = time.perf_counter_ns() - starting_discovery_time
@@ -123,8 +136,8 @@ class KargerStein:
 
         return minimum, k, k_min, discovery_time, total_time, is_threshold_activated
 
-    def measurements(self, G: KargerGraph, threshold_in_seconds=math.inf):
-        min_cut, k, k_min, discovery_time, total_time, is_threshold_activated = self.algorithm(G, threshold_in_seconds)
+    def measurements(self, threshold_in_seconds=math.inf):
+        min_cut, k, k_min, discovery_time, total_time, is_threshold_activated = self.algorithm(threshold_in_seconds)
 
         if total_time < 1000000000:
             num_calls = 1000000000 // total_time
@@ -132,7 +145,7 @@ class KargerStein:
             starting_repetitions_total_time = time.perf_counter_ns()
             repetitions_discovery_time = 0
             for j in range(0, num_calls):
-                min_cut, k, k_min, discovery_time, total_time, is_threshold_activated = self.algorithm(G, threshold_in_seconds)
+                min_cut, k, k_min, discovery_time, total_time, is_threshold_activated = self.algorithm(threshold_in_seconds)
                 repetitions_discovery_time += discovery_time
             repetitions_total_time = time.perf_counter_ns() - starting_repetitions_total_time
 

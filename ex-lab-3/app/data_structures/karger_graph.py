@@ -5,8 +5,7 @@ sys.path.append('../')
 
 class KargerGraph:
     def __init__(self, n_vertices, n_edges):
-        self.n_vertices_input = n_vertices
-        self.n_edges_input = n_edges
+        self.n_edges = n_edges
         self.n_vertices = n_vertices
         self.W = []                     # Matrice di adiacenza
         self.D = []                     # Grado pesato dei vertici

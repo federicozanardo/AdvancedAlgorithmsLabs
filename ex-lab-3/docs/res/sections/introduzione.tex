@@ -32,6 +32,15 @@ Dato $\mathcal{G}=(\mathcal{V}, \mathcal{E})$ un multigrafo ed $e=\{u,v\} \in \m
     \item[] $\mathcal{V}{}'=\mathcal{V} \setminus \{u, v\} \cup \{z_{u,v}\}$
     \item[] $\mathcal{E}{}'=\mathcal{E} \setminus \{\{\{x, y\}: (x=u) \vee (x=v)\}\} \cup \{\{\{z_{u,v}, y\}: (\{u,y\} \in \mathcal{E}) \vee (\{v,y\} \in \mathcal{E}), (y\neq u) \wedge (y \neq v) \}\}$
 \end{itemize}
+Quando vengono contratti due vertici, viene eliminato il lato tra loro e 
+si crea un nuovo vertice che li comprende, ereditando tutti i loro vecchi lati 
+incidenti. Si osservi che:
+\begin{enumerate}
+    \item $|\mathcal{V}'| = |\mathcal{V}| - 1$ ($= |\mathcal{V}| - 2 + 1$);
+    \item $|\mathcal{E}'| = |\mathcal{E}| - m(e) \le |\mathcal{E}| - 1$ (ovvero, viene 
+    rimosso almeno il lato che collega i due vertici da contrarre).
+\end{enumerate}
+
 Viene riportato di seguito un esempio grafico di contrazione di un multigrafo rispetto a un arco.
 
 \begin{figure}[H]

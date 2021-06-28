@@ -83,8 +83,16 @@ Per l'algoritmo di Karger-Stein vengono invece riportate le seguenti informazion
   \item Numero del dataset;
   \item Numero di vertici del grafo;
   \item Numero di archi del grafo;
+  \item Peso finale calcolato;
+  \item Numero di iterazioni per l'alta probabilità ($k$);
+  \item Numero di iterazioni minimo in cui è stato determinato il min-cut;
+  \item Discovery time in nano secondi (tempo in cui l'algoritmo trova per la prima volta il taglio di peso minimo);
+  \item Discovery time in secondi;
   \item Tempo di esecuzione in nano secondi;
   \item Tempo di esecuzione in secondi;
-  \item Peso finale calcolato;
-  \item Esecuzioni totali effettuate dell'algoritmo.
+  \item Esecuzioni totali effettuate dell'algoritmo (necessarie per effetturare le misurazioni).
 \end{itemize}
+
+Per quanto riguarda le misurazioni con una \textit{threshold} sul tempo di esecuzione 
+dell'algoritmo di Karger-Stein, nei file di output è presente anche l'informazione 
+che indica se una particolare istanza ha superato o meno la soglia.

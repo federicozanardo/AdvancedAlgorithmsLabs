@@ -1,7 +1,7 @@
 \section{Introduzione}
 
 \subsection{Descrizione del problema}
-In questa relazione illustreremo dei confronti tra due algoritmi per risolvere il problema del \textit{Minimum Cut}, confrontando i tempi di calcolo e la correttezza delle soluzioni trovate. \\
+In questa relazione illustreremo dei confronti tra due algoritmi per risolvere il problema del \textbf{Minimum Cut}, confrontando i tempi di calcolo e la correttezza delle soluzioni trovate. \\
 Quello del \textit{Minimum Cut} è un problema di ottimizzazione che può essere definito come segue:
 \begin{center}
     \centering
@@ -40,3 +40,16 @@ Viene riportato di seguito un esempio grafico di contrazione di un multigrafo ri
 	\caption{Esempio di contrazione di un multigrafo.}
 	\label{fig:multigraph_contraction}
 \end{figure}
+
+\subsubsection*{Alta probabilità}
+
+Ai fini dell'analsi dell'algoritmo di \textit{Karger} e \textit{Stein}, si forniscano le seguenti definizioni:
+\begin{enumerate}
+    \item \textbf{Alta probabilità}: dato $\Pi \subseteq \mathcal{I} \times \mathcal{S}$, un algoritmo $\mathcal{A}_{\Pi}$ 
+    ha complessità $\mathcal{T}(n) = \mathcal{O}(f(n))$ con \textit{alta probabilità} se $\exists c, d > 0$ tali che 
+    $\forall i \in \mathcal{I}$, $|i| = n$, $Pr(\mathcal{A}_{\Pi}(i)$ termina in $\ge c \dot f(n)$ passi $) \le \frac{1}{n^d}$, 
+    ovvero, la probabilità che l'algoritmo superi la complessità $\mathcal{O}(f(n))$ è molto bassa ($\frac{1}{n^d}$).
+    \item \textbf{Correttezza con alta probabilità di un algoritmo}: dato $\Pi \subseteq \mathcal{I} \times \mathcal{S}$, 
+    un algoritmo $\mathcal{A}_{\Pi}$ è corretto con alta probabilità se $\exists d > 0$ tali che 
+    $\forall i \in \mathcal{I}$, $|i| = n$, $Pr((i, \mathcal{A}_{\Pi}) \notin \Pi) \le \frac{1}{n^d}$.
+\end{enumerate}

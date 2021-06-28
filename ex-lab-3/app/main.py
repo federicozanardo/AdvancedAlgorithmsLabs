@@ -17,8 +17,9 @@ from time import perf_counter_ns
 from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
-from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexGraphs
-from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets
+from algorithms.utils import loadData
+from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexGraphsFromDirpath
+from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartetsFromDirpath
 from algorithms.stoerwagner import StoerWagner
 from algorithms.karger_stein import KargerStein
 import sys
@@ -40,39 +41,31 @@ def main(args):
 
 
     if sys.argv[1] == "all":
-        executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, fileResultLock)
+        executeTheSuperFancyFunctionToCalculateMegaComplexGraphsFromDirpath(dirpath)
+
 
     if sys.argv[1] == "all-quartet":
-        executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
+        executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartetsFromDirpath(dirpath)
 
     if sys.argv[1] == "sw" or sys.argv[1] == "all-single":
 
-        if path.isdir(dirpath):
-            graphs = loadFromFolder(dirpath, False)
-        elif path.isfile(dirpath):     
-            graph = loadFromFile(dirpath, False)
-            graphs = [graph]
+        graphs = loadData(dirpath, False)
 
         print(col.HEADER + "STOER-WAGNER" + col.ENDC)
         for graph in graphs:
             res = StoerWagner().algorithm(graph)
             print(col.OKBLUE+ graph.datasetName, ' \t' + col.ENDC, res)
 
-    if sys.argv[1] == "ks" or sys.argv[1] == "all-single": #TODO
+    if sys.argv[1] == "ks" or sys.argv[1] == "all-single":
 
-        if path.isdir(dirpath):
-            graphs = loadFromFolder(dirpath, True)
-        elif path.isfile(dirpath):     
-            graph = loadFromFile(dirpath, True)
-            graphs = [graph]
+        graphs = loadData(dirpath, True)
 
         print(col.HEADER + "KARGER-STEIN" + col.ENDC)
         i = 1
         for graph in graphs:
-            karger = KargerStein()
+            karger = KargerStein(graph)
             threshold_in_seconds = 7
-            #min_cut, k, k_min, discovery_time, total_time, n_repetitions, is_threshold_activated = karger.measurements(graph, threshold_in_seconds) #
-            min_cut, k, k_min, discovery_time, total_time, n_repetitions, is_threshold_activated = karger.measurements(graph)
+            min_cut, k, k_min, discovery_time, total_time, n_repetitions, is_threshold_activated = karger.measurements()
             print('Graph {}'.format(i))
             print('\tMin-cut: {}'.format(min_cut))
             print('\tNumero di ripetizioni totali (k): {}'.format(k))
@@ -81,12 +74,10 @@ def main(args):
             print('\tTempo totale di esecuzione: {}ns ({}s)'.format(total_time, total_time / 1000000000))
             print('\tNumero di ripetizioni: {}'.format(n_repetitions))
             print('\tThreshold di {}s attivata: {}\n'.format(threshold_in_seconds, is_threshold_activated))
-
             i+=1
 
   
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

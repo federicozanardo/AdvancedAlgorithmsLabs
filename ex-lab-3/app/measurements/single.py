@@ -20,13 +20,10 @@ import time
 
 """
 Esecuzione degli algoritmi in tutti i dataset
-
     graphs      =   grafi dei dataset da eseguire
-    lock        =   accesso condiviso dei threads per la scrittura in append dei file (eventuale implementazione)
 
 """
-def executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, lock):
-
+def executeTheSuperFancyFunctionToCalculateMegaComplexGraphsFromDirpath(dirpath):
     outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
 
     # ======= Stoer-Wagner ========
@@ -35,7 +32,7 @@ def executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, lock):
     output = "./output_stoerwagner_" + outputfilePostfix
 
     for graph in graphs:
-        executeSingleGraphCalculus(output, "sw", graph, datasetNumber, lock)
+        executeSingleGraphCalculus(output, "sw", graph, datasetNumber)
         datasetNumber += 1    
 
     # ======= Karger-Stein ========
@@ -44,7 +41,7 @@ def executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, lock):
     output = "./output_kargerstein_" + outputfilePostfix
 
     for graph in graphs:
-        executeSingleGraphCalculus(output, "ks", graph, datasetNumber, lock)
+        executeSingleGraphCalculus(output, "ks", graph, datasetNumber)
         datasetNumber += 1    
 
 
@@ -55,10 +52,9 @@ Esecuzione di un singolo grafo
     algoname        =   tipo algoritmo da eseguire
     graph           =   grafo di partenza in input
     filenumber      =   numero del dataset
-    fileResultLock  =   accesso condiviso dei threads per la scrittura in append dei file (eventuale implementazione)
 
 """
-def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResultLock):
+def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber):
 
     executionTimes = 1
 
@@ -105,11 +101,10 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     # dataset number | n vertex | n edges | nano seconds time | seconds time | result | exe times
     # ======================================================================
   
-    if algoname == "sw":
-        with fileResultLock: 
-            file_object = open(outputfile, 'a')
-            file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" +   str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".  format(rightTime/1000000000) + "\t" + str(res) + "\t" + str    (executionTimes) + "\n")
-            file_object.close()
+    if algoname == "sw": 
+        file_object = open(outputfile, 'a')
+        file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" +   str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".  forma(rightTime/1000000000) + "\t" + str(res) + "\t" + str    (executionTimes) + "\n")
+        file_object.close()
 
 
     # ======================================================================
@@ -121,9 +116,8 @@ def executeSingleGraphCalculus(outputfile, algoname, graph, filenumber, fileResu
     # - repetition times (per rendere l'algoritmo in h.p.)
 
     elif algoname == "ks": #TODO
-        pass
-        with fileResultLock: 
-            file_object = open(outputfile, 'a')
-            file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" +   str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".  format(rightTime/1000000000) + "\t" + str(kw) + "\t" + str    (executionTimes) + "\n")
-            file_object.close()
+        pass 
+        file_object = open(outputfile, 'a')
+        file_object.write(str(filenumber) + "\t" + str(len(graph.V)) + "\t" +   str(len(graph.E)) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".  forma(rightTime/1000000000) + "\t" + str(kw) + "\t" + str    (executionTimes) + "\n")
+        file_object.close()
 

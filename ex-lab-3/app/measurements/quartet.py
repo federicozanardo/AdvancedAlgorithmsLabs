@@ -29,11 +29,9 @@ import multiprocessing
 Composizione ed esecuzione dei quartetti a partire da più dataset
 
     graphs          =   grafi dei dataset da eseguire
-    lock  =   accesso condiviso dei threads per la scrittura in append dei file (eventuale implementazione)
 
 """
-def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, lock):
-
+def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartetsFromDirpath(dirpath):
     outputfilePostfix = time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime()) + ".csv"
 
     # ======= QUARTET STOER-WAGNER ========
@@ -48,7 +46,7 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs,
     for graph in graphs:
         if foo == 4:
             foo = 0
-            executeSingleQuartetMeasurement(output, "sw", graphsAccumulator, datasetNumberAccumulator, lock)
+            executeSingleQuartetMeasurement(output, "sw", graphsAccumulator, datasetNumberAccumulator)
             graphsAccumulator = []
             datasetNumberAccumulator = []
             
@@ -60,7 +58,7 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs,
 
     # Eseguo l'ultimo quartetto
     if len(graphsAccumulator) != 0 :
-        executeSingleQuartetMeasurement(output, "sw", graphsAccumulator, datasetNumberAccumulator, lock)
+        executeSingleQuartetMeasurement(output, "sw", graphsAccumulator, datasetNumberAccumulator)
 
 
 """
@@ -70,10 +68,9 @@ Esecuzione di un singolo quartetto di grafi
     algoname        =   tipo algoritmo da eseguire
     graphs          =   grafi dei dataset da eseguire
     filenumbers     =   array di numeri dei dataset da eseguire
-    fileResultLock  =   accesso condiviso dei threads per la scrittura in append dei file (eventuale implementazione)
 
 """
-def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers, fileResultLock):
+def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers):
 
     executionTimes = 4
 
@@ -139,10 +136,9 @@ def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers, f
     outAvgEdges /= 4
 
     if algoname == "sw":
-      with fileResultLock: 
-          file_object = open(outputfile, 'a')
-          file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\t" + str(executionTimes//4) + "\n")
-          file_object.close()
+        file_object = open(outputfile, 'a')
+        file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\t" + str(executionTimes//4) + "\n")
+        file_object.close()
 
     elif algoname == "ks":
       pass

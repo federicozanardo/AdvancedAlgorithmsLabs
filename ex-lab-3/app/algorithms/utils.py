@@ -5,11 +5,19 @@ from data_structures.graph import Graph
 from data_structures.karger_graph import KargerGraph
 from os import walk
 sys.path.append('../')
-import os
+from os import path
 
 from itertools import cycle
 from shutil import get_terminal_size
 from time import sleep
+
+def loadData(dirpath: str, is_karger: bool):
+    if path.isdir(dirpath):
+            graphs = loadFromFolder(dirpath, is_karger)
+    elif path.isfile(dirpath):     
+        graph = loadFromFile(dirpath, is_karger)
+        graphs = [graph]
+    return graphs
 
 def populateGraphFromFile(filepath, is_karger: bool):
 
@@ -33,7 +41,7 @@ def populateGraphFromFile(filepath, is_karger: bool):
         n_vertices, n_edges = int(formatted_file[0].split(
             ' ')[0]), int(formatted_file[0].split(' ')[1])
         g.totalVertex, g.totalEdges = n_vertices, n_edges
-        g.datasetName = os.path.basename(file.name)
+        g.datasetName = path.basename(file.name)
 
         for i in range(n_edges):
             row = formatted_file[i+1].split(' ')

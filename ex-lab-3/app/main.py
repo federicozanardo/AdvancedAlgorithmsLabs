@@ -20,6 +20,7 @@ from algorithms.utils import bcolors as col
 from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexGraphs
 from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets
 from algorithms.stoerwagner import StoerWagner
+from algorithms.karger_stein import KargerStein
 import sys
 from os import walk, path
 import time
@@ -37,11 +38,6 @@ def main(args):
     assert path.isfile(dirpath) or path.isdir(
         dirpath), "File or folder not found"
 
-    if path.isdir(dirpath):
-        graphs = loadFromFolder(dirpath)
-    elif path.isfile(dirpath):     
-        graph = loadFromFile(dirpath)
-        graphs = [graph]
 
     if sys.argv[1] == "all":
         executeTheSuperFancyFunctionToCalculateMegaComplexGraphs(graphs, fileResultLock)
@@ -50,16 +46,43 @@ def main(args):
         executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartets(graphs, fileResultLock)
 
     if sys.argv[1] == "sw" or sys.argv[1] == "all-single":
+
+        if path.isdir(dirpath):
+            graphs = loadFromFolder(dirpath, False)
+        elif path.isfile(dirpath):     
+            graph = loadFromFile(dirpath, False)
+            graphs = [graph]
+
         print(col.HEADER + "STOER-WAGNER" + col.ENDC)
         for graph in graphs:
             res = StoerWagner().algorithm(graph)
             print(col.OKBLUE+ graph.datasetName, ' \t' + col.ENDC, res)
 
     if sys.argv[1] == "ks" or sys.argv[1] == "all-single": #TODO
+
+        if path.isdir(dirpath):
+            graphs = loadFromFolder(dirpath, True)
+        elif path.isfile(dirpath):     
+            graph = loadFromFile(dirpath, True)
+            graphs = [graph]
+
         print(col.HEADER + "KARGER-STEIN" + col.ENDC)
-        # for graph in graphs:
-        #     res = StoerWagner().algorithm(graph)
-        #     print(col.OKBLUE+ graph.datasetName, ' \t' + col.ENDC, res)
+        i = 1
+        for graph in graphs:
+            karger = KargerStein()
+            threshold_in_seconds = 7
+            #min_cut, k, k_min, discovery_time, total_time, n_repetitions, is_threshold_activated = karger.measurements(graph, threshold_in_seconds) #
+            min_cut, k, k_min, discovery_time, total_time, n_repetitions, is_threshold_activated = karger.measurements(graph)
+            print('Graph {}'.format(i))
+            print('\tMin-cut: {}'.format(min_cut))
+            print('\tNumero di ripetizioni totali (k): {}'.format(k))
+            print('\tIl min-cut è stato trovato all\'iterazione: {}'.format(k_min))
+            print('\tDiscovery time: {}ns ({}s)'.format(discovery_time, discovery_time / 1000000000))
+            print('\tTempo totale di esecuzione: {}ns ({}s)'.format(total_time, total_time / 1000000000))
+            print('\tNumero di ripetizioni: {}'.format(n_repetitions))
+            print('\tThreshold di {}s attivata: {}\n'.format(threshold_in_seconds, is_threshold_activated))
+
+            i+=1
 
   
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)

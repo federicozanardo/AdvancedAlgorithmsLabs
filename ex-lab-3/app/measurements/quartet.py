@@ -14,20 +14,19 @@ from time import perf_counter_ns
 from data_structures.max_heap import MaxHeap, Node
 from data_structures.graph import Graph
 from algorithms.stoerwagner import StoerWagner
+from algorithms.karger_stein import KargerStein
 from algorithms.utils import populateGraphFromFile as populate
 from algorithms.utils import loadFromFolder
 from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
+from algorithms.utils import loadData
 import sys
 from os import walk, path
 import time
-import concurrent.futures
-import multiprocessing
 
 
 """
 Composizione ed esecuzione dei quartetti a partire da più dataset
-
     graphs          =   grafi dei dataset da eseguire
 
 """
@@ -41,6 +40,8 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartetsFromDirp
     graphsAccumulator = []
     datasetNumberAccumulator = []
     foo = 0
+    
+    graphs = loadData(dirpath, False)
     
     # Compongo ed eseguo i quartetti
     for graph in graphs:
@@ -59,6 +60,34 @@ def executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartetsFromDirp
     # Eseguo l'ultimo quartetto
     if len(graphsAccumulator) != 0 :
         executeSingleQuartetMeasurement(output, "sw", graphsAccumulator, datasetNumberAccumulator)
+
+    # ======= QUARTET KARGER-STEIN ========
+    print("Executing quartet Karger-Stein...")
+    output = "./quartet_kargerstein_" + outputfilePostfix
+    datasetNumber = 1
+    graphsAccumulator = []
+    datasetNumberAccumulator = []
+    foo = 0
+    
+    graphs = loadData(dirpath, True)
+    
+    # Compongo ed eseguo i quartetti
+    for graph in graphs:
+        if foo == 4:
+            foo = 0
+            executeSingleQuartetMeasurement(output, "ks", graphsAccumulator, datasetNumberAccumulator)
+            graphsAccumulator = []
+            datasetNumberAccumulator = []
+            
+        if foo != 4:
+            datasetNumberAccumulator.append(datasetNumber)
+            graphsAccumulator.append(graph)
+            datasetNumber += 1
+            foo += 1
+
+    # Eseguo l'ultimo quartetto
+    if len(graphsAccumulator) != 0 :
+        executeSingleQuartetMeasurement(output, "ks", graphsAccumulator, datasetNumberAccumulator)
 
 
 """
@@ -125,23 +154,36 @@ def executeSingleQuartetMeasurement(outputfile, algoname, graphs, filenumbers):
         outFilenumbers += str(i) + " "
     outFilenumbers += ")"
 
-    outEdges = "( "
-    for graph in graphs:
-        outEdges = outEdges + str(len(graph.E)) + " "
-    outEdges += ")"
-
-    outAvgEdges = 0
-    for graph in graphs:
-        outAvgEdges += len(graph.E)
-    outAvgEdges /= 4
-
     if algoname == "sw":
+        outEdges = "( "
+        for graph in graphs:
+            outEdges = outEdges + str(len(graph.E)) + " "
+        outEdges += ")"
+
+        outAvgEdges = 0
+        for graph in graphs:
+            outAvgEdges += len(graph.E)
+        outAvgEdges /= 4
+
         file_object = open(outputfile, 'a')
-        file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\t" + str(executionTimes//4) + "\n")
+        file_object.write(str(len(graphs[0].V)) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\t" + str(executionTimes//4) + "\n")
         file_object.close()
 
     elif algoname == "ks":
-      pass
+        outEdges = "( "
+        for graph in graphs:
+            outEdges = outEdges + str(graph.n_edges) + " "
+        outEdges += ")"
+
+        outAvgEdges = 0
+        for graph in graphs:
+            outAvgEdges += graph.n_edges
+        outAvgEdges /= 4
+
+        file_object = open(outputfile, 'a')
+        file_object.write(str(graphs[0].n_vertices) + "\t" + outFilenumbers + "\t" + outEdges + "\t" + str(outAvgEdges) + "\t" + "{:.7f}".format(rightTime) + "\t" + "{:.7f}".format(rightTime/1000000000) + "\t" + str(executionTimes) + "\t" + str(executionTimes//4) + "\n")
+        file_object.close()
+
 
 
 """
@@ -154,12 +196,12 @@ Esecuzione di un singolo algoritmo in un grafo
 def executeAlgorithm(algoname, graph):
 
     if algoname == "sw":
-      kw = StoerWagner().algorithm(graph)
+        res = StoerWagner().algorithm(graph)
 
     elif algoname == "ks": #TODO
-        pass
+        res = KargerStein(graph).algorithm()
 
     else:
         pass
 
-    return kw
+    return res

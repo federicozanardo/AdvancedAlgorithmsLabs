@@ -2,7 +2,7 @@
 
 \subsection{Struttura dati per il grafo}
 
-Per comodità nell'implementazione abbiamo realizzato due diverse strutture dati per rappresentare un multigrafo; queste sono simili tra loro ma presentano alcune differenze. \\
+Per comodità nell'implementazione abbiamo realizzato due diverse strutture dati per rappresentare un multigrafo; queste sono simili tra loro ma presentano alcune differenze.
 
 \subsubsection{Struttura dati per Stoer-Wagner}
 Per quanto riguarda la struttura dati per l'esecuzione dell'algoritmo Stoer-Wagner, un oggetto \texttt{Graph} è rappresentato nel seguente modo:
@@ -31,7 +31,22 @@ Essendo l'oggetto in questione un multigrafo, la lista di adiacenza e la lista d
 \end{enumerate}
 
 \subsubsection{Struttura dati per Karger-Stein}
-%TODO
+La struttura dati per quanto riguarda l'algoritmo di Karger-Stein (\verb|KargerGraph|) contiene i seguenti campi:
+\begin{enumerate}
+  \item \verb|n_edges|: rappresenta il numero di lati del grafo;
+  \item \verb|n_vertices|: rappresenta il numero di vertici del grafo;
+  \item \verb|W|: rappresenta la \textit{matrice di adiacenza} del grafo;
+  \item \verb|D|: rappresenta il vettore dei \textit{gradi pesati} dei vertici del grafo (successivamente verrà illustrato 
+  il motivo dell'utilità di questa struttura).
+\end{enumerate}
+
+I metodi implementati per questa struttura dati sono:
+\begin{enumerate}
+  \item \verb|add_edge|: aggiunge un lato al grafo;
+  \item \verb|remove_edge|: rimuove un lato al grafo;
+  \item \verb|calculate_weighted_degrees_vertices|: permette di calcolare i gradi pesati dei vertici. Tali risultati vengono 
+  memorizzati in \verb|D|.
+\end{enumerate}
 
 \subsection{Stoer e Wagner}
 

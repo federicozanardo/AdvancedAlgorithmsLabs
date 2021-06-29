@@ -25,71 +25,116 @@ Nelle istanze più grandi, il tempo di calcolo necessario a completare tutte le 
 \textit{Misurate il discovery time dell'algoritmo di Karger e Stein sui grafi del dataset. Il discovery time è il momento (in secondi) in cui l'algoritmo trova per la prima volta il taglio di costo minimo.  Confrontate il discovery time con il tempo di esecuzione complessivo per ognuno dei grafi nel dataset.}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/karger_stein_confronto_discovery_time_total_time.png}
-	\caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
-	\label{fig:karger_stein_confronto_discovery_time_total_time}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/karger_stein_rapporto_discovery_time_total_time.png}
-	\caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo 
-	e il discovery time per ogni esecuzione.}
-	\label{fig:karger_stein_rapporto_discovery_time_total_time}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/karger_stein_confronto_discovery_time_total_time.png}
+		\caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
+		\label{fig:karger_stein_confronto_discovery_time_total_time}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/karger_stein_rapporto_discovery_time_total_time.png}
+		\caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo 
+		e il discovery time per ogni esecuzione.}
+		\label{fig:karger_stein_rapporto_discovery_time_total_time}
+	\end{subfigure}
+	\caption{Esecuzione dell'algoritmo di Karger-Stein senza una threshold sul tempo.}
+	\label{fig:karger_stein_discovery_time}
 \end{figure}
 
 I valori del grafico \ref{fig:karger_stein_rapporto_discovery_time_total_time} 
 esprimono la percentuale di tempo impiegato per trovare per la prima 
 volta il min-cut, rispetto al tempo totale di esecuzione dell'algoritmo.
-
-Dai grafici \ref{fig:karger_stein_confronto_discovery_time_total_time} 
-e \ref{fig:karger_stein_rapporto_discovery_time_total_time} è possibile 
-notare che per le istanze più piccole, il rapporto tra il discovery 
-time e il tempo totale di esecuzione è maggiore rispetto allo stesso 
-rapporto per le istanze più grandi.
-
-L'esecuzione dell'algoritmo con la threshold a 10 secondi impiega, in media, 
+Dai grafici è possibile notare che per le istanze più piccole, il rapporto 
+tra il discovery time e il tempo totale di esecuzione è maggiore rispetto 
+allo stesso rapporto per le istanze più grandi.
+L'esecuzione dell'algoritmo con la threshold a 10 secondi (grafici 
+\ref{fig:karger_stein_discovery_time_threshold_10s}) impiega, in media, 
 impiega un tempo maggiore per determinare il min-cut. È possibile notare che 
 l'esecuzione dell'algoritmo senza threshold impiega un tempo maggiore rispetto 
 alle esecuzioni con la threshold. Questo perchè le istanze più grandi richiedono 
 un tempo maggiore per poter determinare il min-cut. Tuttavia, l'esecuzione senza 
-threshold non ha prodotto errori rispetto al min-cut ottimo. Si illustrino i 
-risultati:
+threshold non ha prodotto errori rispetto al min-cut ottimo. Il tempo medio del 
+discovery time è:
+\begin{enumerate}
+	\item \textit{Senza threshold}: 4.5 secondi;
+	\item \textit{Threshold di 6 secondi}: 2.7 secondi;
+	\item \textit{Threshold di 10 secondi}: 3.1 secondi.
+\end{enumerate}
 
-Senza threshold: 4.5 secondi;
-Threshold di 6 secondi: 2.7 secondi;
-Threshold di 10 secondi: 3.1 secondi.
+Si illustri il discovery time in rapporto al tempo totale di esecuzione dell'algoritmo, in percentuale:
+\begin{enumerate}
+	\item \textit{Senza threshold}: 7.56\%;
+	\item \textit{Threshold di 6 secondi}: 38.42\%;
+	\item \textit{Threshold di 10 secondi}: 29.87\%.
+\end{enumerate}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold6/karger_stein_confronto_discovery_time_total_time_threshold_6s.png}
-	\caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
-	\label{fig:karger_stein_confronto_discovery_time_total_time_threshold_6s}
+	\begin{subfigure}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold6/karger_stein_confronto_discovery_time_total_time_threshold_6s.png}
+	  \caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
+	  \label{fig:karger_stein_confronto_discovery_time_total_time_threshold_6s}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold6/karger_stein_rapporto_discovery_time_total_time_threshold_6s.png}
+	  \caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo 
+	  e il discovery time per ogni esecuzione.}
+	  \label{fig:karger_stein_rapporto_discovery_time_total_time_threshold_6s}
+	\end{subfigure}
+	\caption{Esecuzione dell'algoritmo di Karger-Stein con una threshold sul tempo di 
+	6 secondi.}
+	\label{fig:karger_stein_discovery_time_threshold_6s}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold6/karger_stein_rapporto_discovery_time_total_time_threshold_6s.png}
-	\caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo 
-	e il discovery time per ogni esecuzione.}
-	\label{fig:karger_stein_rapporto_discovery_time_total_time_threshold_6s}
+	\begin{subfigure}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold10/karger_stein_confronto_discovery_time_total_time_threshold_10s.png}
+	  \caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
+	  \label{fig:karger_stein_confronto_discovery_time_total_time_threshold_10s}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold10/karger_stein_rapporto_discovery_time_total_time_threshold_10s.png}
+	  \caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo e il 
+	  discovery time per ogni esecuzione.}
+	  \label{fig:karger_stein_rapporto_discovery_time_total_time_threshold_10s}
+	\end{subfigure}
+	\caption{Esecuzione dell'algoritmo di Karger-Stein con una threshold sul tempo di 
+	10 secondi.}
+	\label{fig:karger_stein_discovery_time_threshold_10s}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold10/karger_stein_confronto_discovery_time_total_time_threshold_10s.png}
-	\caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
-	\label{fig:karger_stein_confronto_discovery_time_total_time_threshold_10s}
+	\begin{subfigure}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/confronto/karger_stein_confronto_discovery_time_total_time_with_thresholds.png}
+	  \caption{Confronto tra il tempo totale di esecuzione dell'algoritmo e il discovery time per ogni esecuzione.}
+	  \label{fig:confronto}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+	  \centering
+	  \includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/confronto/karger_stein_rapporto_discovery_time_total_time_with_thresholds.png}
+	  \caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo e il 
+	  discovery time per ogni esecuzione.}
+	  \label{fig:rapporto}
+	\end{subfigure}
+	\caption{Confronto tra le esecuzioni senza threshold, con una threshold sul tempo 
+	di 6 secondi e di 10 secondi.}
+	\label{fig:karger_stein_discovery_time_thresholds}
 \end{figure}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/discovery-time/threshold10/karger_stein_rapporto_discovery_time_total_time_threshold_10s.png}
-	\caption{Rapporto tra il tempo totale di esecuzione dell'algoritmo 
-	e il discovery time per ogni esecuzione.}
-	\label{fig:karger_stein_rapporto_discovery_time_total_time_threshold_10s}
-\end{figure}
+Dai grafici \ref{fig:karger_stein_discovery_time_thresholds} è possibile notare che 
+l'esecuzione dell'algoritmo senza una threshold sul tempo ha un discovery 
+time maggiore rispetto alle altre due esecuzioni. Questo è dovuto al fatto che per 
+istanze più grandi dei grafi, è necessario un tempo maggiore per poter determinare 
+il min-cut di tale istanza. Tuttavia, l'esecuzione senza threshold permette di avere 
+delle soluzioni più precise (in particolare, l'algoritmo ritorna per ogni istanza la 
+soluzione ottima). Osservando il grafo dei rapporti tra discovery time e tempo totale 
+di esecuzione dell'algoritmo, l'esecuzione senza la threshold ha dei rapporti che sono 
+molto inferiori rispetto alle altre due esecuzioni.
 
 \subsection{Domanda 4}
 \textit{Per ognuno dei grafi del dataset, riportate il costo del taglio minimo trovato dai due algoritmi. Per l'algoritmo di Karger e Stein, riportate l'errore relativo calcolato come $SoluzioneTrovata-SoluzioneOttima/SoluzioneOttima$, dove $SoluzioneOttima$ è la soluzione trovata dall'algoritmo deterministico, se esiste.}

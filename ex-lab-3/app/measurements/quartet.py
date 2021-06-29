@@ -6,22 +6,11 @@ di grafi composti dallo stesso numero di vertici
 
 """
 
-import argparse
-from random import randint
 import gc
 import math
-from time import perf_counter_ns
-from data_structures.max_heap import MaxHeap, Node
-from data_structures.graph import Graph
 from algorithms.stoerwagner import StoerWagner
 from algorithms.karger_stein import KargerStein
-from algorithms.utils import populateGraphFromFile as populate
-from algorithms.utils import loadFromFolder
-from algorithms.utils import loadFromFile
-from algorithms.utils import bcolors as col
 from algorithms.utils import loadData
-import sys
-from os import walk, path
 import time
 
 

@@ -1,6 +1,18 @@
 \subsection{Karger e Stein}
 
 \subsubsection{Introduzione}
+L'algoritmo di Karger-Stein è un algoritmo ricorsivo che ripete i 
+seguenti passi:
+\begin{enumerate}
+    \item Viene scelto a caso un lato;
+    \item Si \textit{contraggono} i due vertici relativi, eliminando tutti i lati incidenti su entrambi;
+    \item Si ripetono questi due passi finchè restano solo \textit{due} vertici;
+    \item Quando sono restati soltanto due vertici, si restituiscano i lati tra quei due vertici.
+\end{enumerate}
+
+Questo algoritmo funziona con una probabilità molto bassa. Tuttavia tale probabilità 
+può essere significativamente incrementata andando a ripetere questo processo molte 
+volte.
 
 \subsubsection{Implementazione}
 

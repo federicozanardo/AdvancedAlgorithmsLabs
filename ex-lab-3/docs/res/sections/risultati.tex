@@ -20,6 +20,107 @@ Come si può evincere dall'immagine, la complessità dell'algoritmo da noi imple
 \textit{Misurate i tempi di calcolo dell'algoritmo di Karger e Stein sui grafi del dataset, usando un numero di ripetizioni che garantisca una probabilità minore o uguale a $1/n$ di sbagliare. Mostrate i risultati con un grafico che mostri la variazione dei tempi di calcolo al variare del numero di vertici nel grafo. Confrontate i tempi misurati con la complessità asintotica dell'algoritmo. \\
 Nelle istanze più grandi, il tempo di calcolo necessario a completare tutte le iterazioni potrebbe risultare eccessivo. In questo caso utilizzate un timeout oppure abbassate il numero di ripetizioni per ottenere tempi di esecuzione ragionevoli.}
 
+\subsubsection{Analisi della complessità}
+
+Analogamente per quanto rigurada Stoer-Wagner, anche per Karger-Stein abbiamo 
+implementato il codice in Python per l'esecuzione dell'algoritmo su tutto il dataset 
+fornito. I risultati, che sono stati riportati in modo dettagliato con i relativi pesi 
+anche nella sezione appendice, sono riportati di seguito.
+Nel grafico \ref{fig:kargerstein} è riportata la complessità 
+computazionale teorica (in giallo) ed effettiva (in blu) per l'algoritmo di Karger e 
+Stein, con più esecuzioni dell'algoritmo. È possibile notare dall'immagine che la 
+complessità dell'algoritmo da noi implementato rimane al di sotto della complessità 
+teorica, pur mantenendo un andamento molto simile. In particolare, il tempo richiesto 
+per l'esecuzione dell'ultima istanza risulta essere molto simile al tempo previsto 
+dalla complessità teorica.
+
+Oltre alle ripetizioni necessarie per effettuare le misurazioni correttamente 
+(si veda \ref{guida_misurazioni}), l'algoritmo di Karger-Stein richiede che il 
+procedimento descritto precedentemente (si veda \ref{karger_stein_section}) venga 
+ripetuto un numero sufficiente di volte, tale per cui l'algoritmo ha una probabilità 
+minore o uguale a $\frac{1}{n}$ di sbagliare. Pertanto, il numero di ripetizioni che 
+soddisfa questo vincolo è pari a $log^{2}(n)$.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{res/images/single/karger-stein/complexity/karger_stein_complexity.png}
+	\caption{Complessità di Karger-Stein con \textit{k} esecuzioni ripetute per ogni quartetto di grafi con uguale numero di nodi.}
+	\label{fig:kargerstein}
+\end{figure}
+
+\subsubsection{Introduzione di una soglia sul tempo di esecuzione dell'algoritmo}
+
+È possibile notare che questo algoritmo impiega molto tempo per computare le istanze 
+che hanno un numero di vertici superiore a 250. Per questo motivo è stato 
+deciso di svolgere un'analisi riguardo la scelta di uno o più appositi valori come 
+soglia sul tempo di esecuzione dell'algoritmo. Per determinare tali valori sono stati 
+osservati i vari discovery time per le varie istanze. È stato possibile notare che 
+svolgendo una \textit{media aritmetica} dei discovery time, in media, l'algoritmo 
+impiega 4.5 secondi per determinare il min-cut (circa il 7.56\% del tempo totale 
+di esecuzione dell'algoritmo). Tuttavia, scegliere come \textit{threshold} questo 
+valore, poteva andare a penalizzare la qualità delle soluzioni per quanto riguarda 
+i grafi con un numero di vertici maggiore di 250. Quindi, si è proceduti nel calcolare 
+anche la media \textit{media ponderata} dei discovery time, ottenendo un valore pari a 
+circa 9 secondi. A seguito di questa analisi, sono state svolte due misurazioni: una 
+misurazione con una soglia impostata a 6 secondi sul tempo di esecuzione totale 
+dell'algoritmo, e una con una soglia di 10 secondi. Sono stati scelti dei valori 
+leggermente maggiori rispetto ai valori forniti dalle medie in quanto potevano 
+essere troppo stringenti per le istanze più grandi.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{res/images/single/karger-stein/karger_stein_istanze_superato_threshold_6s.png}
+	\caption{Numero di istanze che hanno superato la soglia di 6 secondi.}
+	\label{fig:karger_stein_istanze_superato_threshold_6s}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{res/images/single/karger-stein/karger_stein_istanze_superato_threshold_10s.png}
+	\caption{Numero di istanze che hanno superato la soglia di 10 secondi.}
+	\label{fig:karger_stein_istanze_superato_threshold_10s}
+\end{figure}
+
+Nelle risposte alle successive domande, pertanto, sarà possibile vedere il confronto 
+tra tre possibili esecuzioni dell'algoritmo: un'esecuzione senza alcuna soglia sul 
+tempo, un'esecuzione con una soglia di 6 secondi e un'esecuzione con una soglia di 10 
+secondi.
+
+\subsubsection{Altre analisi}
+
+Un'altra analisi che è stata effettuata, ma che non abbiamo utilizzato per effettuare 
+le successive analisi, riguarda il numero di iterazioni minime in cui l'algoritmo  
+riesce a determinare il min-cut. È stato possibile notare che rispetto alle $log^{2}(n)$ 
+ripetizioni che l'algoritmo necessita per l'\textit{alta probabilità}, l'algoritmo 
+era in grado di determinare il min-cut in numero di iterazioni molto minore rispetto a 
+$log^{2}(n)$. Analogamente per quanto riguarda i discovery time, facendo la media 
+aritmetica del numero di iterazioni minime si è ottenuto un valore pari a 2.6 
+(circa il 7.39\% delle ripetizioni totali), mentre facendo la media ponderata si è 
+ottenuto un valore pari a 2.2. La differenza non è sostanziale, pertanto è stato 
+deciso di focalizzare l'attenzione nell'analisi dell'algoritmo introducendo delle 
+soglie sul tempo di esecuzione. Si illustrino dei grafici inerenti all'analisi appena 
+descritta:
+
+\begin{figure}[H]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{res/images/single/karger-stein/iterazioni/karger_stein_confronto_numero_iterazioni.png}
+		\caption{Confronto tra il numero di iterazioni minime in cui l'algoritmo è 
+		riuscito a determinare il min-cut e il numero di iterazioni totali.}
+		\label{fig:karger_stein_confronto_numero_iterazioni}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=1\textwidth]{res/images/single/karger-stein/iterazioni/karger_stein_rapporto_numero_iterazioni.png}
+		\caption{Rapporto tra il numero di iterazioni minime in cui l'algoritmo è 
+		riuscito a determinare il min-cut e il numero di iterazioni totali.}
+		\label{fig:karger_stein_rapporto_numero_iterazioni}
+	\end{subfigure}
+	\caption{Analisi del numero di iterazioni minime in cui l'algoritmo riesce a 
+	determinare il min-cut.}
+	\label{fig:karger_stein_numero_iterazioni}
+\end{figure}
+
 \subsection{Domanda 3}
 \textit{Misurate il discovery time dell'algoritmo di Karger e Stein sui grafi del dataset. Il discovery time è il momento (in secondi) in cui l'algoritmo trova per la prima volta il taglio di costo minimo.  Confrontate il discovery time con il tempo di esecuzione complessivo per ognuno dei grafi nel dataset.}
 
@@ -56,17 +157,18 @@ un tempo maggiore per poter determinare il min-cut. Tuttavia, l'esecuzione senza
 threshold non ha prodotto errori rispetto al min-cut ottimo. Il tempo medio del 
 discovery time è:
 \begin{enumerate}
-	\item \textit{Senza threshold}: 4.5 secondi;
-	\item \textit{Threshold di 6 secondi}: 2.7 secondi;
-	\item \textit{Threshold di 10 secondi}: 3.1 secondi.
+	\item \textit{Senza threshold}: 4.5 secondi (7.56\% del tempo totale di 
+	esecuzione dell'algoritmo);
+	\item \textit{Threshold di 6 secondi}: 2.7 secondi (38.42\% del tempo totale di 
+	esecuzione dell'algoritmo);
+	\item \textit{Threshold di 10 secondi}: 3.1 secondi (29.87\% del tempo totale di 
+	esecuzione dell'algoritmo).
 \end{enumerate}
 
-Si illustri il discovery time in rapporto al tempo totale di esecuzione dell'algoritmo, in percentuale:
-\begin{enumerate}
-	\item \textit{Senza threshold}: 7.56\%;
-	\item \textit{Threshold di 6 secondi}: 38.42\%;
-	\item \textit{Threshold di 10 secondi}: 29.87\%.
-\end{enumerate}
+Di seguito si illustrino i grafici inerenti ai discovery time con le diverse soglie 
+(grafici \ref{fig:karger_stein_discovery_time_threshold_6s}, 
+\ref{fig:karger_stein_discovery_time_threshold_10s}, 
+\ref{fig:karger_stein_discovery_time_thresholds}):
 
 \begin{figure}[H]
 	\begin{subfigure}{.5\textwidth}
@@ -133,23 +235,32 @@ il min-cut di tale istanza. Tuttavia, l'esecuzione senza threshold permette di a
 delle soluzioni più precise (in particolare, l'algoritmo ritorna per ogni istanza la 
 soluzione ottima). Osservando il grafo dei rapporti tra discovery time e tempo totale 
 di esecuzione dell'algoritmo, l'esecuzione senza la threshold ha dei rapporti che sono 
-molto inferiori rispetto alle altre due esecuzioni.
+molto inferiori rispetto alle altre due esecuzioni. Le esecuzioni con una soglia 
+hanno invece dei rapporti che sono più grandi rispetto all'esecuzione senza threshold 
+e questo è dovuto proprio al fatto che avendo un limite superiore al tempo di 
+esecuzione, il rapporto tra il discover time e il tempo totale di esecuzione risulta  
+essere più grande. In particolare, è possibile osservare dal grafico 
+\ref{fig:karger_stein_confronto_discovery_time_total_time_threshold_6s} che 
+nell'ultima istanza (il grafo 56) il discovery time (approssimativamente) combacia 
+con il tempo totale di esecuzione dell'algoritmo. In questo caso, l'algoritmo ha 
+restituito una soluzione subottimale (min-cut resistuito: 761, errore del 30.31\% 
+rispetto alla soluzione ottima, si veda la tabella \ref{tabella_min_cut}): 
+probabilmente, se la soglia fosse stata impostata ad un valore maggiore, l'algoritmo 
+sarebbe stato in grado di restituire la soluzione ottima.
 
 \subsection{Domanda 4}
 \textit{Per ognuno dei grafi del dataset, riportate il costo del taglio minimo trovato dai due algoritmi. Per l'algoritmo di Karger e Stein, riportate l'errore relativo calcolato come $SoluzioneTrovata-SoluzioneOttima/SoluzioneOttima$, dove $SoluzioneOttima$ è la soluzione trovata dall'algoritmo deterministico, se esiste.}
 
 L'esecuzione dell'algoritmo di Karger-Stein senza la threshold sul 
-tempo di esecuzione ha sempre restiuito la soluzione ottima. Invece, 
-imponendo una threshold sul tempo esecuzione è possibile notare dal 
-grafico \ref{fig:karger_stein_tassi_di_errore} che l'algoritmo 
-comincia a restituire delle soluzioni con una maggiore imprecisione 
-a mano a mano che la dimensione dell'istanza aumenta.
-
-Nel grafico è possibile notare che aumentando la threshold 
-(da 6 secondi a 10 secondi), l'algoritmo produce delle soluzioni più 
-precise, ovvero, il tasso di errore diminuisce. In particolare, 
-l'algoritmo diventa più preciso a mano a mano che la dimensione delle 
-istanze aumenta.
+tempo di esecuzione ha sempre restiuito la soluzione ottima. 
+Imponendo invece una threshold sul tempo di esecuzione è possibile 
+notare dal grafico \ref{fig:karger_stein_tassi_di_errore} che 
+l'algoritmo comincia a restituire delle soluzioni con una maggiore 
+imprecisione, a mano a mano che la dimensione dell'istanza aumenta. 
+Si può notare che aumentando la threshold (da 6 secondi a 10 secondi), 
+l'algoritmo restituisce delle soluzioni più precise, ovvero, il tasso di 
+errore diminuisce. In particolare, l'algoritmo è più preciso per le 
+istanze che hanno un numero di vertici alto.
 
 \begin{figure}[H]
 	\centering
@@ -159,6 +270,7 @@ istanze aumenta.
 	\label{fig:karger_stein_tassi_di_errore}
 \end{figure}
 
+\label{tabella_min_cut}
 % Please add the following required packages to your document preamble:
 % \usepackage{longtable}
 % Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
@@ -228,4 +340,4 @@ istanze aumenta.
 \textit{Commentate i risultati che avete ottenuto: come si comportano gli algoritmi rispetto alle varie istanze? C'è un algoritmo che riesce sempre a fare meglio degli altri? Quale dei due algoritmi che avete implementato è più efficiente? Quale il più preciso nei risultati?}
 
 I risultati ottenuti dai due algoritmi sono perfettamente in linea con quanto ci aspettavamo dal punto di vista della complessità teorica di ognuno. L'andamento delle varie istanze è in linea con la complessità teorica, visto che all'aumentare del numero di nodi aumenta in modo corrispondente il tempo di esecuzione dell'algoritmo da noi implementato. 
-Analizzando i tempi di esecuzione dei due algoritmi possiamo affermare che l'algoritmo di Stoer e Wagner risulta essere nettamente più veloce rispetto a quello di Karger e Stein, con un tempo massimo nell'istanza più grande pari a poco più di un secondo (1.12 s per la precisione), mentre il secondo impiega più di 10 minuti (722.44 s) con le ripetizioni w.h.p. Quello di Stoer e Wagner è dunque l'algoritmo migliore su tutti i fronti (nello specifico, tempo computazionale e risultati ottenuti). Confrontandolo con Karger e Stein a livello di efficienza e precisione possiamo vedere che risultati riportati sono corretti senza soglie di tempo impostate, mentre impostando delle soglie di 6 secondi e 10 secondi l'algoritmo ha un tasso di errore minore con soglie maggiori. Questo è triviale, essendo un algoritmo randomico w.h.p., e come ulteriore analisi possiamo vedere anche che quando si arriva a una grandezza pari a 250 nodi gli errori cominciano a manifestarsi, sebbene il tempo di esecuzioni sia comunque superiore (anche in questo caso) rispetto a Stoer e Wagner. 
+Analizzando i tempi di esecuzione dei due algoritmi possiamo affermare che l'algoritmo di Stoer e Wagner risulta essere nettamente più veloce rispetto a quello di Karger e Stein, con un tempo massimo nell'istanza più grande pari a poco più di un secondo (1.12 s per la precisione), mentre il secondo impiega più di 10 minuti (722.44 s) con le ripetizioni w.h.p. Quello di Stoer e Wagner è dunque l'algoritmo migliore su tutti i fronti (nello specifico, tempo computazionale e risultati ottenuti). Confrontandolo con Karger e Stein a livello di efficienza e precisione possiamo vedere che i risultati riportati sono corretti senza soglie di tempo impostate, mentre impostando delle soglie di 6 secondi e 10 secondi l'algoritmo ha un tasso di errore minore con soglie maggiori. Questo è triviale, essendo un algoritmo randomico w.h.p., e come ulteriore analisi possiamo vedere anche che quando si arriva a una grandezza pari a 250 nodi gli errori cominciano a manifestarsi, sebbene il tempo di esecuzioni sia comunque superiore (anche in questo caso) rispetto a Stoer e Wagner. 

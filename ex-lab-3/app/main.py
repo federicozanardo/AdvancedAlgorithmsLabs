@@ -12,10 +12,6 @@ __version__ = "1.0.0"
 __license__ = "Unlicense"
 
 import argparse
-from random import randint
-from time import perf_counter_ns
-from algorithms.utils import loadFromFolder
-from algorithms.utils import loadFromFile
 from algorithms.utils import bcolors as col
 from algorithms.utils import loadData
 from measurements.single import executeTheSuperFancyFunctionToCalculateMegaComplexGraphsFromDirpath
@@ -23,14 +19,12 @@ from measurements.quartet import executeOneOfTheMostAdvancedFunctionInHumanHisto
 from algorithms.stoerwagner import StoerWagner
 from algorithms.karger_stein import KargerStein
 import sys
-from os import walk, path
+from os import path
 import time
-import multiprocessing
 
 def main(args):
 
     start = time.time()  # Timer di partenza del programma
-    fileResultLock = multiprocessing.Lock() # Accesso condiviso per una eventuale implementazione con multithreading
     
     # Recupero il path in input e salvo i grafi individuati
 
@@ -54,7 +48,7 @@ def main(args):
         print(col.HEADER + "STOER-WAGNER" + col.ENDC)
         for graph in graphs:
             res = StoerWagner().algorithm(graph)
-            print(col.OKBLUE+ graph.datasetName, ' \t' + col.ENDC, res)
+            print(col.OKBLUE+ graph.datasetName, ' \t' + col.ENDC, 'Min-cut: ' + col.ENDC, res)
 
     if sys.argv[1] == "ks" or sys.argv[1] == "all-single":
 

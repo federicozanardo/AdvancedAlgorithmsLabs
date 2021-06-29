@@ -112,6 +112,9 @@ Poiché la ricerca del nodo che massimizza w(A,{v}) può essere un'operazione co
     return (V-{t},{t}), s, t
 \end{verbatim}
 
+La complessità dell'algoritmo è fortemente legata alla struttura dati che viene utilizzata. La funzione \texttt{stMinCut}, infatti, ha complessità $O(mlogn)$ se implementata tramite \textit{MaxHeap} e $O(m+nlogn)$ se implementata tramite \textit{Fibonacci Heap}. \\
+Di conseguenza la funzione \texttt{GlobalMinCut}, e quindi l'algoritmo, ha complessità $O(mnlogn)$ se implementato tramite \textit{MaxHeap} e $O(mn+n^2 logn)$ se implementato tramite \textit{Fibonacci Heap}. Nel caso specifico della nostra implementazione, avendo usato la struttura dati \textit{MaxHeap}, ci attendiamo che la complessità teorica sia $O(mnlogn)$.
+
 \subsubsection{Implementazione}
 
 Per implementare l'algoritmo Stoer e Wagner in Python abbiamo realizzato una classe denominata \texttt{StoerWagner} che definisce una serie di metodi per la corretta esecuzione dell'algoritmo.

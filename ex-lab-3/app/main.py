@@ -38,10 +38,10 @@ def main(args):
         executeTheSuperFancyFunctionToCalculateMegaComplexGraphsFromDirpath(dirpath)
 
 
-    if sys.argv[1] == "all-quartet":
+    elif sys.argv[1] == "all-quartet":
         executeOneOfTheMostAdvancedFunctionInHumanHistoryToCalculateQuartetsFromDirpath(dirpath)
 
-    if sys.argv[1] == "sw" or sys.argv[1] == "all-single":
+    elif sys.argv[1] == "sw" or sys.argv[1] == "all-single":
 
         graphs = loadData(dirpath, False)
 
@@ -50,7 +50,7 @@ def main(args):
             res = StoerWagner().algorithm(graph)
             print(col.OKBLUE+ graph.datasetName, ' \t' + col.ENDC, 'Min-cut: ' + col.ENDC, res)
 
-    if sys.argv[1] == "ks" or sys.argv[1] == "all-single":
+    elif sys.argv[1] == "ks" or sys.argv[1] == "all-single":
 
         graphs = loadData(dirpath, True)
 
@@ -69,6 +69,9 @@ def main(args):
             print('\tNumero di ripetizioni: {}'.format(n_repetitions))
             print('\tThreshold di {}s attivata: {}\n'.format(threshold_in_seconds, is_threshold_activated))
             i+=1
+    else:
+        print("\n\nWhen life gives you ", col.HEADER + sys.argv[1] + col.ENDC, ", don't run min-cut algorithms! \nMake life take ",col.HEADER + sys.argv[1] + col.ENDC," back! Get mad! I don't want your ", col.HEADER + sys.argv[1] + col.ENDC,"! \nWhat am I supposed to do with this? Demand to see life's manager! \nOr choose between <all-single/all/all-quartet/sw/ks>. [Portal 2]\n\n")
+
 
   
     print(">" + col.OKGREEN + " Total execution time: " + col.HEADER + str(round(time.time()-start, 8)) + "s" + col.ENDC)
@@ -77,7 +80,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     # Required positional arguments
-    parser.add_argument("<algo type>", help="Tipo di algoritmo <all/all-single/sw/ks>")
+    parser.add_argument("<algo type>", help="Tipo di algoritmo <all-single/all/all-quartet/sw/ks>")
     parser.add_argument("<dataset path>", help="Posizione del singolo file o della cartella con i dataset")
 
     parser.add_argument(

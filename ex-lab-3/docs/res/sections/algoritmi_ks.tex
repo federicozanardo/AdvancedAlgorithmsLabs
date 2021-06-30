@@ -1,19 +1,179 @@
 \subsection{Karger e Stein}
 \label{karger_stein_section}
 
-\subsubsection{Introduzione}
-L'algoritmo di Karger-Stein è un algoritmo ricorsivo che ripete i 
-seguenti passi:
+\subsubsection{Introduzione all'algoritmo di Karger}
+I passi svolti dall'algoritmo di Karger sono:
 \begin{enumerate}
     \item Viene scelto a caso un lato;
-    \item Si \textit{contraggono} i due vertici relativi, eliminando tutti i lati incidenti su entrambi;
+    \item Si \textit{contraggono} (si veda \ref{definizione_contrazione}) i due vertici 
+    relativi, eliminando tutti i lati incidenti su entrambi;
     \item Si ripetono questi due passi finchè restano solo \textit{due} vertici;
-    \item Quando sono restati soltanto due vertici, si restituiscano i lati tra quei due vertici.
+    \item Quando sono rimasti soltanto due vertici, si restituiscano i lati che  
+    connettono i due vertici.
 \end{enumerate}
 
+\subsubsection{Introduzione all'algoritmo di Karger-Stein}
+L'algoritmo di Karger-Stein è un algoritmo randomizzato ricorsivo che fa parte della 
+categoria di algoritmi Monte Carlo. La versione di questo algoritmo è in grado di 
+offrire delle prestazioni migliori rispetto all'algoritmo di Karger e può essere 
+applicato per grafi pesati (si veda la descrizione del problema 
+\ref{descrizione_min_cut}). Per fare ciò, l'operazione di \verb|full_contraction| 
+deve essere ridefinita, in modo tale che:
+\begin{enumerate}
+    \item Deve essere scelto un lato con probabilità proporzionale al peso del lato 
+    \item stesso;
+    \item Sia possibile scegliere il lato da contrarre in tempo lineare;
+    \item Effettuare la contrazione in tempo lineare.
+\end{enumerate}
+
+Riprendendo quanto illustrato precedentemente (si veda 
+\ref{struttura_dati_karger_stein}), la struttura dati \verb|KargeGraph| 
+include al suo interno altre due strutture dati:
+\begin{enumerate}
+    \item La matrice di adiacenza \textit{pesata} \verb|W|
+    $n \times n$, tale che: 
+    \[
+        W[u,v] = w(u,v) \textnormal{ se } (u,v) \in \mathcal{E} 
+        \textnormal{, altrimenti } 0
+    \]
+    \item Il vettore dei \textbf{gradi pesati} dei vertici:
+    \[
+        D[u] = \sum_{v \in \mathcal{V}} W[u,v]
+    \]
+\end{enumerate}
+
+La procedura di \verb|full_contraction| viene scomposta in due fasi: 
+nella prima fase viene determinato il lato e successivamente avviene la 
+contrazione.
+
 Questo algoritmo funziona con una probabilità molto bassa. Tuttavia tale probabilità 
-può essere significativamente incrementata andando a ripetere questo processo molte 
-volte.
+può essere significativamente incrementata andando a ripetere questo processo un certo 
+numero di volte.
+
+L'algoritmo di Karger-Stein è composto dalle seguenti fasi:
+\begin{enumerate}
+    \item \textbf{Random select}
+    \item \textbf{Edge select}
+    \item \textbf{Contract edge}
+    \item \textbf{Contract}
+    \item \textbf{Recursive contract}
+\end{enumerate}
+
+\subsubsection*{Random select}
+Si vuole scegliere un lato con una probabilità 
+proporzionale al peso del lato stesso. Per fare ciò, si introducono i 
+\textbf{pesi cumulativi}. Dati $m$ lati $e_1, e_2, \cdots , e_m$ di peso 
+$w_1, w_2, \cdots , w_m$, i pesi cumulativi sono così definiti:
+\[
+    C[k] = \sum_{i = 1}^{k} w_i
+\]
+ovvero, alla posizione $k$ del \textit{vettore dei pesi cumulativi} $C$, si avrà 
+la somma dei pesi dei primi $k$ lati. Quindi, in $C[m]$ si avrà la somma dei pesi 
+di tutti i lati del grafo $\mathcal{G}$. A questo punto:
+\begin{enumerate}
+    \item Si determina un valore intero $0 \le r \le C[m]$ con 
+    \textbf{probabilità uniforme};
+    \item \label{scelta_lato} Si utilizza la \textit{ricerca binaria} per 
+    determinare il lato $e_i$ tale che $C[i - 1] \le r \le C[i]$:
+    \[
+        Pr[e_i \textnormal{ viene scelto}] = Pr[C[i - 1] \le r \le C[i]] = \frac{C[i] - C[i - 1]}{C[m]} = \frac{w(e_i)}{\sum_{e \in \mathcal{E}} w(e)}
+    \]
+    quindi, la probabilità è il peso del lato diviso la somma dei pesi totali del 
+    grafo $\mathcal{G}$. Di conseguenza, è proporzionale al peso del lato $w(e_i)$.
+\end{enumerate}
+L'input di questa procedura può essere un \textit{qualsiasi} vettore di pesi 
+cumulativi, non necessariamente di lati.
+
+Dal punto di vista computazionale:
+\begin{enumerate}
+    \item Costruzione del vettore $C$: $\mathcal{O}(m)$;
+    \item Scelta del valore $r$: $\mathcal{O}(1)$;
+    \item Determinare il lato $e_i$ con la ricerca binaria in $C$: 
+    $\mathcal{O}(log(m))$.
+\end{enumerate}
+Quindi, la complessità totale di questa procedura è $\mathcal{O}(m)$. Nel caso 
+peggiore, ovvero, quando il grafo è \textit{denso}, si ha $m \le \mathcal{O}(n^2)$. 
+Di conseguenza la complessità di questa procedura nel caso di un grafo denso è di 
+$\mathcal{O}(n^2)$. Questo risulta essere un problema, in quanto andrebbe ad 
+incrementare significativamente la complessità totale dell'algoritmo. Per tale 
+motivo, al posto di determinare il lato, come definito al punto \ref{scelta_lato}, 
+si vuole determinare la posizione del valore $r$ nel vettore $C$.
+
+\subsubsection*{Edge select}
+Per i motivi espressi al punto 
+precedente, tramite la procedura \verb|random_select| si andrà a determinare il 
+vertice $u$ di partenza e poi il vertice $v$ di arrivo, in modo che la probabilità 
+di scegliere un lato sia proporzionale al peso del lato stesso. La procedura 
+\verb|edge_select| prende in input \verb|W| e il vettore dei gradi pesati dei 
+vertici \verb|D| e svolge le seguenti operazioni:
+\begin{enumerate}
+    \item Si sceglie un vertice $u$ con una probabilità proporzionale a $D[u]$:
+    \begin{enumerate}
+        \item Si costruisce il vettore dei pesi cumulativi di $D[u]$;
+        \item Viene chiamata la procedura \verb|random_select| per scegliere il 
+        primo vertice;
+    \end{enumerate}
+    \item Si sceglie un vertice $v$ con una probabilità proporzionale a $W[u,v]$:
+    \begin{enumerate}
+        \item Si costruisce il vettore dei pesi cumulativi di $W[u,v]$;
+        \item Viene chiamata la procedura \verb|random_select| per scegliere il 
+        secondo vertice;
+    \end{enumerate}
+    \item Si ritorna il lato $(u,v)$.
+\end{enumerate}
+La complessità di questa procdeura è $\mathcal{O}(n)$ in quanto $D$ e $W[u,v]$ 
+hanno una dimensione pari a $\mathcal{O}(n)$ e di conseguenza \verb|random_select| 
+opererà in $\mathcal{O}(n)$ in entrambi i casi (si ricordi che \verb|W| è 
+$n \times n$). Così facendo, la procedura non ha una dipendenza quadratica legata 
+al numero di lati del grafo $\mathcal{G}$, ma ha una dipendenza lineare legata al 
+numero di vertici del grafo $\mathcal{G}$.
+
+\[
+    Pr[(u,v) \textnormal{ scelto}] = Pr[u \textnormal{ scelto}] \cdot 
+    Pr[v \textnormal{ scelto} | u] + Pr[v \textnormal{ scelto}] \cdot 
+    Pr[u \textnormal{ scelto} | v]
+\]
+\[
+    = \frac{D[u]}{\sum_v D[v]} \cdot \frac{W[u,v]}{D[u]} + \frac{D[v]}{\sum_v D[v]} 
+    \cdot \frac{W[v,u]}{D[v]} =
+    \frac{2 \cdot W[u,v]}{\sum_v D[v]} \textnormal{ ed è proporzionale al peso del lato } W[u,v]
+\]
+
+\subsubsection*{Contract edge}
+Sulla matrice \verb|W| si va 
+ad azzerare la riga e la colonna corrispondente al vertice $v$ (che verrà 
+contratto). Azzerare $v$ significa \textit{eliminare} il vertice dal grafo. Si va 
+ad aggiornare conseguentemente anche la matrice \verb|W| in modo da avere soltanto 
+i pesi sulla matrice che corrispondono ai vertici restanti dopo la contrazione. 
+Si illustra di seguito lo pseudo-codice:
+\begin{verbatim}
+    function contract_edge(u, v)
+        D[u] = D[u] + D[v] - 2W[u,v]
+        D[v] = 0
+        W[u,v] = W[v,u] = 0
+        for w in V, eccetto u e v do
+            W[u,w] = W[u,w] + W[v,w]
+            W[w,u] = W[w,u] + W[w,v]
+            W[v,w] = W[w,v] = 0
+\end{verbatim}
+Questa procedura opera in tempo $\mathcal{O}(n)$.
+
+\subsubsection*{Contract}
+Si definisce la procedura di contrazione che opera in 
+$\mathcal{O}(n^2)$. Questa procedura ritorna una contrazione di $k$ vertici del 
+grafo $\mathcal{G}$ rappresentato con la matrice \verb|W| ed il vettore \verb|D|.
+Si illustra di seguito lo pseudo-codice:
+\begin{verbatim}
+    function contract(G = (D,W), k)
+        n = numero di vertici in G
+        for i = 1 to n - k do
+            (u,v) = edge_select(D,W)
+            contract_edge(u,v)
+        return D,W
+\end{verbatim}
+
+\subsubsection*{Recursive contract}
+
 
 \subsubsection{Implementazione}
 

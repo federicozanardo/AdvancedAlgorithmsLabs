@@ -2,28 +2,27 @@
 \label{karger_stein_section}
 
 \subsubsection{Introduzione all'algoritmo di Karger-Stein}
-Prima di spiegare l'algoritmo di Karger-Stein, si introduca la sua versione naive: 
+Prima di spiegare l'algoritmo di Karger-Stein, introduciamo la sua versione naive: 
 l'algoritmo di Karger. Questo algoritmo non può essere applicato per grafi pesati 
 e ha una complessità $\mathcal{O}(n^4 \cdot log(n))$. I passi svolti dall'algoritmo 
 di Karger sono:
 \begin{enumerate}
     \item Viene scelto a caso un lato;
-    \item Si \textit{contraggono} (si veda \ref{definizione_contrazione}) i due vertici 
+    \item Si \textit{contraggono} (si veda \S \ref{definizione_contrazione}) i due vertici 
     relativi, eliminando tutti i lati incidenti su entrambi. In questo modo l'algoritmo 
     è in grado di determinare un taglio minimo con probabilità maggiore o uguale a 
     $\frac{2}{n^2}$. Queste operazioni vengono effettuate da una procedura chiamata 
     \verb|full_contraction|;
     \item Si ripetono questi due passi finchè restano solo \textit{due} vertici;
-    \item Quando sono rimasti soltanto due vertici, si restituiscano i lati che  
+    \item Quando sono rimasti soltanto due vertici, si restituiscono i lati che  
     connettono i due vertici.
 \end{enumerate}
-Andando a ripetere la procedura \verb|full_contraction|, la probabilità di errore è 
-minore o uguale a $\frac{1}{n}$.
+Andando a ripetere la procedura \verb|full_contraction| per $n^2 \cdot log(n)$ volte, la probabilità di errore è minore o uguale a $\frac{1}{n}$.
 
 L'algoritmo di Karger-Stein è un algoritmo randomizzato ricorsivo che fa parte della 
 categoria di algoritmi Monte Carlo. La versione di questo algoritmo è in grado di 
 offrire delle prestazioni migliori rispetto all'algoritmo di Karger e può essere 
-applicato per grafi pesati (si veda la descrizione del problema 
+applicato per grafi pesati (si veda la descrizione del problema \S
 \ref{descrizione_min_cut}). Per fare ciò, l'operazione di \verb|full_contraction| 
 deve essere ridefinita, in modo tale che:
 \begin{enumerate}
@@ -33,17 +32,17 @@ deve essere ridefinita, in modo tale che:
     \item Effettuare la contrazione in tempo lineare.
 \end{enumerate}
 
-Riprendendo quanto illustrato precedentemente (si veda 
-\ref{struttura_dati_karger_stein}), la struttura dati \verb|KargeGraph| 
+Riprendendo quanto illustrato precedentemente (si veda \S
+\ref{struttura_dati_karger_stein}), la struttura dati \verb|KargerGraph| 
 include al suo interno altre due strutture dati:
 \begin{enumerate}
-    \item La matrice di adiacenza \textit{pesata} \verb|W|
+    \item La matrice di adiacenza \textit{pesata} \verb|W| di dimensione 
     $n \times n$, tale che: 
     \[
         W[u,v] = w(u,v) \textnormal{ se } (u,v) \in \mathcal{E} 
         \textnormal{, altrimenti } 0
     \]
-    \item Il vettore dei \textbf{gradi pesati} dei vertici:
+    \item Il vettore dei \textbf{gradi pesati} dei vertici \verb|D|:
     \[
         D[u] = \sum_{v \in \mathcal{V}} W[u,v]
     \]
@@ -52,12 +51,11 @@ include al suo interno altre due strutture dati:
 La procedura di \verb|full_contraction| viene scomposta in due fasi: 
 nella prima fase viene determinato il lato e successivamente avviene la 
 contrazione.
-
-Questo algoritmo funziona con una probabilità molto bassa. Tuttavia tale probabilità 
+\\ Questo algoritmo funziona con una probabilità molto bassa. Tuttavia, tale probabilità 
 può essere significativamente incrementata andando a ripetere questo processo un certo 
 numero di volte.
 
-L'algoritmo di Karger-Stein è composto dalle seguenti fasi:
+\noindent L'algoritmo di Karger-Stein è composto dalle seguenti fasi:
 \begin{enumerate}
     \item \textbf{Random select}
     \item \textbf{Edge select}
@@ -81,7 +79,8 @@ di tutti i lati del grafo $\mathcal{G}$. A questo punto:
     \item Si determina un valore intero $0 \le r \le C[m]$ con 
     \textbf{probabilità uniforme};
     \item \label{scelta_lato} Si utilizza la \textit{ricerca binaria} per 
-    determinare il lato $e_i$ tale che $C[i - 1] \le r \le C[i]$:
+    determinare il lato $e_i$ tale che $C[i - 1] \le r \le C[i]$. La probabilità 
+    che il lato $e_i$ venga scelto è pari a:
     \[
         Pr[e_i \textnormal{ viene scelto}] = Pr[C[i - 1] \le r \le C[i]] = \frac{C[i] - C[i - 1]}{C[m]} = \frac{w(e_i)}{\sum_{e \in \mathcal{E}} w(e)}
     \]
@@ -89,9 +88,7 @@ di tutti i lati del grafo $\mathcal{G}$. A questo punto:
     grafo $\mathcal{G}$. Di conseguenza, è proporzionale al peso del lato $w(e_i)$.
 \end{enumerate}
 L'input di questa procedura può essere un \textit{qualsiasi} vettore di pesi 
-cumulativi, non necessariamente di lati.
-
-Dal punto di vista computazionale:
+cumulativi, non necessariamente di lati. Inoltre, dal punto di vista computazionale:
 \begin{enumerate}
     \item Costruzione del vettore $C$: $\mathcal{O}(m)$;
     \item Scelta del valore $r$: $\mathcal{O}(1)$;
@@ -101,7 +98,7 @@ Dal punto di vista computazionale:
 Quindi, la complessità totale di questa procedura è $\mathcal{O}(m)$. Nel caso 
 peggiore, ovvero, quando il grafo è \textit{denso}, si ha $m \le \mathcal{O}(n^2)$. 
 Di conseguenza la complessità di questa procedura nel caso di un grafo denso è di 
-$\mathcal{O}(n^2)$. Questo risulta essere un problema, in quanto andrebbe ad 
+$\mathcal{O}(n^2)$. Questo risulta essere un problema, in quanto andrebbe a 
 incrementare significativamente la complessità totale dell'algoritmo. Per tale 
 motivo, al posto di determinare il lato, come definito al punto \ref{scelta_lato}, 
 si vuole determinare la posizione del valore $r$ nel vettore $C$.
@@ -122,13 +119,13 @@ vertici \verb|D| e svolge le seguenti operazioni:
     \end{enumerate}
     \item Si sceglie un vertice $v$ con una probabilità proporzionale a $W[u,v]$:
     \begin{enumerate}
-        \item Si costruisce il vettore dei pesi cumulativi di $W[u,v]$;
+        \item Si costruisce il vettore dei pesi cumulativi di $W[u]$;
         \item Viene chiamata la procedura \verb|random_select| per scegliere il 
         secondo vertice;
     \end{enumerate}
     \item Si ritorna il lato $(u,v)$.
 \end{enumerate}
-La complessità di questa procdeura è $\mathcal{O}(n)$ in quanto $D$ e $W[u,v]$ 
+La complessità di questa procedura è $\mathcal{O}(n)$ in quanto $D$ e $W[u]$ 
 hanno una dimensione pari a $\mathcal{O}(n)$ e di conseguenza \verb|random_select| 
 opererà in $\mathcal{O}(n)$ in entrambi i casi (si ricordi che \verb|W| è 
 $n \times n$). Così facendo, la procedura non ha una dipendenza quadratica legata 
@@ -153,6 +150,7 @@ contratto). Azzerare $v$ significa \textit{eliminare} il vertice dal grafo. Si v
 ad aggiornare conseguentemente anche la matrice \verb|W| in modo da avere soltanto 
 i pesi sulla matrice che corrispondono ai vertici restanti dopo la contrazione. 
 Si illustra di seguito lo pseudo-codice:
+\pagebreak
 \begin{verbatim}
     function contract_edge(u, v)
         D[u] = D[u] + D[v] - 2W[u,v]
@@ -178,17 +176,17 @@ Si illustra di seguito lo pseudo-codice:
             contract_edge(u,v)
         return D,W
 \end{verbatim}
-Inizialemente, quando il grafo $\mathcal{G}$ ha $n$ vertici, la probabilità di 
-sbagliare, ovvero, di contrarre un lato che fa parte del min-cut, è molto bassa. 
-Nel momento in cui si arriva ad avere tre veritici nel grafo $\mathcal{G}$, la 
+Inizialmente, quando il grafo $\mathcal{G}$ ha $n$ vertici, la probabilità di 
+sbagliare, ovvero di contrarre un lato che fa parte del min-cut, è molto bassa. 
+Nel momento in cui si arriva ad avere tre vertici nel grafo $\mathcal{G}$, la 
 probabilità di scegliere il lato sbagliato è pari a $\frac{2}{3}$.
 
 \subsubsection*{Recursive contract}
 Si effettua un'unica fase di contrazione per i primi vertici, in modo tale 
-che la probabilità di sbaglaire sia inferiore del 50\%. Per la fase successiva, 
+che la probabilità di sbagliare sia inferiore del 50\%. Per la fase successiva, 
 cioè quando si va a contrarre un grafo piccolo, dove la probabilità di errore è 
 maggiore del 50\%, anzichè contrarre in maniera randomica, si fanno 
-\textit{due tentativi} di contrazione, ottenendo due soluzioni distinte e sceglieno 
+\textit{due tentativi} di contrazione, ottenendo due soluzioni distinte e scegliendo 
 quella migliore (ovvero, quella di peso minimo). In questo modo anche se la probabilità 
 di errore in questa seconda fase è più alta, poichè si sceglie la migliore soluzione 
 tra due scelte randomiche, la probabilità di errore rimane comunque bassa.
@@ -213,7 +211,7 @@ Si illustra di seguito lo pseudo-codice:
         return min(w_1,w_2)
 \end{verbatim}
 La complessità di questa procedura è $\mathcal{O}(n^2 \cdot log(n))$ e trova un 
-taglio minimo con probabilità o uguale a $\frac{1}{log(n)}$. Quindi, con $log^2(n)$ 
+taglio minimo con probabilità maggiore o uguale a $\frac{1}{log(n)}$. Quindi, con $log^2(n)$ 
 ripetizioni di \verb|recursive_contract|, la probabilità di errore è minore o uguale 
 a $\frac{1}{n}$. In conclusione, la complessità computazionale dell'algoritmo di 
 Karger-Stein è $\mathcal{O}(n^2 \cdot log^3(n))$.
@@ -235,7 +233,7 @@ corretto alla $k$-esima chiamata ricorsiva:
 \[
     \mathcal{P}(k) = 1 - \Bigl(1 - \frac{1}{2} \cdot \mathcal{P}(k - 1)\Bigr)^2 \simeq \frac{1}{k}
 \]
-Qualora il numero delle chiamate ricorsive è logaritmico rispetto al numero di vertici, 
+Qualora il numero delle chiamate ricorsive sia logaritmico rispetto al numero di vertici, 
 si ottiene che:
 \[
     \mathcal{P}(n) \le c \cdot \frac{1}{log(n)}
@@ -249,7 +247,7 @@ le varie fasi descritte nella sezione precedente:
     \item \verb|random_select|: permette di scegliere randomicamente un certo valore 
     $r$ e restituisce, tramite la ricerca binaria, la posizione di tale valore nel 
     vettore dei pesi cumulativi $C$;
-    \item \verb|edge_select|: permette di sceglie un lato del grafo $\mathcal{G}$ in 
+    \item \verb|edge_select|: permette di scegliere un lato del grafo $\mathcal{G}$ in 
     tempo lineare rispetto al numero di vertici del grafo. Per determinare i vertici, 
     questa procedura utilizza \verb|random_select|;
     \item \verb|contract_edge|: dati $u$ e $v$, effettua la contrazione del lato scelto;
@@ -276,25 +274,25 @@ delle strutture dati necessarie.
 Per questo algoritmo non sono state attuate delle particolari ottimizzazioni. Tuttavia, 
 per poter incrementare significativamente il tempo di esecuzione dell'algoritmo, sono 
 state applicate alcune \textit{accortezze}. Proprio per tale motivo, è stata realizzata 
-una struttura dati dedicata (\verb|KargerGraph|), in modo da mantenere soltano le 
+una struttura dati dedicata (\verb|KargerGraph|), in modo da mantenere soltanto le 
 variabili e le strutture dati di supporto strettamente necessarie. Il motivo per cui il 
 vettore dei gradi pesati dei vertici è incluso nella struttura dati \verb|KargerGraph| 
-è dovuto per il semplice motivo di mantenere pulito il codice del metodo 
+è quello di mantenere pulito il codice del metodo 
 \verb|algorithm|. Per poter implementare quest'ultimo metodo, era necessario che ogni 
 volta che venisse effettuata una chiamata al metodo \verb|recursive_contract|, a 
-tale metodo fosse passato una \textit{copia} del grafo $\mathcal{G}$ di partenza. 
+tale metodo fosse passata una \textit{copia} del grafo $\mathcal{G}$ di partenza. 
 Per fare ciò, il linguaggio Python mette a disposizione il metodo \verb|deepcopy|, 
 un'operazione computazionalmente onerosa. Durante lo sviluppo dell'algoritmo, abbiamo 
-effetuato la \verb|deepcopy| della struttura dati \verb|KargerGraph|. Tuttavia, abbiamo 
+effettuato la \verb|deepcopy| della struttura dati \verb|KargerGraph|. Tuttavia, abbiamo 
 notato che il tempo di esecuzione dell'algoritmo risultava essere troppo elevato. 
-Pertanto, abbiamo deciso di effettura la \verb|deepcopy| delle singole strutture dati 
-contenute in \verb|KargerGraph|, ovvero, la matrice di adiacenza pesata \verb|W|, il 
+Pertanto, abbiamo deciso di effettuare la \verb|deepcopy| delle singole strutture dati 
+contenute in \verb|KargerGraph|, ovvero la matrice di adiacenza pesata \verb|W|, il 
 vettore dei gradi pesati dei vertici \verb|D| e il numero dei vertici \verb|n_vertices|
 del grafo $\mathcal{G}$. Così facendo, abbiamo notato che l'algoritmo era in grado di 
 eseguire le varie istanze in un tempo ragionevole.
 
 L'unica importante variazione che ha l'implementazione rispetto allo pseudo-codice è 
-l'introduzione di una soglia (\textit{thershold}) sul tempo di esecuzione dell'algoritmo. 
+l'introduzione di una soglia (\textit{threshold}) sul tempo di esecuzione dell'algoritmo. 
 Come suggerito dalla consegna, l'algoritmo potrebbe impiegare molto tempo per computare 
 le istanze più grandi. Per tale motivo, il codice originale è stato modificato in modo 
 appropriato per poter implementare l'interruzione dell'esecuzione dell'algoritmo al 

@@ -21,7 +21,7 @@ Per l'esecuzione del programma è necessario spostarsi nella cartella di progett
     \begin{itemize}
         \item \textit{all} (esegue e salva su file le misurazioni con le opportune ripetizioni);
         \item \textit{all-single} (esegue tutte le misurazioni singole);
-        \item \textit{all-quartet} (esegue tutte le misurazioni raggruppando i grafi in base al numero di vertici, nello specifico a gruppi di quattro);
+        \item \textit{all-quartet} (esegue e salva su file tutte le misurazioni raggruppando i grafi in base al numero di vertici, nello specifico a gruppi di quattro);
         \item \textit{sw} (esegue le misurazioni con Stoer-Wagner);
         \item \textit{ks} (esegue le misurazioni con Karger-Stein).   
     \end{itemize} 
@@ -44,14 +44,14 @@ L'esecuzione del programma e le relative misurazioni sono state effettuate sulla
 
 \subsection{Introduzione alle misurazioni} 
 
-Le misurazioni sono state effettuate eseguendo i due algoritmi per ogni grafo del dataset, misurandone il tempo di esecuzione medio; dalla misura dei tempi è stato ovviamente escluso il tempo di caricamente dei dataset negli oggetti \texttt{graphs}. Prima di ogni esecuzione degli algoritmi è stato inoltre disabilitato temporaneamente il \textit{garbage collector} di Python, onde evitare rallentamenti anche minimi nel corso dell'esecuzione. Infine, i risultati del programma vengono salvati in due file differenti, uno per algoritmo.
+Le misurazioni sono state effettuate eseguendo i due algoritmi per ogni grafo del dataset, misurandone il tempo di esecuzione medio; dalla misura dei tempi è stato ovviamente escluso il tempo di caricamento dei dataset nelle strutture dati. Prima di ogni esecuzione degli algoritmi è stato inoltre disabilitato temporaneamente il \textit{garbage collector} di Python, onde evitare rallentamenti anche minimi nel corso dell'esecuzione. Infine, i risultati del programma vengono salvati in due file differenti, uno per algoritmo.
 
-\subsection{Misurazione}
+\subsection{Misurazione istanza per istanza}
 
 \subsubsection{Descrizione} 
 \label{guida_misurazioni}
 
-La misurazione è organizzata sequenzialmente eseguendo in base al tipo di algoritmo l'intero dataset. Il metodo \textit{executeSingleGraphCalculus} applica l'algoritmo richiesto al graph in input e procede nella seguente maniera:
+La misurazione è organizzata sequenzialmente eseguendo in base al tipo di algoritmo l'intero dataset. Il metodo \textit{executeSingleGraphCalculus} applica l'algoritmo richiesto alla struttura dati in input e procede nella seguente maniera:
 
 \begin{enumerate}
     \item Esegue una volta l'algoritmo applicato al grafo, disabilitando il \textit{garbage collector} e salvando il tempo di esecuzione.
@@ -63,6 +63,7 @@ La misurazione è organizzata sequenzialmente eseguendo in base al tipo di algor
     \end{itemize}
     \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
 \end{enumerate}
+
 
 
 \subsubsection{File di output}
@@ -79,22 +80,60 @@ Il file di output viene salvato direttamente alla fine di ogni esecuzione dell'a
     \item Esecuzioni totali effettuate dell'algoritmo.
 \end{itemize}
 
-Per l'algoritmo di Karger-Stein vengono invece riportate le seguenti informazioni:
+\noindent Per l'algoritmo di Karger-Stein vengono invece riportate le seguenti informazioni:
 
 \begin{itemize}
   \item Numero del dataset;
   \item Numero di vertici del grafo;
   \item Numero di archi del grafo;
   \item Peso finale calcolato;
-  \item Numero di iterazioni per l'alta probabilità ($k$);
+  \item Numero di iterazioni per l'alta probabilità;
   \item Numero di iterazioni minimo in cui è stato determinato il min-cut;
   \item Discovery time in nano secondi (tempo in cui l'algoritmo trova per la prima volta il taglio di peso minimo);
   \item Discovery time in secondi;
   \item Tempo di esecuzione in nano secondi;
   \item Tempo di esecuzione in secondi;
-  \item Esecuzioni totali effettuate dell'algoritmo (necessarie per effetturare le misurazioni).
+  \item Esecuzioni totali effettuate dell'algoritmo (necessarie per effettuare le misurazioni).
 \end{itemize}
 
 Per quanto riguarda le misurazioni con una \textit{threshold} sul tempo di esecuzione 
 dell'algoritmo di Karger-Stein, nei file di output è presente anche l'informazione 
 che indica se una particolare istanza ha superato o meno la soglia.
+
+
+\subsection{Misurazione a quartetto}
+
+\subsubsection{Descrizione} 
+
+La misurazione a quartetto è organizzata sequenzialmente eseguendo in base al tipo di algoritmo l'intero dataset raggruppando a gruppi di 4 i grafi con lo stesso numero di vertici. Per questa particolare casistica applichiamo la premessa che il dataset in input abbia sempre 4 file adiacenti con lo stesso numero di vertici. Il metodo \textit{executeSingleQuartetMeasurement} applica l'algoritmo richiesto al quartetto di grafi e procede nella seguente maniera:
+
+\begin{enumerate}
+    \item Esegue una volta l'algoritmo applicato al quartetto di grafi, disabilitando il \textit{garbage collector} e salvando il tempo di esecuzione medio.
+    \item Verifica se il tempo di esecuzione è maggiore o meno a 1s.
+    \begin{itemize}
+        \item Se il tempo è minore a 1s, esegue nuovamente \(k\) volte l'algoritmo per ogni quartetto di grafi, disabilitando il \textit{garbage collector} e salvando il tempo di esecuzione medio sulle \(k\) esecuzioni, con \(k\) definito come segue:  \[ k = \left\lfloor\frac{10^9 \textrm{ ns}}{\textrm{tempo medio di esecuzione in ns}}\right\rfloor\]
+        ossia il numero di ripetizioni applicate all'algoritmo la cui somma arriva a 1s.
+        \item Altrimenti, viene mantenuto il tempo rilevato precedentemente, pari all'esecuzione media del quartetto di grafi.
+    \end{itemize}
+    \item Esegue il salvataggio in \textit{append} nel file di output in formato \textsc{csv}.
+\end{enumerate}
+
+
+\subsubsection{File di output}
+
+Il file di output viene salvato direttamente alla fine di ogni esecuzione del metodo mantenendo la seguente formattazione:
+\begin{itemize}
+    \item Numero dei vertici;
+    \item Numeri del dataset di interesse;
+    \item Numeri di archi dei grafi;
+    \item Numero medio di archi nei grafi;
+    \item Tempo di esecuzione in nano secondi;
+    \item Tempo di esecuzione in secondi;
+    \item Esecuzioni totali effettuate per il quartetto.
+    \item Esecuzioni effettuate per ogni grafo del quartetto.
+\end{itemize}
+
+
+\subsubsection{Nota aggiuntiva per KargerStein}
+
+Le misurazioni di \textit{KargerStein} vengono eseguite senza soglia di default. Nel caso in cui si voglia inserire una soglia sul tempo massimo di esecuzione è necessario modificare il file \texttt{main.py} aggiungendo la soglia come argomento aggiuntivo nella chiamata di uno dei due metodi \texttt{KargerStein.measurements} o \texttt{KargerStein.algorithms}.

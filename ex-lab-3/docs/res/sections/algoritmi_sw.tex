@@ -20,7 +20,6 @@ Per quanto riguarda la struttura dati per l'esecuzione dell'algoritmo Stoer-Wagn
     \item \verb|datasetName| rappresenta il nome del grafo.
 \end{enumerate}
 Essendo l'oggetto in questione un multigrafo, la lista di adiacenza e la lista di lati possono contenere più archi tra due nodi aventi pesi diversi.
-
 \noindent I metodi implementati sono:
 \begin{enumerate}
     \item \verb|add_vertex|: aggiunge un vertice al grafo;
@@ -36,15 +35,15 @@ La struttura dati per quanto riguarda l'algoritmo di Karger-Stein (\verb|KargerG
 \begin{enumerate}
   \item \verb|n_edges|: rappresenta il numero di lati del grafo;
   \item \verb|n_vertices|: rappresenta il numero di vertici del grafo;
-  \item \verb|W|: rappresenta la \textit{matrice di adiacenza} del grafo;
+  \item \verb|W|: rappresenta la \textit{matrice di adiacenza pesata} del grafo;
   \item \verb|D|: rappresenta il vettore dei \textit{gradi pesati} dei vertici del grafo (successivamente verrà illustrato 
   il motivo dell'utilità di questa struttura).
 \end{enumerate}
 
-I metodi implementati per questa struttura dati sono:
+\noindent I metodi implementati per questa struttura dati sono:
 \begin{enumerate}
   \item \verb|add_edge|: aggiunge un lato al grafo;
-  \item \verb|remove_edge|: rimuove un lato al grafo;
+  \item \verb|remove_edge|: rimuove un lato dal grafo;
   \item \label{calculate_weighted_degrees_vertices} \verb|calculate_weighted_degrees_vertices|: permette di calcolare i gradi pesati dei vertici. Tali risultati vengono 
   memorizzati in \verb|D|.
 \end{enumerate}
@@ -69,7 +68,7 @@ L'algoritmo è composto da due funzioni:
   \item \texttt{stMinCut}: funzione che si occupa di trovare un \textit{s-t minimum cut}.
 \end{itemize}
 
-Viene qui riportato lo pseudocodice per entrambe le funzioni.
+\noindent Viene qui riportato lo pseudocodice per entrambe le funzioni.
 
 \begin{verbatim}
   function GlobalMinCut(G=(V,E,w))
@@ -94,8 +93,9 @@ Viene qui riportato lo pseudocodice per entrambe le funzioni.
     return (V-{t},{t}), s, t
 \end{verbatim}
 
-Poiché la ricerca del nodo che massimizza w(A,{v}) può essere un'operazione computazionalmente pesante, complice anche la necessità di iterare sull'intera lista di nodi, l'algoritmo può essere facilmente ottimizzato tramite l'utilizzo di una coda di priorità; questa infatti permette di ottenere il nodo di peso massimo in tempo costante. La funzione \texttt{stMinCut} può essere quindi modificata come segue.
+Poiché la ricerca del nodo che massimizza \(w(A,\{v\})\) può essere un'operazione computazionalmente pesante, complice anche la necessità di iterare sull'intera lista di nodi, l'algoritmo può essere facilmente ottimizzato tramite l'utilizzo di una coda di priorità; questa infatti permette di ottenere il nodo di peso massimo in tempo costante (ad eccezione delle operazioni per il mantenimento della proprietà del max-heap, le quali hanno complessità logaritmica). La funzione \texttt{stMinCut} può essere quindi modificata come segue.
 
+\newpage
 \begin{verbatim}
   function stMinCut(G=(V,E,w))
     Q <- empty
@@ -113,8 +113,8 @@ Poiché la ricerca del nodo che massimizza w(A,{v}) può essere un'operazione co
     return (V-{t},{t}), s, t
 \end{verbatim}
 
-La complessità dell'algoritmo è fortemente legata alla struttura dati che viene utilizzata. La funzione \texttt{stMinCut}, infatti, ha complessità $O(mlogn)$ se implementata tramite \textit{MaxHeap} e $O(m+nlogn)$ se implementata tramite \textit{Fibonacci Heap}. \\
-Di conseguenza la funzione \texttt{GlobalMinCut}, e quindi l'algoritmo, ha complessità $O(mnlogn)$ se implementato tramite \textit{MaxHeap} e $O(mn+n^2 logn)$ se implementato tramite \textit{Fibonacci Heap}. Nel caso specifico della nostra implementazione, avendo usato la struttura dati \textit{MaxHeap}, ci attendiamo che la complessità teorica sia $O(mnlogn)$.
+La complessità dell'algoritmo è fortemente legata alla struttura dati che viene utilizzata. La funzione \texttt{stMinCut}, infatti, ha complessità $O(m\cdot logn)$ se implementata tramite \textit{MaxHeap} e $O(m+n \cdot logn)$ se implementata tramite \textit{Fibonacci Heap}. \\
+Di conseguenza la funzione \texttt{GlobalMinCut}, e quindi l'algoritmo, ha complessità $O(m\cdot n\cdot logn)$ se implementato tramite \textit{MaxHeap} e $O(m\cdot n+n^2 \cdot logn)$ se implementato tramite \textit{Fibonacci Heap}. Nel caso specifico della nostra implementazione, avendo usato la struttura dati \textit{MaxHeap}, ci attendiamo che la complessità teorica sia $O(m\cdot n \cdot logn)$.
 
 \subsubsection{Implementazione}
 
@@ -123,16 +123,16 @@ Nello specifico:
 
 \begin{itemize}
     \item \texttt{algorithm}, che si occupa di mandare in esecuzione \texttt{globalMinCut} sul grafo di input;
-    \item \texttt{stMinCut}, che cerca un min cut (S,T) sfruttando un \textit{max-heap} come \textit{priority queue} da cui estrarre i nodi con peso dei lati maggiori, individuando così i vertici s e t da ritornare;
-    \item \texttt{globalMinCut}, che esegue la ricerca ricorsivamente di un min cut globale a partire dal grafo di input e, nel caso in cui il grafo contenga solo due nodi, restituisca come caso base i nodi presenti come tupla.
+    \item \texttt{stMinCut}, che cerca un min-cut \((s,t)\) sfruttando un \textit{max-heap} come \textit{priority queue} da cui estrarre i nodi con peso dei lati maggiore, individuando così i vertici $s$ e $t$ da ritornare;
+    \item \texttt{globalMinCut}, che esegue la ricerca ricorsivamente di un min-cut globale a partire dal grafo di input e, nel caso in cui il grafo contenga solo due nodi, restituisca come caso base i nodi presenti come tupla.
     \item \texttt{weightMinCut}, usato per ritornare il peso del vertice in input a partire dai pesi dei lati;
     \item \texttt{contractGraph}, usato contrarre il grafo in modo iterativo rispetto ai vertici \textit{s} e \textit{t} in input. 
 \end{itemize}
 
-Le implementazioni fanno uso della struttura dati \texttt{graph} precedentemente menzionata, attraverso cui viene costruita la matrice di adiacenza, nonché il vettore di vertici del grafo in input. Rispetto a quanto riportato nello pseudocodice, inoltre, abbiamo fatto uso delle tuple conservare i pesi calcolati con \texttt{key[v]} per i singoli vertici, che poi vengono recuperati da \texttt{weightMinCut} per ritornare il peso del min cut, senza necessità di doverlo ricalcolare.
+Le implementazioni fanno uso della struttura dati \texttt{graph} precedentemente menzionata, attraverso cui viene costruita la lista di adiacenza, nonché il vettore di vertici del grafo in input. Rispetto a quanto riportato nello pseudocodice, inoltre, abbiamo fatto uso delle tuple per conservare i pesi calcolati con \texttt{key[v]} per i singoli vertici, che poi vengono recuperati da \texttt{weightMinCut} per ritornare il peso del min-cut, senza necessità di doverlo ricalcolare.
 
 \subsubsection{Ottimizzazioni implementate}
 
-Per quanto concerne le ottimizzazioni, abbiamo evitato - a meno della prima e unica invocazione di \texttt{algorithm} - la copia profonda di tutto \texttt{Graph}, preferendo la sola copia della lista di vertici, dal momento che questa era quella maggiormente soggetta ad alterazioni. La lista di vertici è stata poi constantemente passata tra i vari metodi di classe e questo ci ha velocizzato in buona parte il passaggio di variabili, nonché ridotto il tempo totale di esecuzione dell'algoritmo stesso. Inoltre, abbiamo preferito l'uso della copia profonda manuale rispetto a quella di sistema, inserendo gli \(n-1\) vertici in una nuova lista, poi passata come risultato dei metodi. 
-Al fine di velocizzare la parte di aggiornamento dei pesi dei nodi nel \textit{max-heap}, abbiamo riscritto la funzione \texttt{searchAndUpdateWeight} in \texttt{increaseKey} come metodo a sé stante, garantendo così la riduzione di una buona percentuale di tempo impiegato per l'aggiornamento del peso dei nodi. Inoltre, sempre nel \textit{max-heap}, abbiamo recuperato una vecchia ottimizzazione consistente nell'utilizzo di una mappa, concretizzata in una variabile di tipo \texttt{defaultdict} in Python, che associa a ogni nodo la sua posizione in \textit{list}, ossia la lista dei nodi. Questa implementazione permette di ricercare la presenza di un vertice nello Heap in tempo costante, e ciò è particolarmente utile perché la presenza del vertice deve essere verificata due volte ad ogni iterazione del ciclo for dell'algoritmo (nella condizione if e durante l'aggiornamento dello heap). Se non avessimo adottato tale ottimizzazione, queste operazioni avrebbero avuto una complessità lineare, andando così ad aumentare polinomialmente la complessità computazionale dell'algoritmo.
+Per quanto concerne le ottimizzazioni, abbiamo evitato - a meno della prima e unica invocazione di \texttt{algorithm} - la copia profonda di tutto \texttt{Graph}, preferendo la sola copia della lista di vertici, dal momento che questa era quella maggiormente soggetta ad alterazioni. La lista di vertici è stata poi costantemente passata tra i vari metodi di classe e questo ha velocizzato in buona parte il passaggio di variabili, nonché ridotto il tempo totale di esecuzione dell'algoritmo stesso. Inoltre, abbiamo preferito l'uso della copia profonda manuale rispetto a quella nativa del linguaggio, inserendo gli \(n-1\) vertici in una nuova lista, poi passata come risultato dei metodi. 
+Al fine di velocizzare la parte di aggiornamento dei pesi dei nodi nel \textit{max-heap}, abbiamo riscritto la funzione \texttt{searchAndUpdateWeight} in \texttt{increaseKey} come metodo a sé stante, garantendo così la riduzione di una buona percentuale di tempo impiegato per l'aggiornamento del peso dei nodi, svolgendo così solo l'operazione di \texttt{heapifyUp}. Inoltre, sempre nel \textit{max-heap}, abbiamo recuperato una vecchia ottimizzazione consistente nell'utilizzo di una mappa, concretizzata in una variabile di tipo \texttt{defaultdict} in Python, che associa a ogni nodo la sua posizione in \textit{list}, ossia la lista dei nodi. Questa implementazione permette di ricercare la presenza di un vertice nello Heap in tempo costante, e ciò è particolarmente utile perché la presenza del vertice deve essere verificata due volte ad ogni iterazione del ciclo for dell'algoritmo (nella condizione if e durante l'aggiornamento dello heap). Se non avessimo adottato tale ottimizzazione, queste operazioni avrebbero avuto una complessità lineare, andando così ad aumentare polinomialmente la complessità computazionale dell'algoritmo.
 L'insieme di tutte queste piccole ottimizzazioni ci ha permesso di non dover inserire una soglia di tempo massima entro cui l'algoritmo doveva eseguire.

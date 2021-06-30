@@ -39,7 +39,7 @@ Dato $\mathcal{G}=(\mathcal{V}, \mathcal{E})$ un multigrafo connesso, un \textit
 Dato $\mathcal{G}=(\mathcal{V}, \mathcal{E})$ un multigrafo ed $e=\{u,v\} \in \mathcal{E}$, la \textit{contrazione} di $\mathcal{G}$ rispetto ad $e$, $\mathcal{G}/e=(\mathcal{V}{}', \mathcal{E}{}')$ è il multigrafo con:
 \begin{itemize}
     \item[] $\mathcal{V}{}'=\mathcal{V} \setminus \{u, v\} \cup \{z_{u,v}\}$
-    \item[] $\mathcal{E}{}'=\mathcal{E} \setminus \{\{\{x, y\}: (x=u) \vee (x=v)\}\} \cup \{\{\{z_{u,v}, y\}: (\{u,y\} \in \mathcal{E}) \vee (\{v,y\} \in \mathcal{E}), (y\neq u) \wedge (y \neq v) \}\}$
+    \item[] $\mathcal{E}{}'=\mathcal{E} \setminus \{\{\{x, y\}: (x=u) \vee (x=v)\}\} \cup \{\{\{z_{u,v}, y\}: (\{u,y\} \in \mathcal{E}) \vee (\{v,y\} \in \mathcal{E}), (y\neq u) \wedge (y \neq v) \}\}$ % im dead inside 
 \end{itemize}
 Quando vengono contratti due vertici, viene eliminato il lato tra loro e 
 si crea un nuovo vertice che li comprende, ereditando tutti i loro vecchi lati 
@@ -62,13 +62,13 @@ Viene riportato di seguito un esempio grafico di contrazione di un multigrafo ri
 
 \subsubsection*{Alta probabilità}
 
-Ai fini dell'analsi dell'algoritmo di \textit{Karger} e \textit{Stein}, si forniscano le seguenti definizioni:
+Ai fini dell'analisi dell'algoritmo di \textit{Karger} e \textit{Stein}, si forniscono le seguenti definizioni:
 \begin{enumerate}
     \item \textbf{Alta probabilità}: dato $\Pi \subseteq \mathcal{I} \times \mathcal{S}$, dove $\Pi$ è un 
     \textit{problema decisionale}, un algoritmo $\mathcal{A}_{\Pi}$ ha complessità 
     $\mathcal{T}(n) = \mathcal{O}(f(n))$ con \textit{alta probabilità} se $\exists c, d > 0$ tali che 
     $\forall i \in \mathcal{I}$, $|i| = n$, $Pr(\mathcal{A}_{\Pi}(i)$ termina in $\ge c \dot f(n)$ passi $) \le \frac{1}{n^d}$, 
-    ovvero, la probabilità che l'algoritmo superi la complessità $\mathcal{O}(f(n))$ è molto bassa ($\frac{1}{n^d}$).
+    ovvero, la probabilità che l'algoritmo superi la complessità $\mathcal{O}(f(n))$ è molto bassa $\Bigl(\frac{1}{n^d}\Bigr)$.
     \item \textbf{Correttezza con alta probabilità di un algoritmo}: dato $\Pi \subseteq \mathcal{I} \times \mathcal{S}$, 
     un algoritmo $\mathcal{A}_{\Pi}$ è corretto con alta probabilità se $\exists d > 0$ tali che 
     $\forall i \in \mathcal{I}$, $|i| = n$, $Pr((i, \mathcal{A}_{\Pi}) \notin \Pi) \le \frac{1}{n^d}$.
@@ -86,7 +86,7 @@ casuali, l'algoritmo può essere progettato per restituire sempre la risposta co
 (\textit{algoritmo Las Vegas}), a scapito del tempo di calcolo, o per prevedere 
 anche che il risultato calcolato possa essere errato con una certa probabilità 
 (\textit{algoritmo Monte Carlo}). Una volta che il fattore casuale è stato ottenuto, 
-il comportamento dell’algoritmo risulta determinato unicamente dall'input e quindi 
+il comportamento dell'algoritmo risulta determinato unicamente dall'input e quindi 
 esso può essere visto come un algoritmo deterministico.
 
 \subsubsection*{Algoritmi Las Vegas}
@@ -128,7 +128,7 @@ funzione di $|i| = n$. Si ha una famiglia di variabili aleatorie \textit{binarie
 rappresentano il fatto che l'algoritmo sia corretto o meno (una variabile $\forall$ 
 input). Anche il tempo $\mathcal{T}(n)$ potrebbe essere una variabile aleatoria.
 
-Questa categoria di algoritmi, per i problemi decisionali, si dividono in:
+Questa categoria di algoritmi per i problemi decisionali si dividono in:
 \begin{enumerate}
     \item \textit{one-sided}: l'algoritmo sbaglia soltanto su una singola risposta. 
     Ad esempio, l'algoritmo fa giuste tutte le istanze \verb|Si|, ma può sbagliare 

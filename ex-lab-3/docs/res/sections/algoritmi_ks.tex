@@ -1,18 +1,25 @@
 \subsection{Karger e Stein}
 \label{karger_stein_section}
 
-\subsubsection{Introduzione all'algoritmo di Karger}
-I passi svolti dall'algoritmo di Karger sono:
+\subsubsection{Introduzione all'algoritmo di Karger-Stein}
+Prima di spiegare l'algoritmo di Karger-Stein, si introduca la sua versione naive: 
+l'algoritmo di Karger. Questo algoritmo non può essere applicato per grafi pesati 
+e ha una complessità $\mathcal{O}(n^4 \cdot log(n))$. I passi svolti dall'algoritmo 
+di Karger sono:
 \begin{enumerate}
     \item Viene scelto a caso un lato;
     \item Si \textit{contraggono} (si veda \ref{definizione_contrazione}) i due vertici 
-    relativi, eliminando tutti i lati incidenti su entrambi;
+    relativi, eliminando tutti i lati incidenti su entrambi. In questo modo l'algoritmo 
+    è in grado di determinare un taglio minimo con probabilità maggiore o uguale a 
+    $\frac{2}{n^2}$. Queste operazioni vengono effettuate da una procedura chiamata 
+    \verb|full_contraction|;
     \item Si ripetono questi due passi finchè restano solo \textit{due} vertici;
     \item Quando sono rimasti soltanto due vertici, si restituiscano i lati che  
     connettono i due vertici.
 \end{enumerate}
+Andando a ripetere la procedura \verb|full_contraction|, la probabilità di errore è 
+minore o uguale a $\frac{1}{n}$.
 
-\subsubsection{Introduzione all'algoritmo di Karger-Stein}
 L'algoritmo di Karger-Stein è un algoritmo randomizzato ricorsivo che fa parte della 
 categoria di algoritmi Monte Carlo. La versione di questo algoritmo è in grado di 
 offrire delle prestazioni migliori rispetto all'algoritmo di Karger e può essere 
@@ -21,7 +28,7 @@ applicato per grafi pesati (si veda la descrizione del problema
 deve essere ridefinita, in modo tale che:
 \begin{enumerate}
     \item Deve essere scelto un lato con probabilità proporzionale al peso del lato 
-    \item stesso;
+    stesso;
     \item Sia possibile scegliere il lato da contrarre in tempo lineare;
     \item Effettuare la contrazione in tempo lineare.
 \end{enumerate}

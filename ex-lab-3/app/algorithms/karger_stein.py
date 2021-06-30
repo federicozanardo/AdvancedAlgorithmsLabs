@@ -12,7 +12,14 @@ sys.path.append('../')
 class KargerStein:
     def __init__(self, G: KargerGraph):
         self.G = G
+    
+    """
+    Input: vettore dei pesi cumulativi C
 
+    Permette di scegliere randomicamente un certo valore r e restituisce, 
+    tramite la ricerca binaria, la posizione di tale valore nel 
+    vettore dei pesi cumulativi C.
+    """
     def random_select(self, C):
         random = rnd.uniform(low=0, high=C[len(C) - 1], size=(1,))
         r = round(random[0])
@@ -34,6 +41,14 @@ class KargerStein:
 
         return mid
 
+    """
+    Input:  W: matrice di adiacenza pesata
+            D: vettore dei gradi pesati dei vertici
+
+    Permette di sceglie un lato del grafo G in tempo lineare rispetto al 
+    numero di vertici del grafo. Per determinare i vertici, questa procedura 
+    utilizza il metodo random_select.
+    """
     def edge_select(self, D, W):
         C_D = []
         for i in range(1, len(D) + 1):
@@ -55,6 +70,14 @@ class KargerStein:
 
         return (u, v)
 
+    """
+    Input:  W: matrice di adiacenza pesata
+            D: vettore dei gradi pesati dei vertici
+            u, v: vertici
+            n: numero di vertici nel grafo G
+
+    Effettua la contrazione del lato scelto.
+    """
     def contract_edge(self, D, W, u, v, n: int):
         D[u] = D[u] + D[v] - 2 * W[u][v]
         D[v] = 0
@@ -69,6 +92,14 @@ class KargerStein:
 
         return n
 
+    """
+    Input:  W: matrice di adiacenza pesata
+            D: vettore dei gradi pesati dei vertici
+            k: numero di vertici da contrarre
+
+    Definisce l'operazione completa di contrazione, aggiornando 
+    tutte le strutture dati.
+    """
     def contract(self, D, W, k: int):
         n = 0
         for d in D:
@@ -81,6 +112,15 @@ class KargerStein:
             n_i = self.contract_edge(D, W, u, v, n)
         return D, W, n_i
 
+    """
+    Input:  W: matrice di adiacenza pesata
+            D: vettore dei gradi pesati dei vertici
+            n: numero di vertici nel grafo G
+
+    Corrisponde al metodo full_contraction dell'algoritmo di Karger, 
+    però ottenendo un vantaggio dal punto di vista 
+    computazionale e la possibilità di essere applicato per grafi pesati.
+    """
     def recursive_contract(self, D, W, n: int):
         if n <= 6:
             D_prime, W_prime, _ = self.contract(D, W, 2)
@@ -104,6 +144,14 @@ class KargerStein:
 
         return min(w[0], w[1])
 
+    """
+    Input:  threshold_in_seconds:   valore in secondi per indicare la soglia 
+                                    oltre la quale l'esecuzione dell'algoritmo
+                                    viene interrotta
+
+    Questa procedura ricorsiva richiama recursive_contract un numero sufficiente 
+    di volte per poter garantire la correttezza in alta probabilità.
+    """
     def algorithm(self, threshold_in_seconds=math.inf):
         # Calcola il vettore D
         self.G.calculate_weighted_degrees_vertices()
@@ -119,6 +167,8 @@ class KargerStein:
 
         starting_total_time = starting_discovery_time = time.perf_counter_ns()
         gc.disable()
+
+        # Ripetizioni per l'alta probabilità
         for i in range(0, k):
             if time.perf_counter_ns() > (starting_total_time + (threshold_in_seconds * 1000000000)):
                 is_threshold_activated = True
@@ -136,6 +186,13 @@ class KargerStein:
 
         return minimum, k, k_min, discovery_time, total_time, is_threshold_activated
 
+    """
+    Input:  threshold_in_seconds:   valore in secondi per indicare la soglia 
+                                    oltre la quale l'esecuzione dell'algoritmo
+                                    viene interrotta
+
+    Questo metodo viene utilizzato per effettuare le misurazioni dell'algoritmo.
+    """
     def measurements(self, threshold_in_seconds=math.inf):
         min_cut, k, k_min, discovery_time, total_time, is_threshold_activated = self.algorithm(threshold_in_seconds)
 

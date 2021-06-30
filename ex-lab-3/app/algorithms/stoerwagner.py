@@ -7,11 +7,11 @@ class StoerWagner:
   def algorithm(self, G: Graph):
 
     """
-    self.backupG: Graph = copia profonda del grafo di partenza per il calcolo dei pesi degli archi
+    backupG: Graph = copia profonda del grafo di partenza per il calcolo dei pesi degli archi
     res: tuple = tupla contenente i risultati dell'esecuzione dell'algoritmo
     """
-    self.backupG = deepcopy(G)
-    res = self.globalMinCut(G)
+    backupG = deepcopy(G)
+    res = self.globalMinCut(backupG)
     return res[1][0][1]
     
 
@@ -53,7 +53,7 @@ class StoerWagner:
       for (v, w) in G.graph[u[0]]:
         if Q.search(v):
           key[v] = key[v] + w
-          Q.searchAndUpdateWeight(v, key[v])
+          Q.increaseKey(v, key[v])
 
     """
     Rimozione di t da G.V
@@ -126,7 +126,5 @@ class StoerWagner:
     for (u, w) in G.graph[t]:
       if u != s:
         G.add_edge(s, u, w)
-
     G.remove_node(t)
-
     return G

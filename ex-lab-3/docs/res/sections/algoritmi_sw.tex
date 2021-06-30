@@ -1,0 +1,138 @@
+\section{Descrizione degli algoritmi}
+
+\subsection{Struttura dati per il grafo}
+
+Per comodità nell'implementazione abbiamo realizzato due diverse strutture dati per rappresentare un multigrafo; queste sono simili tra loro ma presentano alcune differenze.
+
+\subsubsection{Struttura dati per Stoer-Wagner}
+Per quanto riguarda la struttura dati per l'esecuzione dell'algoritmo Stoer-Wagner, un oggetto \texttt{Graph} è rappresentato nel seguente modo:
+
+\begin{enumerate}
+    \item \verb|V| è un insieme di nodi;
+    \item \verb|E| è una lista di lati;
+    \item \verb|Graph| rappresenta la \textit{lista di adiacenza}.
+    Gli indici per accedere alla mappa sono rappresentati dai vertici.
+    Ogni cella della mappa punta ad una lista di coppie di valori
+    (il vertice a cui è collegato e il peso del lato che li
+    congiunge);
+    \item \verb|totalVertex| rappresenta il numero di vertici;
+    \item \verb|totalEdges| rappresenta il numero di archi;
+    \item \verb|datasetName| rappresenta il nome del grafo.
+\end{enumerate}
+Essendo l'oggetto in questione un multigrafo, la lista di adiacenza e la lista di lati possono contenere più archi tra due nodi aventi pesi diversi.
+\noindent I metodi implementati sono:
+\begin{enumerate}
+    \item \verb|add_vertex|: aggiunge un vertice al grafo;
+    \item \verb|add_edge|: aggiunge un lato al grafo;
+    \item \verb|remove_edge|: rimuove un lato dal grafo;
+    \item \verb|remove_node|: rimuove completamente un vertice dal grafo, ossia rimuove il vertice dalla relativa lista e tutti gli archi a esso collegati;
+    \item \verb|totalWeightCost|: restituisce la somma di tutti i lati tra due vertici.
+\end{enumerate}
+
+\subsubsection{Struttura dati per Karger-Stein}
+\label{struttura_dati_karger_stein}
+La struttura dati per quanto riguarda l'algoritmo di Karger-Stein (\verb|KargerGraph|) contiene i seguenti campi:
+\begin{enumerate}
+  \item \verb|n_edges|: rappresenta il numero di lati del grafo;
+  \item \verb|n_vertices|: rappresenta il numero di vertici del grafo;
+  \item \verb|W|: rappresenta la \textit{matrice di adiacenza pesata} del grafo;
+  \item \verb|D|: rappresenta il vettore dei \textit{gradi pesati} dei vertici del grafo (successivamente verrà illustrato 
+  il motivo dell'utilità di questa struttura).
+\end{enumerate}
+
+\noindent I metodi implementati per questa struttura dati sono:
+\begin{enumerate}
+  \item \verb|add_edge|: aggiunge un lato al grafo;
+  \item \verb|remove_edge|: rimuove un lato dal grafo;
+  \item \label{calculate_weighted_degrees_vertices} \verb|calculate_weighted_degrees_vertices|: permette di calcolare i gradi pesati dei vertici. Tali risultati vengono 
+  memorizzati in \verb|D|.
+\end{enumerate}
+
+\subsection{Stoer e Wagner}
+
+\subsubsection{Introduzione}
+
+L'algoritmo di Stoer-Wagner è un algoritmo ricorsivo per la risoluzione del problema del minimum cut di grafi non diretti, pesati e con pesi degli archi non negativi. Questo algoritmo è di tipo deterministico, ossia non vi è alcuna componente di randomicità in esso. \\
+L'idea base dell'algoritmo è la seguente: 
+\begin{itemize}
+  \item A ogni fase, l'algoritmo trova un \textit{s-t minimum cut} tra due vertici;
+  \item L'algoritmo contrae quindi il grafo rispetto all'arco $\{s,t\}$ al fine di ricercare un taglio diverso da \textit{s-t};
+  \item Il taglio di peso minimo trovato in tutte le iterazioni dell'algoritmo è il risultato dell'algoritmo, e coincide con il \textit{minimum cut} del grafo.
+\end{itemize}
+
+\subsubsection{Algoritmo}
+
+L'algoritmo è composto da due funzioni:
+\begin{itemize}
+  \item \texttt{GlobalMinCut}: funzione ricorsiva che si occupa di chiamare \texttt{stMinCut} e di restituire il \textit{minimum cut} globale di peso minore;
+  \item \texttt{stMinCut}: funzione che si occupa di trovare un \textit{s-t minimum cut}.
+\end{itemize}
+
+\noindent Viene qui riportato lo pseudocodice per entrambe le funzioni.
+
+\begin{verbatim}
+  function GlobalMinCut(G=(V,E,w))
+    if V = {a,b} then
+      return({a}, {b})
+    else
+      (C1, s, t) <- stMinCut(G)
+      C2 <- GlobalMinCut(G/{s,t})
+      if w(C1) <= w(C2) then
+        return C1
+      else
+        return C2
+\end{verbatim}
+
+\begin{verbatim}
+  function stMinCut(G=(V,E,w))
+    A <- {a}
+    while A != V do
+      trova v in V che massimizza w(A,{v})
+      A <- A unito {v}
+    siano s e t gli ultimi due vertici aggiunti ad A
+    return (V-{t},{t}), s, t
+\end{verbatim}
+
+Poiché la ricerca del nodo che massimizza \(w(A,\{v\})\) può essere un'operazione computazionalmente pesante, complice anche la necessità di iterare sull'intera lista di nodi, l'algoritmo può essere facilmente ottimizzato tramite l'utilizzo di una coda di priorità; questa infatti permette di ottenere il nodo di peso massimo in tempo costante (ad eccezione delle operazioni per il mantenimento della proprietà del max-heap, le quali hanno complessità logaritmica). La funzione \texttt{stMinCut} può essere quindi modificata come segue.
+
+\newpage
+\begin{verbatim}
+  function stMinCut(G=(V,E,w))
+    Q <- empty
+    for all u in V do
+      key[u] <- 0
+      Insert(Q, u, key[u])
+    s, t <- null
+    while Q != empty do
+      u <- ExtractMax(Q)
+      s <- t; t <- u
+      for all (u,v) in E do
+        if v in Q then
+          key[v] <- key[v] + w(u,v)
+          IncreaseKey(Q, v, key[v])
+    return (V-{t},{t}), s, t
+\end{verbatim}
+
+La complessità dell'algoritmo è fortemente legata alla struttura dati che viene utilizzata. La funzione \texttt{stMinCut}, infatti, ha complessità $O(m\cdot logn)$ se implementata tramite \textit{MaxHeap} e $O(m+n \cdot logn)$ se implementata tramite \textit{Fibonacci Heap}. \\
+Di conseguenza la funzione \texttt{GlobalMinCut}, e quindi l'algoritmo, ha complessità $O(m\cdot n\cdot logn)$ se implementato tramite \textit{MaxHeap} e $O(m\cdot n+n^2 \cdot logn)$ se implementato tramite \textit{Fibonacci Heap}. Nel caso specifico della nostra implementazione, avendo usato la struttura dati \textit{MaxHeap}, ci attendiamo che la complessità teorica sia $O(m\cdot n \cdot logn)$.
+
+\subsubsection{Implementazione}
+
+Per implementare l'algoritmo Stoer e Wagner in Python abbiamo realizzato una classe denominata \texttt{StoerWagner} che definisce una serie di metodi per la corretta esecuzione dell'algoritmo.
+Nello specifico: 
+
+\begin{itemize}
+    \item \texttt{algorithm}, che si occupa di mandare in esecuzione \texttt{globalMinCut} sul grafo di input;
+    \item \texttt{stMinCut}, che cerca un min-cut \((s,t)\) sfruttando un \textit{max-heap} come \textit{priority queue} da cui estrarre i nodi con peso dei lati maggiore, individuando così i vertici $s$ e $t$ da ritornare;
+    \item \texttt{globalMinCut}, che esegue la ricerca ricorsivamente di un min-cut globale a partire dal grafo di input e, nel caso in cui il grafo contenga solo due nodi, restituisca come caso base i nodi presenti come tupla.
+    \item \texttt{weightMinCut}, usato per ritornare il peso del vertice in input a partire dai pesi dei lati;
+    \item \texttt{contractGraph}, usato contrarre il grafo in modo iterativo rispetto ai vertici \textit{s} e \textit{t} in input. 
+\end{itemize}
+
+Le implementazioni fanno uso della struttura dati \texttt{graph} precedentemente menzionata, attraverso cui viene costruita la lista di adiacenza, nonché il vettore di vertici del grafo in input. Rispetto a quanto riportato nello pseudocodice, inoltre, abbiamo fatto uso delle tuple per conservare i pesi calcolati con \texttt{key[v]} per i singoli vertici, che poi vengono recuperati da \texttt{weightMinCut} per ritornare il peso del min-cut, senza necessità di doverlo ricalcolare.
+
+\subsubsection{Ottimizzazioni implementate}
+
+Per quanto concerne le ottimizzazioni, abbiamo evitato - a meno della prima e unica invocazione di \texttt{algorithm} - la copia profonda di tutto \texttt{Graph}, preferendo la sola copia della lista di vertici, dal momento che questa era quella maggiormente soggetta ad alterazioni. La lista di vertici è stata poi costantemente passata tra i vari metodi di classe e questo ha velocizzato in buona parte il passaggio di variabili, nonché ridotto il tempo totale di esecuzione dell'algoritmo stesso. Inoltre, abbiamo preferito l'uso della copia profonda manuale rispetto a quella nativa del linguaggio, inserendo gli \(n-1\) vertici in una nuova lista, poi passata come risultato dei metodi. 
+Al fine di velocizzare la parte di aggiornamento dei pesi dei nodi nel \textit{max-heap}, abbiamo riscritto la funzione \texttt{searchAndUpdateWeight} in \texttt{increaseKey} come metodo a sé stante, garantendo così la riduzione di una buona percentuale di tempo impiegato per l'aggiornamento del peso dei nodi, svolgendo così solo l'operazione di \texttt{heapifyUp}. Inoltre, sempre nel \textit{max-heap}, abbiamo recuperato una vecchia ottimizzazione consistente nell'utilizzo di una mappa, concretizzata in una variabile di tipo \texttt{defaultdict} in Python, che associa a ogni nodo la sua posizione in \textit{list}, ossia la lista dei nodi. Questa implementazione permette di ricercare la presenza di un vertice nello Heap in tempo costante, e ciò è particolarmente utile perché la presenza del vertice deve essere verificata due volte ad ogni iterazione del ciclo for dell'algoritmo (nella condizione if e durante l'aggiornamento dello heap). Se non avessimo adottato tale ottimizzazione, queste operazioni avrebbero avuto una complessità lineare, andando così ad aumentare polinomialmente la complessità computazionale dell'algoritmo.
+L'insieme di tutte queste piccole ottimizzazioni ci ha permesso di non dover inserire una soglia di tempo massima entro cui l'algoritmo doveva eseguire.
